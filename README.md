@@ -9,8 +9,8 @@ box, easily to be deployed and use.
 are still under development. You can update your Clue system by using **Clue Setup** utility
 (type `setup` or `clue` in OS console) over _SSH_.
 
-In order to install **Clue** OS you have to download the installer image (from [GitHub releases]
-(https://github.com/stefandmn/Clue/releases) or from [amsd.go.ro/clue](https://amsd.go.ro/clue),
+In order to install **Clue** OS you have to download the installer image from 
+[GitHub releases](https://github.com/stefandmn/Clue/releases) or from [amsd.go.ro/clue](https://amsd.go.ro/clue),
 choosing the file corresponding to your RPi version), write it on the SD (or min SD) card, connect
 RPi device through LAN port to your local network - that must have Internet access and _DHCP_ enabled,
 and then power it on. The installer doesn't require human interaction and it will be ready depending
