@@ -1,8 +1,14 @@
-BUILD_DIRS=../CWork/build.*
-SOURCES_DIR=../CWork/sources
-TARGET_DIR=../CWork/target
+ROOT=$(shell pwd)
+export BUILD_DIR=$(ROOT)/../CWork
+export PROJECT=RPi
+export DEVICE=RPi
+export ARCH=arm
+
 
 all: release
+
+addons:
+	./setup/addon all
 
 system:
 	./setup/image
@@ -17,10 +23,5 @@ noobs:
 	./setup/image noobs
 
 clean:
-	rm -rf $(BUILD_DIRS)/* $(BUILD_DIRS)/.stamps
+	rm -rf $(BUILD_DIR)/* $(BUILD_DIR)/.stamps
 
-distclean:
-	rm -rf ./.ccache ./$(BUILD_DIRS)
-
-src-pkg:
-	tar cvJf sources.tar.xz sources .stamps
