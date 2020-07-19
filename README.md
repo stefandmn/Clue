@@ -5,10 +5,6 @@ to provide you builtin functions like multimedia center, integrated webcam, mult
 networking pre-configurations (like Repeater, Router, Hotspot,etc.), etc., everything 
 out of the box, easy to be deployed and to use.
 
-> **Note**: _Clue_ is fully functional but the packages that are part of this linux 
-> distribution are still under development. You can update your Clue system by using 
-> **Clue Setup** utility (type `setup` or `clue` in OS console) over _SSH_.
-
 To install **Clue OS**  you have to download the installer image from [amsd.go.ro/clue](https://amsd.go.ro/clue),
 choosing the right image file corresponding to your RPi version, write it on the SD 
 (or min SD) card, and connect RPi device through LAN port to your local network. The 
