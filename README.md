@@ -17,7 +17,7 @@ graphical interface. Furthermore, level you'll have access over SSH using __root
 Connecting the RPi device to a TV over _HDMI_ you'll be able to setup the system directly 
 from TV remove control and also to control the entire _HDMI_ chain using **Setup** utility.
 
-**Clue OS** works quite well on _RPi v2_ (it is suggested to not activate all services 
+**Clue** works quite well on _RPi v2_ (it is suggested to not activate all services 
 due to limited power processor) but it is recommended to run it on _RPi v3_ - it works 
 like a charm on this hardware platform.
 
