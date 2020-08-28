@@ -78,8 +78,17 @@ viewplan:
 help:
 	echo -e "\
 \nSYNOPSIS\n\
-       make build|install|clean|cleanall|release|image|cachestats|viewplan\n\
+       make build|install|clean|cleanall|release|image\n\
+       make cachestats|viewplan\n\
+       make help\n\
 \nDESCRIPTION\n\
+    Executes one of the make tasks defined through this Makefile flow, according \n\
+    to the specified DEVICE variable. In case is not defined/exported to the OS \n\
+    level you can include it in the command line with '-e' like in the following\n\
+    example: 'make build -e DEVICE=RPi4'. It is recommended to work with the OS \n\
+    export variable just to avoid complex command lines: 'export DEVICE=RPi4'\n\
+    All possible value of DEVICE variable are described in the README files, \n\
+    providing the complete list of support devices.\n\n\
     build [-e package=<pack>]\n\
                   build one particular package (and all related dependencies) or \n\
                   the entire DEVICE distribution\n\
@@ -93,10 +102,24 @@ help:
                   Build the system release for the current DEVICE\n\
     image\n\
                   Build the system release and create OS image for the current DEVICE\n\
+    cachestats\n\
+                  Displays cache statistics\n\
+    viewplan\n\
+                  Shows the building plan for the current DEVICE\n\
+    help\n\
+                  Shows this text\n\
 \nEXAMPLES\n\
        build the entire distribution ('build' make task is default)\n\
        > make\n\
        > make build\n\n\
        build 'sed' package\n\
-       > make build -e package=sed\n\
+       > make build -e package=sed\n\n\
+       install 'sed' package (and related dependencies)\n\
+       > make install -e package=sed\n\n\
+       make system release\n\
+       > make release\n\n\
+       make system release and OS image\n\
+       > make image\n\n\
+       view the building plan (it is saved in viewplan.txt file from BUILD_DIR folder)\n\
+       > make viewplan\n\n\
 "
