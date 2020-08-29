@@ -71,7 +71,12 @@ cachestats:
 
 # Display the building plan for the current distribution
 viewplan:
-	./$(CONFIG)/tools/viewplan | tee $(BUILD_DIR)/viewplan.txt
+	./$(CONFIG)/tools/viewplan | tee $(BUILD_DIR)/viewplan_$(DEVICE).txt
+
+
+# Display building process
+dashboard:
+	./$(CONFIG)/tools/dashboard
 
 
 # Display the help text
@@ -79,7 +84,7 @@ help:
 	echo -e "\
 \nSYNOPSIS\n\
        make build|install|clean|cleanall|release|image\n\
-       make cachestats|viewplan\n\
+       make cachestats|viewplan|dashboard\n\
        make help\n\
 \nDESCRIPTION\n\
     Executes one of the make tasks defined through this Makefile flow, according \n\
@@ -106,6 +111,8 @@ help:
                   Displays cache statistics\n\
     viewplan\n\
                   Shows the building plan for the current DEVICE\n\
+    dashboard\n\
+                  Display the real time build process for the current DEVICE\n\
     help\n\
                   Shows this text\n\
 \nEXAMPLES\n\
