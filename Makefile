@@ -74,6 +74,16 @@ viewplan:
 	./$(CONFIG)/tools/viewplan | tee $(BUILD_DIR)/viewplan_$(DEVICE).txt
 
 
+# Display specified package attributes and also the dependencies' list
+#	@package - package name with optional target [:<host|target|init|bootstrap>]
+viewpack:
+ifneq ($(package),)
+	./$(CONFIG)/tools/viewpack $(package)
+else
+	echo "Please specify 'package' parameter"
+endif
+
+
 # Display building process
 dashboard:
 	./$(CONFIG)/tools/dashboard
