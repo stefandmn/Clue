@@ -1,0 +1,16 @@
+[Unit]
+Description=System Logging Service
+Requires=syslog.socket
+Documentation=http://www.rsyslog.com/doc/
+
+[Service]
+Type=notify
+Environment=RSYSLOG_MODDIR=/clue/.kodi/addons/service.rsyslog/lib/rsyslog/
+ExecStartPre=/bin/sh /clue/.kodi/addons/service.rsyslog/bin/rsyslog.init
+ExecStart=/clue/.kodi/addons/service.rsyslog/bin/rsyslogd -n -f /clue/.kodi/userdata/addon_data/service.rsyslog/rsyslog.conf
+StandardOutput=null
+Restart=on-failure
+
+[Install]
+WantedBy=kodi.target
+Alias=syslog.service

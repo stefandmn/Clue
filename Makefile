@@ -5,7 +5,6 @@ ifndef VERBOSE
 .SILENT:
 endif
 
-export BUILD_DIR=$(ROOT)/../Clue-out
 export CONFIG=setup
 export SYSTEM=distro
 export PACKAGES=packs
@@ -14,6 +13,9 @@ ifeq ($(DEVICE),)
 	export DEVICE=RPi
 endif
 
+ifeq ($(OUTPUT),)
+	export OUTPUT_DIR=$(ROOT)/../Clue-out
+endif
 
 # Build particular package or the entire system
 #	@package - package name with optional target [:<host|target|init|bootstrap>]
@@ -21,9 +23,9 @@ endif
 #	- in case no one of these parameters is specified then the process build is called
 build:
 ifeq ($(package),)
-	./$(CONFIG)/process | tee $(BUILD_DIR)/process.log
+	./$(CONFIG)/process | tee $(OUTPUT_DIR)/process.log
 else
-	./$(CONFIG)/build $(package) $(parent) | tee $(BUILD_DIR)/build.log
+	./$(CONFIG)/build $(package) $(parent) | tee $(OUTPUT_DIR)/build.log
 endif
 
 
@@ -32,9 +34,10 @@ endif
 #	@parent parent of the specified package
 install:
 ifneq ($(package),)
-	./$(CONFIG)/install $(package) $(parent) | tee $(BUILD_DIR)/install.log
+	./$(CONFIG)/install $(package) $(parent) | tee $(OUTPUT_DIR)/install.log
 else
-	echo "Please specify 'package' and optional 'parent' parameter(s)"
+	@printf "\n* Please specify 'package' parameter, and optional 'parent' parameter!\n\n"
+	exit 1
 endif
 
 
@@ -43,35 +46,35 @@ endif
 #	@package - package name with optional target [:<host|target|init|bootstrap>]
 clean:
 ifneq ($(package),)
-	./$(CONFIG)/clean $(package) $(parent) | tee $(BUILD_DIR)/clean.log
+	./$(CONFIG)/clean $(package) $(parent) | tee $(OUTPUT_DIR)/clean.log
 else
-	rm -rf $(BUILD_DIR)/build.* $(BUILD_DIR)/.stamps
+	rm -rf $(OUTPUT_DIR)/*-${DEVICE}.* $(OUTPUT_DIR)/.stamps
 endif
 
 
 # Clean-up all build distributions, cache and stamps
 cleanall:
-	rm -rf $(BUILD_DIR)/* $(BUILD_DIR)/.stamp $(BUILD_DIR)/.ccache
+	rm -rf $(OUTPUT_DIR)/* $(OUTPUT_DIR)/.stamp $(OUTPUT_DIR)/.ccache
 
 
 # Build OS release
 release:
-	./$(CONFIG)/process release | tee $(BUILD_DIR)/process.log
+	./$(CONFIG)/process release | tee $(OUTPUT_DIR)/process.log
 
 
 # Build OS image
 image:
-	./$(CONFIG)/process image | tee $(BUILD_DIR)/process.log
+	./$(CONFIG)/process image | tee $(OUTPUT_DIR)/process.log
 
 
 # Display the cache statistics for
 cachestats:
-	./$(CONFIG)/tools/cachestats | tee $(BUILD_DIR)/cachestats.txt
+	./$(CONFIG)/tools/cachestats | tee $(OUTPUT_DIR)/cachestats.txt
 
 
 # Display the building plan for the current distribution
 viewplan:
-	./$(CONFIG)/tools/viewplan | tee $(BUILD_DIR)/viewplan_$(DEVICE).txt
+	./$(CONFIG)/tools/viewplan | tee $(OUTPUT_DIR)/viewplan_$(DEVICE).txt
 
 
 # Display specified package attributes and also the dependencies' list
@@ -80,13 +83,16 @@ viewpack:
 ifneq ($(package),)
 	./$(CONFIG)/tools/viewpack $(package)
 else
-	echo "Please specify 'package' parameter"
+	@printf "\n* Please specify 'package' parameter!\n\n"
+	exit 1
 endif
 
 
 # Display building process
-dashboard:
-	./$(CONFIG)/tools/dashboard
+viewbuild:
+	./$(CONFIG)/tools/viewbuild
+
+monitor:viewbuild
 
 
 # Display the help text
@@ -94,7 +100,7 @@ help:
 	echo -e "\
 \nSYNOPSIS\n\
        make build|install|clean|cleanall|release|image\n\
-       make cachestats|viewplan|dashboard\n\
+       make cachestats|viewplan|viewpack|viewbuild\n\
        make help\n\
 \nDESCRIPTION\n\
     Executes one of the make tasks defined through this Makefile flow, according \n\
@@ -121,11 +127,30 @@ help:
                   Displays cache statistics\n\
     viewplan\n\
                   Shows the building plan for the current DEVICE\n\
-    dashboard\n\
+    viewpack\n\
+                  Shows the package descriptor and properties\n\
+    viewbuild\n\
                   Display the real time build process for the current DEVICE\n\
     help\n\
                   Shows this text\n\
-\nEXAMPLES\n\
+\n\
+    There are couple of system variables that can be set in order to drive the building \n\
+    process:\n\
+    DEVICE\n\
+                  Indicates the target device type. Possible options are: RPi, RPi2, RPi4\n\
+                  Default value is 'RPi'.\n\
+    OUTPUT\n\
+                  Describe the local file system location where the build process will be  \n\
+                  executed. Default value is '$(ROOT)/../Clue-out'\n\
+    STATUS\n\
+                  Provides and indication about distribution build status. All possible values\n\
+                  are: stable, devel, nightly, daily, weekly, monthly, Default value is 'devel'\n\
+    DEBUG\n\
+                  Debug compilation flag (yes/no). Default value is 'no'\n\
+    VERBOSE\n\
+                  Verbose compilation mode (yes/no). Default value is 'yes'\n\
+\n\
+EXAMPLES\n\
        build the entire distribution ('build' make task is default)\n\
        > make\n\
        > make build\n\n\
@@ -137,6 +162,6 @@ help:
        > make release\n\n\
        make system release and OS image\n\
        > make image\n\n\
-       view the building plan (it is saved in viewplan.txt file from BUILD_DIR folder)\n\
+       view the building plan (it is saved in viewplan.txt file from $(OUTPUT_DIR) folder)\n\
        > make viewplan\n\n\
 "

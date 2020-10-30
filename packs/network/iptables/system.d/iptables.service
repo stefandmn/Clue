@@ -1,0 +1,17 @@
+[Unit]
+Description=IPTABLES Packet Filtering
+ConditionPathExists=/usr/lib/clue/iptables_helper
+ConditionPathExists=|/clue/.cache/services/iptables.conf
+Before=network.target
+Wants=network.target
+
+[Service]
+Type=oneshot
+EnvironmentFile=-/clue/.cache/services/iptables.conf
+ExecStart=/usr/lib/clue/iptables_helper enable
+ExecReload=/usr/lib/clue/iptables_helper enable
+ExecStop=/usr/lib/clue/iptables_helper disable
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

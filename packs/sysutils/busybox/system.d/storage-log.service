@@ -1,0 +1,9 @@
+[Unit]
+Description=Create Persistent Log Directory on /clue
+DefaultDependencies=no
+RequiresMountsFor=/clue
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/mkdir -p /clue/.cache/log/journal

@@ -1,0 +1,13 @@
+[Unit]
+Description=Sapphire remote start script
+Before=kodi.service
+
+[Service]
+Type=oneshot
+Environment=HOME=/clue
+ExecStartPre=/clue/.kodi/addons/driver.remote.sapphire/bin/sapphire-config
+ExecStart=/clue/.kodi/addons/driver.remote.sapphire/bin/sapphire_startup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

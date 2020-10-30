@@ -1,0 +1,5 @@
+#!/bin/bash
+
+. ${SYSTEM}/options ""
+
+${TOOLCHAIN}/bin/ccache -s

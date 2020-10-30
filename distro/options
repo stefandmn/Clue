@@ -1,0 +1,778 @@
+# OS_VERSION: OS Version
+OS_VERSION="2.0"
+
+# ADDON_VERSION: Addon version
+ADDON_VERSION="2.0.0"
+
+# Name of the Distro to build (full name, without special characters)
+DISTRONAME="Clue"
+
+# Set status, use "devel" for development version and stable for any stable version
+DISTROSTATUS="devel"
+
+# LTO (Link Time Optimization) support
+LTO_SUPPORT="yes"
+
+# GOLD (Google Linker) support
+GOLD_SUPPORT="yes"
+
+# HARDENING (security relevant linker and compiler flags) support
+HARDENING_SUPPORT="no"
+
+# short project description
+DESCRIPTION="Clue Media Experience"
+
+# Root password to integrate in the target system
+ROOT_PASSWORD="clue"
+
+# Install glibc locales to the build (yes / no)
+GLIBC_LOCALES="yes"
+
+# Mediacenter to use (kodi / no)
+MEDIACENTER="kodi"
+
+# Skins to install (Estuary)
+# Space separated list is supported,
+# e.g. SKINS="Estuary"
+SKINS="Estuary"
+
+# Default Skin (Estuary)
+SKIN_DEFAULT="Estuary"
+
+# install extra subtitle Fonts for KODI (yes / no)
+KODI_EXTRA_FONTS="yes"
+
+# build and install PulseAudio support (yes / no)
+PULSEAUDIO_SUPPORT="yes"
+
+# build and install espeak support (yes / no)
+ESPEAK_SUPPORT="yes"
+
+# build and install with BluRay support (yes / no)
+KODI_BLURAY_SUPPORT="yes"
+
+# build and install with BD+ support
+# (BD+ decryption support in KODI) (yes / no)
+BLURAY_BDPLUS_SUPPORT="yes"
+
+# build and install with AACS support
+# (BD decryption support in KODI) (yes / no)
+BLURAY_AACS_SUPPORT="yes"
+
+# build and install with DVDCSS support
+# (DVD decryption support in KODI) (yes / no)
+KODI_DVDCSS_SUPPORT="yes"
+
+# additional drivers to install:
+# for a list of additional drivers see ${PACKAGES}/linux-drivers
+# Space separated list is supported,
+# e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
+ADDITIONAL_DRIVERS="RTL8192CU RTL8192DU RTL8192EU RTL8188EU RTL8812AU rpi-cirrus-config bcm2835-driver"
+
+# build and install bluetooth support (yes / no)
+BLUETOOTH_SUPPORT="yes"
+
+# build and install with KODI webfrontend (yes / no)
+KODI_WEBSERVER_SUPPORT="yes"
+
+# build and install Avahi (Zeroconf) daemon (yes / no)
+AVAHI_DAEMON="yes"
+
+# build with UPnP support (yes / no)
+KODI_UPNP_SUPPORT="yes"
+
+# build with MySQL support (mysql / mariadb / none)
+KODI_MYSQL_SUPPORT="mariadb"
+
+# build xbmc with optical drive support (yes / no)
+KODI_OPTICAL_SUPPORT="yes"
+
+# build with AirPlay support (stream videos from iDevices to KODI) (yes / no)
+KODI_AIRPLAY_SUPPORT="yes"
+
+# build with AirTunes support (stream music from iDevices to KODI) (yes / no)
+KODI_AIRTUNES_SUPPORT="yes"
+
+# build with libnfs support (mounting nfs shares with KODI) (yes / no)
+KODI_NFS_SUPPORT="yes"
+
+# build with Samba Client support (mounting SAMBA shares with KODI) (yes / no)
+KODI_SAMBA_SUPPORT="yes"
+
+# build with NFS support (mounting nfs shares via the OS) (yes / no)
+NFS_SUPPORT="yes"
+
+# build with Samba Client support (mounting samba shares via the OS) (yes / no)
+SAMBA_SUPPORT="yes"
+
+# build and install Samba Server (yes / no)
+SAMBA_SERVER="yes"
+
+# build and install SFTP Server (yes / no)
+SFTP_SERVER="yes"
+
+# build and install OpenVPN support (yes / no)
+OPENVPN_SUPPORT="yes"
+
+# build and install WireGuard support (yes / no)
+WIREGUARD_SUPPORT="yes"
+
+# build and install diskmounter support (udevil)
+# this service provide auto mounting support for external drives in the
+# mediacenter also automount internally drives at boottime via udev (yes / no)
+UDEVIL="yes"
+
+# build and install exFAT fuse support (yes / no)
+EXFAT="yes"
+
+# build and install NTFS-3G fuse support (yes / no)
+NTFS3G="yes"
+
+# build and install hfs filesystem utilities (yes / no)
+HFSTOOLS="yes"
+
+# build and install Joystick support (yes / no)
+JOYSTICK_SUPPORT="yes"
+
+# build and install CEC adapter support (yes / no)
+CEC_SUPPORT="yes"
+
+# build and install CEC framework support (yes / no)
+CEC_FRAMEWORK_SUPPORT="no"
+
+# build and install iSCSI support - iscsistart (yes / no)
+ISCSI_SUPPORT="yes"
+
+# Support for partitioning and formating disks in initramfs (yes / no)
+# This adds support for parted and mkfs.ext3/4 to initramfs for OEM usage
+INITRAMFS_PARTED_SUPPORT="no"
+
+# build with swap support (yes / no)
+SWAP_SUPPORT="yes"
+
+# swap support enabled per default (yes / no)
+SWAP_ENABLED_DEFAULT="no"
+
+# swapfile size if SWAP_SUPPORT=yes in MB
+SWAPFILESIZE="128"
+
+# additional packages to install:
+# Space separated list is supported,
+# e.g. ADDITIONAL_PACKAGES="PACKAGE1 PACKAGE2"
+ADDITIONAL_PACKAGES=""
+
+# build and install nano text editor (yes / no)
+NANO_EDITOR="yes"
+
+# cron support (yes / no)
+CRON_SUPPORT="yes"
+
+# Distribution Specific source location
+DISTRO_MIRROR="http://sources.libreelec.tv/mirror"
+DISTRO_SRC="http://sources.libreelec.tv/${DISTROSTATUS}"
+
+# Addon Server Url
+ADDON_SERVER_URL="https://addons.libreelec.tv"
+
+# Sourceforge download site
+SOURCEFORGE_SRC="https://prdownloads.sourceforge.net"
+
+# set the addon dirs
+ADDON_PATH="${ADDON_VERSION}/${DEVICE}/${TARGET_ARCH}"
+ADDON_URL="${ADDON_SERVER_URL}/${ADDON_PATH}"
+
+# Default size of system partition, in MB, eg. 512
+SYSTEM_SIZE=512
+
+# Default system partition offset, in sectors, eg. 2048
+SYSTEM_PART_START=8192
+
+# Configure debug groups (space delimited key=value pairs, with each value comma-delimited) and default group when DEBUG=yes
+# Use ! or - prefix to prevent a dependent package from being built with debug. Add + suffix to build dependencies with debug.
+DEBUG_GROUPS="kodi+=kodi+,kodi-platform+,p8-platform+,!mesa"
+DEBUG_GROUP_YES="kodi+"
+
+# Default supported get handlers (archive, git, file etc.)
+GET_HANDLER_SUPPORT="archive"
+
+# Partition labels for USB/SD installation media
+DISTRO_BOOTLABEL="BOOT"
+DISTRO_DISKLABEL="HOME"
+
+# Settings package name - blank if not required
+DISTRO_PKG_SETTINGS="LibreELEC-settings"
+
+# IR remote protocols supported in default config
+IR_REMOTE_PROTOCOLS="RC6 NEC"
+
+# IR remote keymaps supported in default config
+IR_REMOTE_KEYMAPS="rc6_mce xbox_360 xbox_one"
+
+# Bootloader to use (bcm2835-bootloader)
+BOOTLOADER="bcm2835-bootloader"
+
+# Kernel target
+KERNEL_TARGET="zImage"
+
+# Additional kernel make parameters
+KERNEL_MAKE_EXTRACMD="dtbs"
+
+# Kernel to use. values can be:
+# default:  default mainline kernel
+LINUX="raspberrypi"
+
+# Project CFLAGS
+PROJECT_CFLAGS=""
+
+# SquashFS compression method (gzip / lzo / xz / zstd)
+SQUASHFS_COMPRESSION="lzo"
+
+# build and install ALSA Audio support (yes / no)
+ALSA_SUPPORT="yes"
+
+# OpenGL(X) implementation to use (no / mesa)
+OPENGL_SUPPORT="no"
+OPENGL="no"
+
+# OpenGL-ES implementation to use (no / bcm2835-driver / mesa)
+OPENGLES_SUPPORT="yes"
+OPENGLES="bcm2835-driver"
+
+# include uvesafb support (yes / no)
+UVESAFB_SUPPORT="no"
+
+# Xorg Graphic drivers to use (all / vc4 / none)
+# Space separated list is supported,
+# e.g. GRAPHIC_DRIVERS="vc4" (for RPi4)
+GRAPHIC_DRIVERS=""
+
+# Use a vendor specific KODI repo
+KODI_VENDOR="raspberrypi"
+
+# KODI Player implementation to use (default / bcm2835-driver / mesa)
+KODIPLAYER_DRIVER="bcm2835-driver"
+
+# Modules to install in initramfs for early boot
+INITRAMFS_MODULES=""
+
+# additional Firmware to use (dvb-firmware, misc-firmware, wlan-firmware)
+# Space separated list is supported,
+# e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
+FIRMWARE="misc-firmware wlan-firmware dvb-firmware brcmfmac_sdio-firmware"
+
+# build debug with valgrind (yes / no)
+# Not available for armv6. Increases image size significantly
+VALGRIND="no"
+
+# kernel image name
+KERNEL_NAME="kernel.img"
+
+# build and install driver addons (yes / no)
+DRIVER_ADDONS_SUPPORT="yes"
+
+# driver addons to install:
+# for a list of additional drivers see ${PACKAGES}/linux-driver-addons
+# Space separated list is supported,
+DRIVER_ADDONS="crazycat dvb-latest"
+
+# debug tty path
+DEBUG_TTY="/dev/console"
+
+# debug flag
+DEBUG="no"
+
+# Do not build as root. Ever.
+if [[ "${EUID}" -eq 0 ]]; then
+	echo "Building as the root user is NOT supported. Use a regular user account for the build." 1>&2
+	exit 1
+fi
+
+# Spaces in paths are verboten
+if [[ ${PWD} =~ [[:space:]] ]]; then
+	echo "Current PWD: \"${PWD}\"" 1>&2
+	echo 1>&2
+	echo "Building in a folder that includes spaces is NOT supported. Use a folder without spaces." 1>&2
+	exit 1
+fi
+
+# set default language for buildsystem
+export LC_ALL=C
+
+# set default independent variables
+ROOT="${PWD}"
+
+# setup TARGET_ARCH
+TARGET_ARCH="arm"
+
+# include helper functions
+. ${SYSTEM}/functions
+
+# read DEVICE options if available
+if [ -f "${SYSTEM}/devices/${DEVICE}/options" ]; then
+	. "${SYSTEM}/devices/${DEVICE}/options"
+fi
+
+# read global persistent options from $HOME if available
+if [ -f "${HOME}/.clue/options" ]; then
+	. "${HOME}/.clue/options"
+fi
+
+# projects can set KERNEL_NAME (kernel.img)
+KERNEL_NAME="${KERNEL_NAME:-KERNEL}"
+LINUX_DEPENDS="${SYSTEM}/linux ${SYSTEM}/patches/linux ${SYSTEM}/${PACKAGES}/linux ${ROOT}/${PACKAGES}/linux"
+[ -n "${DEVICE}" ] && LINUX_DEPENDS+=" ${SYSTEM}/devices/${DEVICE}/linux ${SYSTEM}/devices/${DEVICE}/patches/linux ${SYSTEM}/devices/${DEVICE}/${PACKAGES}/linux"
+
+# Need to point to your actual cc
+# If you have ccache installed, take care that LOCAL_CC does not point to it
+[ -z "${LOCAL_CC}" ] && export LOCAL_CC="$(command -v gcc)"
+
+if [ -z "${LOCAL_CC}" ]; then
+	die "***** Please install gcc *****" "127"
+fi
+
+# Need to point to your actual g++
+# If you have ccache installed, take care that LOCAL_CXX does not point to it
+[ -z "${LOCAL_CXX}" ] && export LOCAL_CXX="$(command -v g++)"
+
+# verbose compilation mode (yes/no)
+VERBOSE="${VERBOSE:-yes}"
+
+# Concurrency make level (-j option)
+#  Try values between 1 and number of processor cores present.
+#  default: use all cores
+[ -z "${CONCURRENCY_MAKE_LEVEL}" ] && export CONCURRENCY_MAKE_LEVEL=$(nproc)
+
+# cache size for ccache
+# Set the maximum size of the files stored in the cache. You can specify a
+# value in gigabytes, megabytes or kilobytes by appending a G, M or K to the
+# value. The default is gigabytes. The actual value stored is rounded down to
+# the nearest multiple of 16 kilobytes.  Keep in mind this per project .ccache
+# directory.
+CCACHE_CACHE_SIZE="5G"
+
+# The TARGET_CPU variable controls which processor should be targeted for generated code.
+# Valid TARGET_CPU for Raspberry Pi based devices are:
+# arm1176jzf-s cortex-a7 cortex-a53
+if [ "$DEVICE" = "RPi" -o "$DEVICE" = "Slice" ]; then
+	TARGET_CPU="arm1176jzf-s"
+elif [ "$DEVICE" = "RPi2" -o "$DEVICE" = "Slice3" ]; then
+	TARGET_CPU="cortex-a7"
+elif [ "$DEVICE" = "RPi4" ]; then
+	TARGET_CPU="cortex-a53"
+	TARGET_CPU_FLAGS="+crc"
+fi
+
+# TARGET_FLOAT:
+# Specifies which floating-point ABI to use. Permissible values are:
+# soft hard
+TARGET_FLOAT="hard"
+
+# Valid TARGET_FPU for Raspberry Pi based devices:
+# This specifies what floating point hardware (or hardware emulation) is
+# available on the target. Permissible names are:
+# vfp neon-vfpv4 neon-fp-armv8
+if [ "$DEVICE" = "RPi" -o "$DEVICE" = "Slice" ]; then
+	TARGET_FPU="vfp"
+elif [ "$DEVICE" = "RPi2" -o "$DEVICE" = "Slice3" ]; then
+	TARGET_FPU="neon-vfpv4"
+elif [ "$DEVICE" = "RPi4" ]; then
+	TARGET_FPU="neon-fp-armv8"
+fi
+TARGET_FEATURES="32bit"
+
+# Check configuration
+check_config
+
+# Include additional variables and environment configurations for path
+# setup initial directories (relative to root)
+SOURCES=${SOURCES_DIR:-${BUILD_DIR}/sources}
+TARGETS=${TARGETS_DIR:-${BUILD_DIR}/targets}
+ADDONS=addons
+
+# TARGET_CPU:
+# arm2 arm250 arm3 arm6 arm60 arm600 arm610 arm620 arm7 arm7m arm7d
+# arm7dm arm7di arm7dmi arm70 arm700 arm700i arm710 arm710c
+# arm7100 arm720 arm7500 arm7500fe arm7tdmi arm7tdmi-s arm710t
+# arm720t arm740t strongarm strongarm110 strongarm1100
+# strongarm1110 arm8 arm810 arm9 arm9e arm920 arm920t arm922t
+# arm946e-s arm966e-s arm968e-s arm926ej-s arm940t arm9tdmi
+# arm10tdmi arm1020t arm1026ej-s arm10e arm1020e arm1022e
+# arm1136j-s arm1136jf-s mpcore mpcorenovfp arm1156t2-s
+# arm1176jz-s arm1176jzf-s cortex-a8 cortex-a9 cortex-r4
+# cortex-r4f cortex-m3 cortex-m1 xscale iwmmxt iwmmxt2 ep9312.
+
+# TARGET_FPU:
+# This specifies what floating point hardware (or hardware emulation) is
+# available on the target. Permissible names are:
+# fpa fpe2 fpe3 maverick vfp vfpv3 vfpv3-fp16 vfpv3-d16 vfpv3-d16-fp16
+# vfpv3xd vfpv3xd-fp16 neon neon-fp16 vfpv4 vfpv4-d16 fpv4-sp-d16
+# neon-vfpv4.
+
+# determine architecture's family
+case $TARGET_CPU in
+	arm1176jzf-s)
+		TARGET_SUBARCH=armv6zk
+		TARGET_ABI=eabi
+		TARGET_EXTRA_FLAGS="-mcpu=$TARGET_CPU"
+		TARGET_FPU_FLAGS="-mfloat-abi=$TARGET_FLOAT -mfpu=$TARGET_FPU"
+		;;
+	cortex-a7 | cortex-a15 | cortex-a17 | cortex-a15.cortex-a7 | cortex-a17.cortex-a7)
+		TARGET_SUBARCH=armv7ve
+		TARGET_ABI=eabi
+		TARGET_EXTRA_FLAGS="-mcpu=$TARGET_CPU"
+		TARGET_FPU_FLAGS="-mfloat-abi=$TARGET_FLOAT -mfpu=$TARGET_FPU"
+		TARGET_FEATURES+=" neon"
+		;;
+	cortex-a5 | cortex-a8 | cortex-a9)
+		TARGET_SUBARCH=armv7-a
+		TARGET_ABI=eabi
+		TARGET_EXTRA_FLAGS="-mcpu=$TARGET_CPU"
+		TARGET_FPU_FLAGS="-mfloat-abi=$TARGET_FLOAT -mfpu=$TARGET_FPU"
+		TARGET_FEATURES+=" neon"
+		;;
+	cortex-a53 | cortex-a72.cortex-a53)
+		TARGET_SUBARCH=armv8-a
+		TARGET_ABI=eabi
+		TARGET_EXTRA_FLAGS="-mcpu=${TARGET_CPU}"
+		TARGET_FPU_FLAGS="-mfloat-abi=$TARGET_FLOAT -mfpu=$TARGET_FPU"
+		TARGET_FEATURES+=" neon"
+		;;
+esac
+
+TARGET_VARIANT="${TARGET_SUBARCH}${TARGET_CPU_FLAGS}"
+TARGET_GCC_ARCH=${TARGET_SUBARCH/-/}
+TARGET_KERNEL_ARCH=${TARGET_KERNEL_ARCH:-arm}
+
+# setup ARCH specific *FLAGS
+TARGET_CFLAGS="-march=$TARGET_VARIANT -mtune=$TARGET_CPU -mabi=aapcs-linux -Wno-psabi -Wa,-mno-warn-deprecated $TARGET_EXTRA_FLAGS"
+[ -n "$TARGET_FPU" ] && TARGET_CFLAGS="$TARGET_CFLAGS $TARGET_FPU_FLAGS"
+TARGET_LDFLAGS="-march=$TARGET_VARIANT -mtune=$TARGET_CPU"
+GCC_OPTS="--with-abi=aapcs-linux --with-arch=$TARGET_SUBARCH --with-float=$TARGET_FLOAT --with-fpu=$TARGET_FPU"
+
+[ -z "${HOST_NAME}" ] && export HOST_NAME="$($LOCAL_CC -dumpmachine)"
+TARGET_NAME=$TARGET_GCC_ARCH-libreelec-linux-gnu${TARGET_ABI}
+
+if [ "${DISTROSTATUS}" = "devel" ]; then
+	BUILD=${BUILD_DIR}/build.${DISTRONAME}-${OS_VERSION}.${DISTROSTATUS}-${DEVICE}
+else
+	BUILD=${BUILD_DIR}/build.${DISTRONAME}-${OS_VERSION}-${DEVICE}
+fi
+
+BUILDPACKS=${BUILD}/${PACKAGES}
+THREAD_CONTROL=${BUILD}/.threads
+TARGET_ADDONS="${TARGETS}/${ADDONS}/${ADDON_PATH}"
+ADDON_BUILD="${BUILD}/${ADDONS}/$1"
+STAMPS_NOARCH=.stamps
+STAMPS=${BUILD}/.stamps
+STAMPS_INSTALL=${BUILD}/image/.stamps
+TOOLCHAIN=${BUILD}/toolchain
+SYSROOT_PREFIX=${TOOLCHAIN}/${TARGET_NAME}/sysroot
+LIB_PREFIX=${SYSROOT_PREFIX}/usr
+TARGET_PREFIX=${TOOLCHAIN}/bin/$TARGET_NAME-
+
+# use ARM toolchain on 64/32 split builds
+if [ -z "$KERNEL_TOOLCHAIN" -a "$TARGET_KERNEL_ARCH" = "arm64" -a "$TARGET_ARCH" = "arm" ]; then
+	KERNEL_TOOLCHAIN="aarch64-linux-gnu"
+fi
+if [ -n "$KERNEL_TOOLCHAIN" ]; then
+	TARGET_KERNEL_PREFIX=$TOOLCHAIN/lib/gcc-arm-$KERNEL_TOOLCHAIN/bin/$KERNEL_TOOLCHAIN-
+else
+	TARGET_KERNEL_PREFIX=$TARGET_PREFIX
+fi
+
+FAKEROOT_SCRIPT=$BUILD/.fakeroot
+
+if [ -z "$INSTALL" ]; then
+	INSTALL=$BUILD/image/system
+fi
+INSTALL_INIT=$BUILD/image/initramfs/root-image
+
+MAKE="$TOOLCHAIN/bin/make"
+
+XORG_PATH_DRI=/usr/lib/dri
+XORG_PATH_XKB=/usr/share/X11/xkb
+XORG_PATH_XKB_OUTPUT=/var/lib/xkb
+XORG_PATH_RGB=/usr/lib/X11/rgb
+XORG_PATH_MODULES=/usr/lib/xorg/modules
+XORG_PATH_DRIVERS=/usr/lib/xorg/modules/drivers
+
+## optimize environment configuration
+GCC_OPTIM="-Os"
+# Linker hash-style is set to gnu via gcc default
+LD_OPTIM="-Wl,--as-needed"
+
+if [ "${BUILD_WITH_DEBUG}" = "yes" ]; then
+	TARGET_CFLAGS="$TARGET_CFLAGS -ggdb"
+	TARGET_CXXFLAGS="$TARGET_CXXFLAGS -ggdb"
+	TARGET_LDFLAGS="$TARGET_LDFLAGS -ggdb"
+else
+	TARGET_CFLAGS="$TARGET_CFLAGS -fomit-frame-pointer"
+	TARGET_CXXFLAGS="$TARGET_CXXFLAGS -fomit-frame-pointer"
+	TARGET_LDFLAGS="$TARGET_LDFLAGS"
+fi
+
+NINJA_OPTS=""
+
+TARGET_CPPFLAGS=""
+TARGET_CFLAGS="$TARGET_CFLAGS -Wall -pipe $GCC_OPTIM $PROJECT_CFLAGS"
+TARGET_CXXFLAGS="$TARGET_CFLAGS"
+TARGET_LDFLAGS="$TARGET_LDFLAGS $LD_OPTIM"
+TARGET_LIBDIR="$SYSROOT_PREFIX/lib $SYSROOT_PREFIX/usr/lib"
+TARGET_INCDIR="$SYSROOT_PREFIX/include $SYSROOT_PREFIX/usr/include"
+
+HOST_CPPFLAGS=""
+HOST_CFLAGS="-march=native -O2 -Wall -pipe -I$TOOLCHAIN/include"
+HOST_CXXFLAGS="$HOST_CFLAGS"
+HOST_LDFLAGS="-Wl,-rpath,$TOOLCHAIN/lib -L$TOOLCHAIN/lib"
+HOST_INCDIR="$TOOLCHAIN/include /usr/include"
+
+# work around Ubuntu default C*FLAGS
+# see https://wiki.ubuntu.com/ToolChain/CompilerFlags#A-Wformat_-Wformat-security
+HOST_CFLAGS="$HOST_CFLAGS -Wno-format-security"
+HOST_CXXFLAGS="$HOST_CXXFLAGS -Wno-format-security"
+
+# lto flags
+FLAGS_OPTIM_LTO_NO_PARALLEL="-flto"
+FLAGS_OPTIM_LTO_PARALLEL="-flto=${CONCURRENCY_MAKE_LEVEL}"
+FLAGS_OPTIM_LTO_NO_FAT="-fno-fat-lto-objects"
+FLAGS_OPTIM_LTO_FAT="-ffat-lto-objects"
+FLAGS_OPTIM_LTO_OFF="-fno-lto"
+LDFLAGS_OPTIM_LTO_COMMON="-fuse-linker-plugin"
+
+# gold flags
+LDFLAGS_OPTIM_GOLD="-fuse-ld=gold"
+
+# position-independent code
+CFLAGS_OPTIM_PIC="-fPIC -DPIC"
+CXXFLAGS_OPTIM_PIC="-fPIC -DPIC"
+LDFLAGS_OPTIM_PIC="-fPIC"
+
+# hardening support
+# TODO: basiclly copied from debian 9, should adjust for LE
+CFLAGS_OPTIM_HARDENING="-fstack-protector-strong -Wformat -Werror=format-security -fPIE"
+CXXFLAGS_OPTIM_HARDENING="-fstack-protector-strong -Wformat -Werror=format-security -fPIE"
+CPPFLAGS_OPTIM_HARDENING="-D_FORTIFY_SOURCE=2"
+LDFLAGS_OPTIM_HARDENING="-Wl,-z,relro -Wl,-z,now"
+
+# add distro specific library dirs
+if [ -z "$HOST_LIBDIR" ]; then
+	HOST_LIBDIR="$TOOLCHAIN/lib"
+
+	# ubuntu/debian specific "multiarch support"
+	export MACHINE_HARDWARE_NAME="$(uname -m)"
+	export MACHINE_HARDWARE_PLATFORM="$(uname -i)"
+	FAMILY_TRIPLET=${HOST_NAME/${MACHINE_HARDWARE_NAME}/${MACHINE_HARDWARE_PLATFORM}}
+	if [ -d /lib/$FAMILY_TRIPLET ]; then
+		HOST_LIBDIR="$HOST_LIBDIR /lib/$FAMILY_TRIPLET"
+	fi
+	if [ -d /usr/lib/$FAMILY_TRIPLET ]; then
+		HOST_LIBDIR="$HOST_LIBDIR /usr/lib/$FAMILY_TRIPLET"
+	fi
+
+	# default dirs
+	export HOST_LIBDIR="$HOST_LIBDIR /lib /usr/lib"
+fi
+
+## setup build environment
+if [ -z "$CCACHE_DIR" ]; then
+	export CCACHE_DIR=${BUILD_DIR}/.ccache
+fi
+
+if [[ -z "$PATH" || ("$PATH" != "$TOOLCHAIN/bin:$TOOLCHAIN/sbin" && "$PATH" == "${PATH#$TOOLCHAIN/bin:$TOOLCHAIN/sbin:}") ]]; then
+	export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/sbin${PATH:+":$PATH"}"
+fi
+
+VERSION_SUFFIX=$TARGET_ARCH
+
+# redirect formatted output
+export BUILD_INDENT_SIZE=4
+SILENT_OUT=3
+VERBOSE_OUT=4
+
+if [ "$VERBOSE" = yes ]; then
+	exec 3>&1
+	exec 4>&1
+else
+	exec 3>&2
+	exec 4>/dev/null
+fi
+
+unset LD_LIBRARY_PATH
+
+# multilib? nah
+unset CONFIG_SITE
+
+# meh suse
+unset PYTHONSTARTUP
+unset PYTHONPATH
+
+## package processing
+
+# If the package caches are unset, then populate them
+init_package_cache
+
+# set package metadata
+source_package "${1}"
+
+## Multithread configuration
+THREADCOUNT=${THREADCOUNT:-100%}
+
+# This function is passed a list of package.mk paths to be processed.
+# Each package.mk is sourced with relevant variables output in JSON format.
+json_worker() {
+	local packages="$@"
+	local pkgpath hierarchy exited
+
+	exit() { exited=1; }
+
+	. ${SYSTEM}/options ""
+
+	for pkgpath in ${packages}; do
+		pkgpath="${pkgpath%%@*}"
+
+		exited=0
+		if ! source_package "${pkgpath}/package.mk" &>/dev/null; then
+			unset -f exit
+			die "$(print_color CLR_ERROR "FAILURE: sourcing package ${pkgpath}/package.mk")"
+		fi
+
+		[ ${exited} -eq 1 ] && continue
+
+		[[ ${pkgpath} =~ ^${ROOT}/${PACKAGES}/ ]] && hierarchy="global" || hierarchy="local"
+
+		cat <<EOF
+  {
+    "name": "${PKG_NAME}",
+    "hierarchy": "${hierarchy}",
+    "section": "${PKG_SECTION}",
+    "bootstrap": "${PKG_DEPENDS_BOOTSTRAP}",
+    "init": "${PKG_DEPENDS_INIT}",
+    "host": "${PKG_DEPENDS_HOST}",
+    "target": "${PKG_DEPENDS_TARGET}"
+  },
+EOF
+	done
+}
+
+export -f json_worker
+
+# This function is passed the build instruction for a single job.
+# The function will run either "build <package>" or "install <package>".
+# ${slot} is the job slot number, ie. 1-8 when THREADCOUNT=8.
+# ${job} is the sequence within the total number of ${jobs}.
+package_worker() {
+	local slot=$1 job=$2 jobs=$3 args="$4"
+	local task pkgname result status
+	local addon istarget isaddon
+
+	export MTJOBID=${slot} MTMAXJOBS=${jobs}
+
+	read -r task pkgname <<<"${args}"
+
+	. ${SYSTEM}/options "${pkgname}"
+
+	[ ! -f "${THREAD_CONTROL}/parallel.pid" ] && echo "${PARALLEL_PID}" >"${THREAD_CONTROL}/parallel.pid"
+
+	${CONFIG}/${task} ${pkgname} 2>&1 && result=0 || result=1
+
+	[[ ${pkgname} =~ :target$ || "${pkgname//:/}" == "${pkgname}" ]] && istarget="yes" || istarget="no"
+
+	[[ "${MTADDONBUILD}" == "yes" && ("${PKG_IS_ADDON}" == "yes" || "${PKG_IS_ADDON}" == "embedded") ]] && isaddon="yes" || isaddon="no"
+
+	if [ "${isaddon}" = "yes" -a "${istarget}" = "yes" ]; then
+		if [ ${result} -eq 0 ]; then
+			${CONFIG}/install_addon ${pkgname} 2>&1 && result=0 || result=1
+		fi
+
+		if [ ${result} -ne 0 ]; then
+			if [ -d "${THREAD_CONTROL}/logs" ]; then
+				echo "${PKG_NAME} ${THREAD_CONTROL}/logs/${job}/stdout" >>"${THREAD_CONTROL}/addons.failed"
+			else
+				echo "${PKG_NAME}" >>"${THREAD_CONTROL}/addons.failed"
+			fi
+		fi
+	fi
+
+	(
+		flock --exclusive 95
+		[ ${result} -eq 0 ] && status="DONE" || status="FAIL"
+		num=$(<"${THREAD_CONTROL}/progress")
+		mv "${THREAD_CONTROL}/progress" "${THREAD_CONTROL}/progress.prev"
+		num=$((num + 1))
+		echo ${num} >"${THREAD_CONTROL}/progress"
+		printf "[%0*d/%0*d] [%-4s] %-7s %s\n" ${#jobs} ${num} ${#jobs} ${jobs} "${status}" "${task}" "${pkgname}" >&2
+	) 95>"${THREAD_CONTROL}/locks/.progress"
+
+	if [ ${result} -eq 0 ]; then
+		pkg_lock_status "IDLE"
+	else
+		pkg_lock_status "FAILED" "${pkgname}" "${task}"
+
+		print_color CLR_ERROR "FAILURE: ${CONFIG}/${task} ${pkgname} has failed!\n"
+
+		if [ -d "${THREAD_CONTROL}/logs" ]; then
+			cat >&2 <<EOF
+
+The following logs for this failure are available:
+  stdout: ${THREAD_CONTROL}/logs/${job}/stdout
+  stderr: ${THREAD_CONTROL}/logs/${job}/stderr
+
+EOF
+		fi
+	fi
+
+	return ${result}
+}
+
+export -f package_worker
+
+start_multithread_build() {
+	local singlethread buildopts result=0
+
+	# init thread control folder
+	rm -rf "${THREAD_CONTROL}"
+	mkdir -p "${THREAD_CONTROL}/locks"
+	echo -1 >"${THREAD_CONTROL}/progress.prev"
+	echo 0 >"${THREAD_CONTROL}/progress"
+	echo 0 >"${THREAD_CONTROL}/status.max"
+	touch "${THREAD_CONTROL}/status"
+
+	# Increase file descriptors if building one thread/package
+	[ "${THREADCOUNT}" = "0" ] && ulimit -n ${ULIMITN:-10240}
+
+	# Bootstrap GNU parallel
+	MTWITHLOCKS=no ${CONFIG}/build parallel:host 2>&1 || die "Unable to bootstrap parallel package"
+
+	# determine number of available slots for the given THREADCOUNT - optimise logging for single threaded builds
+	[ $(seq 1 32 | ${TOOLCHAIN}/bin/parallel --plain --no-notice --max-procs ${THREADCOUNT} echo {%} | sort -n | tail -1) -eq 1 ] && singlethread=yes || singlethread=no
+
+	# create a single log file by default for a single threaded build (or the builder is a masochist)
+	if [ "${singlethread}" = "yes" -a "${ONELOG,,}" != "no" ] || [ "${ONELOG,,}" = "yes" ]; then
+		buildopts+=" --ungroup"
+	else
+		mkdir -p "${THREAD_CONTROL}/logs"
+		buildopts+=" --group --results ${THREAD_CONTROL}/logs/{#}/"
+	fi
+
+	# When building addons, don't halt on error - keep building all ${PACKAGES}/addons
+	[ "${MTADDONBUILD}" = "yes" ] && buildopts+=" --halt never" || buildopts+=" --halt now,fail=1"
+
+	# pipefail: return value of a pipeline is the value of the last (rightmost) command to exit with a non-zero status
+	set -o pipefail
+
+	cat ${_CACHE_PACKAGE_GLOBAL} ${_CACHE_PACKAGE_LOCAL} |
+		${TOOLCHAIN}/bin/parallel --plain --no-notice --max-args 30 --halt now,fail=1 json_worker |
+		${CONFIG}/tools/planner.py --no-reorder --show-wants --build ${@} >"${THREAD_CONTROL}"/plan || result=1
+
+	if [ ${result} -eq 0 ]; then
+		cat "${THREAD_CONTROL}"/plan | awk '{print $1 " " $2}' |
+			MTBUILDSTART=$(date +%s) MTWITHLOCKS=yes ${TOOLCHAIN}/bin/parallel \
+				--plain --no-notice --max-procs ${THREADCOUNT} --joblog="${THREAD_CONTROL}/joblog" --plus ${buildopts} \
+				package_worker {%} {#} {##} {} || result=1
+		rm -f "${THREAD_CONTROL}/parallel.pid"
+	fi
+
+	set +o pipefail
+
+	return ${result}
+}

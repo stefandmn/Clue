@@ -1,0 +1,7 @@
+#!/bin/sh
+. /etc/profile
+oe_setup_addon tools.dotnet-runtime
+
+DOTNET_SYSTEM_GLOBALIZATION_INVARIANT="1" \
+LD_LIBRARY_PATH="$ADDON_DIR/libs:$LD_LIBRARY_PATH" \
+dotnet "$@"

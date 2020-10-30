@@ -1,0 +1,410 @@
+#!/bin/bash
+
+unset _CACHE_PACKAGE_LOCAL _CACHE_PACKAGE_GLOBAL _DEBUG_DEPENDS_LIST _DEBUG_PACKAGE_LIST
+
+. ${SYSTEM}/options ""
+
+${CONFIG}/tools/checkdeps
+
+# Setup both toolchain cmake configs to avoid potentially racy behaviour later.
+# Use a fork for host to isolate any variable modifications.
+(setup_toolchain host)
+setup_toolchain target
+
+# Display distribution configuration
+show_config
+echo -e "\n\n> Process started.."
+
+# Collect versioning details
+echo -e ">> Reading versioning details.."
+GIT_HASH=$(git rev-parse HEAD)
+
+if [ "${DISTROSTATUS}" = "devel" ]; then
+	GIT_ABBREV=${GIT_HASH:0:7}
+	DEVEL_VERSION=${DISTROSTATUS}
+	case "${BUILD_PERIODIC}" in
+		nightly)
+			DISTROSTATUS=nightly-$(date +%Y%m%d)-${GIT_ABBREV}
+			;;
+		daily)
+			DISTROSTATUS=daily-$(date +%Y%j)-${GIT_ABBREV}
+			;;
+		weekly)
+			DISTROSTATUS=weekly-$(date +%G%V)-${GIT_ABBREV}
+			;;
+		monthly)
+			DISTROSTATUS=monthly-$(date +%Y%m)-${GIT_ABBREV}
+			;;
+		*)
+			DISTROSTATUS=devel-$(date +%Y%m%d%H%M%S)-${GIT_ABBREV}
+			;;
+	esac
+fi
+
+CLUE_ARCH="${DEVICE}.${TARGET_ARCH}"
+TARGET_VERSION="${CLUE_ARCH}-${DISTROSTATUS}"
+
+if [ "${DEVEL_VERSION}" = "devel" ]; then
+	IMAGE_NAME="${DISTRONAME}-${CLUE_ARCH}-${OS_VERSION}-${DISTROSTATUS}"
+else
+	IMAGE_NAME="${DISTRONAME}-${TARGET_VERSION}"
+fi
+
+if [ -n "${IMAGE_SUFFIX}" ]; then
+	IMAGE_NAME="${IMAGE_NAME}-${IMAGE_SUFFIX}"
+fi
+
+echo "${IMAGE_NAME}" >${BUILD}/BUILD_FILENAME
+
+# Setup fakeroot
+echo ">> Building fake root.."
+rm -rf ${FAKEROOT_SCRIPT}   # remove ${FAKEROOT_SCRIPT} if it exist
+touch ${FAKEROOT_SCRIPT}    # create an empty ${FAKEROOT_SCRIPT}
+chmod +x ${FAKEROOT_SCRIPT} # make ${FAKEROOT_SCRIPT} executable
+echo "chown -R 0:0 ${INSTALL}" >>${FAKEROOT_SCRIPT}
+
+# Clean old install dirs
+rm -rf ${INSTALL}
+rm -rf ${STAMPS_INSTALL}
+mkdir -p ${INSTALL}
+
+# Create base layout of Clue read-only file system
+echo ">> Creating base layout of read-only file system.."
+for directory in etc dev proc run sys tmp usr var flash clue; do
+	mkdir -p ${INSTALL}/${directory}
+done
+
+# Build image contents
+echo ">> Building system packages.."
+MTADDONBUILD=no start_multithread_build image || die "Parallel build failure - see log for details. Time of failure: $(date)"
+
+echo -e "<< Successful build, finalizing OS structure and components..\n"
+
+# Create legacy sym links
+echo ">> Creating legacy sym links.."
+ln -sfn /var/media ${INSTALL}/media
+ln -sfn /usr/lib ${INSTALL}/lib
+ln -sfn /usr/bin ${INSTALL}/bin
+ln -sfn /usr/sbin ${INSTALL}/sbin
+
+echo "${TARGET_VERSION}" >${INSTALL}/etc/release
+
+# Create /etc/os-release
+echo ">> Creating /etc/os-release.."
+cat <<EOF >${INSTALL}/etc/os-release
+NAME="${DISTRONAME}"
+VERSION="${DISTROSTATUS}"
+ID="clue"
+VERSION_ID="${OS_VERSION}"
+PRETTY_NAME="${DISTRONAME} (${DISTROSTATUS})"
+HOME_URL="https://amsd.go.ro/clue"
+BUILD_ID="${GIT_HASH}"
+DEVICE="${DEVICE}"
+ARCH="${TARGET_ARCH}"
+EOF
+
+# Create /etc/issue
+echo ">> Creating /etc/issue.."
+cat <<EOF >${INSTALL}/etc/issue
+Welcome to ..
+              *****       **          **   **      ******
+            **           **          **   **      **
+           **           **          **   **      ****
+          **           **          **   **      **
+          *****       ******      *******      ******    OS.!
+
+This is an open OS that comes with ABSOLUTELY NO WARRANTY!
+
+EOF
+
+ln -sf /etc/issue ${INSTALL}/etc/motd
+
+# Copy system related files to filesystem
+echo ">> Copying system related files to filesystem.."
+if [ -d "${SYSTEM}/filesystem" ]; then
+	cp -PR ${SYSTEM}/filesystem/* ${INSTALL}
+	# Install project specific systemd services
+	for service in ${SYSTEM}/filesystem/usr/lib/systemd/system/*.service; do
+		if [ -f "${service}" ]; then
+			enable_service $(basename ${service})
+		fi
+	done
+fi
+
+# Copy DEVICE related files to filesystem
+echo ">> Copying DEVICE related files to filesystem.."
+if [ -n "${DEVICE}" -a -d "${SYSTEM}/devices/${DEVICE}/filesystem" ]; then
+	cp -PR ${SYSTEM}/devices/${DEVICE}/filesystem/* ${INSTALL}
+	# Install device specific systemd services
+	for service in ${SYSTEM}/devices/${DEVICE}/filesystem/usr/lib/systemd/system/*.service; do
+		if [ -f "${service}" ]; then
+			enable_service $(basename ${service})
+		fi
+	done
+fi
+
+# Run depmod for base overlay modules
+echo ">> Running depmod for base overlay modules.."
+MODVER=$(basename $(ls -d ${INSTALL}/usr/lib/kernel-overlays/base/lib/modules/*))
+find ${INSTALL}/usr/lib/kernel-overlays/base/lib/modules/${MODVER}/ -name *.ko |
+	sed -e "s,${INSTALL}/usr/lib/kernel-overlays/base/lib/modules/${MODVER}/,," \
+		>${INSTALL}/usr/lib/kernel-overlays/base/lib/modules/${MODVER}/modules.order
+${TOOLCHAIN}/bin/depmod -b ${INSTALL}/usr/lib/kernel-overlays/base -a -e -F "${BUILDPACKS}/linux-$(kernel_version)/System.map" ${MODVER} 2>&1
+
+# Strip kernel modules
+echo ">> Striping kernel modules.."
+for MOD in $(find ${INSTALL}/usr/lib/kernel-overlays/ -type f -name *.ko); do
+	${TARGET_KERNEL_PREFIX}strip --strip-debug ${MOD}
+done
+
+# Symlink overlayed modules to /usr/lib/modules
+echo ">> Symlinking overlayed modules to /usr/lib/modules.."
+ln -sT /var/lib/modules ${INSTALL}/usr/lib/modules
+
+# Symlink overlayed firmware to /usr/lib/firmware
+echo ">> Symlinking overlayed firmware to /usr/lib/firmware.."
+ln -sT /var/lib/firmware ${INSTALL}/usr/lib/firmware
+
+# Make target dir
+echo ">> Creating target folder.."
+mkdir -p ${TARGETS}
+rm -rf ${TARGETS}/${IMAGE_NAME}.kernel
+
+# Copy kernel to target dir
+echo ">> Copying kernel to target folder.."
+cp -PR ${BUILDPACKS}/linux-$(kernel_version)/arch/${TARGET_KERNEL_ARCH}/boot/${KERNEL_TARGET} ${TARGETS}/${IMAGE_NAME}.kernel
+chmod 0644 ${TARGETS}/${IMAGE_NAME}.kernel
+
+# Set mksquashfs options for each compression method
+echo ">> Setting mksquashfs options for each compression method.."
+if [ -z "${SQUASHFS_COMPRESSION_OPTION}" ]; then
+	if [ "${SQUASHFS_COMPRESSION:-gzip}" = "gzip" ]; then
+		SQUASHFS_COMPRESSION_OPTION="-Xcompression-level 9 -b 262144"
+	elif [ "${SQUASHFS_COMPRESSION}" = "lzo" ]; then
+		SQUASHFS_COMPRESSION_OPTION="-Xcompression-level 9 -b 524288"
+	elif [ "${SQUASHFS_COMPRESSION}" = "zstd" ]; then
+		SQUASHFS_COMPRESSION_OPTION="-Xcompression-level 22 -b 262144"
+	fi
+fi
+
+# Create squashfs file, default to gzip if no compression configured
+echo ">> Creating squashfs file, default to gzip if no compression configured.."
+echo "rm -rf \"${TARGETS}/${IMAGE_NAME}.system\"" >>${FAKEROOT_SCRIPT}
+echo "${TOOLCHAIN}/bin/mksquashfs \"${BUILD}/image/system\" \"${TARGETS}/${IMAGE_NAME}.system\" -noappend -comp ${SQUASHFS_COMPRESSION:-gzip} ${SQUASHFS_COMPRESSION_OPTION}" >>${FAKEROOT_SCRIPT}
+
+# Run fakeroot
+echo ">> Running fakeroot.."
+${TOOLCHAIN}/bin/fakeroot -- ${FAKEROOT_SCRIPT}
+rm -rf ${FAKEROOT_SCRIPT}
+
+# Set permissions
+echo -e ">> Setting up permissions..\n"
+chmod 0644 ${TARGETS}/${IMAGE_NAME}.system
+
+# Make OS release and/or OS image
+if [ "${1}" = "release" -o "${1}" = "image" ]; then
+	echo -e "\n> Making OS release.."
+	RELEASE_DIR="${TARGETS}/${IMAGE_NAME}"
+
+	# Cleanup
+	rm -rf ${RELEASE_DIR}
+	# Remove any previously created release images
+	rm -rf ${TARGETS}/${IMAGE_NAME}.img.gz
+	# Remove any previously created release tarballs
+	rm -rf ${TARGETS}/${IMAGE_NAME}.tar
+
+	# Create release dir
+	echo -e "\tCreating release and bootloader resources.."
+	mkdir -p ${RELEASE_DIR}
+
+	if [ -n "${BOOTLOADER}" ]; then
+		BOOTLOADER_DIR="$(get_pkg_directory "${BOOTLOADER}")"
+
+		if [ -d ${BOOTLOADER_DIR}/files ]; then
+			cp -R ${BOOTLOADER_DIR}/files/* ${RELEASE_DIR}
+		fi
+
+		if find_file_path bootloader/release ${BOOTLOADER_DIR}/release; then
+			echo -e "\t\tRunning ${FOUND_PATH}"
+			. ${FOUND_PATH}
+		fi
+	fi
+
+	cp ${ROOT}/README* ${RELEASE_DIR}
+	echo "${TARGET_VERSION}" >${RELEASE_DIR}/RELEASE
+
+	if [ ! "${MEDIACENTER}" = "no" ]; then
+		echo -e "\t\tKodi commit: $(get_pkg_version ${MEDIACENTER})" >>${RELEASE_DIR}/RELEASE
+	fi
+
+	mkdir -p ${RELEASE_DIR}/target
+	cp ${TARGETS}/${IMAGE_NAME}.system ${RELEASE_DIR}/target/SYSTEM
+	cp ${TARGETS}/${IMAGE_NAME}.kernel ${RELEASE_DIR}/target/KERNEL
+
+	( # Create md5sum's
+	cd ${RELEASE_DIR}
+	md5sum -t target/SYSTEM >target/SYSTEM.md5
+	md5sum -t target/KERNEL >target/KERNEL.md5
+	)
+
+	# Create release tarball
+	echo -e "\tCreating release tarball.."
+	tar cf ${TARGETS}/${IMAGE_NAME}.tar -C ${TARGETS} ${IMAGE_NAME} || die "An error has occurred creating release tarball: $(echo '${TARGETS}/${IMAGE_NAME}.tar, over location ${TARGETS} for directory ${IMAGE_NAME}')"
+
+	( # Create sha256 checksum of tarball
+	cd ${TARGETS}
+	sha256sum ${IMAGE_NAME}.tar >${IMAGE_NAME}.tar.sha256
+	)
+
+	# Create image files if requested
+	if [[ ("${1}" == "image") && -n "${BOOTLOADER}" ]]; then
+		echo -e "\n> Making OS image.."
+
+		UUID_SYSTEM="$(date '+%d%m')-$(date '+%M%S')"
+		UUID_STORAGE="$(uuidgen)"
+
+		# set temp variables
+		LE_TMP=/tmp/.clueimg
+		SAVE_ERROR="${LE_TMP}/save_error"
+		rm -rf ${LE_TMP}
+		mkdir -p ${LE_TMP}
+
+		if [ -z "${SYSTEM_SIZE}" -o -z "${SYSTEM_PART_START}" ]; then
+			die "SYSTEM_SIZE and SYSTEM_PART_START must be configured!"
+		fi
+
+		DISK_LABEL=msdos
+		STORAGE_SIZE=32 # STORAGE_SIZE must be >= 32 !
+		DISK_START_PADDING=$(((${SYSTEM_PART_START} + 2048 - 1) / 2048))
+		DISK_GPT_PADDING=1
+		DISK_SIZE=$((${DISK_START_PADDING} + ${SYSTEM_SIZE} + ${STORAGE_SIZE} + ${DISK_GPT_PADDING}))
+		DISK_BASENAME="${TARGETS}/${IMAGE_NAME}"
+		DISK="${DISK_BASENAME}.img"
+
+		trap cleanup SIGINT
+
+		# create an image
+		echo -e "\tCreating file $(basename ${DISK})..."
+		dd if=/dev/zero of="${DISK}" bs=1M count="${DISK_SIZE}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+
+		# write a disklabel
+		echo -e "\tCreating ${DISK_LABEL} partition table.."
+		parted -s "${DISK}" mklabel ${DISK_LABEL}
+		sync
+
+		# create part1
+		echo -e "\tCreating part1.."
+		SYSTEM_PART_END=$((${SYSTEM_PART_START} + (${SYSTEM_SIZE} * 1024 * 1024 / 512) - 1))
+		parted -s "${DISK}" -a min unit s mkpart primary fat32 ${SYSTEM_PART_START} ${SYSTEM_PART_END}
+		parted -s "${DISK}" set 1 boot on
+		sync
+
+		# create part2
+		echo -e "\tCreating part2.."
+		STORAGE_PART_START=$((${SYSTEM_PART_END} + 1))
+		STORAGE_PART_END=$((${STORAGE_PART_START} + (${STORAGE_SIZE} * 1024 * 1024 / 512) - 1))
+		parted -s "${DISK}" -a min unit s mkpart primary ext4 ${STORAGE_PART_START} ${STORAGE_PART_END}
+		sync
+
+		# create filesystem on part1
+		echo -e "\tCreating filesystem on part1.."
+		OFFSET=$((${SYSTEM_PART_START} * 512))
+		HEADS=4
+		TRACKS=32
+		SECTORS=$((${SYSTEM_SIZE} * 1024 * 1024 / 512 / ${HEADS} / ${TRACKS}))
+
+		mformat -i ${DISK}@@${OFFSET} -h ${HEADS} -t ${TRACKS} -s ${SECTORS} -v "${DISTRO_BOOTLABEL}" -N "${UUID_SYSTEM//-/}" ::
+		sync
+
+		# create bootloader configuration
+		echo -e "\tCreating bootloader configuration.."
+		cat <<EOF >"${LE_TMP}/cmdline.txt"
+boot=UUID=${UUID_SYSTEM} disk=UUID=${UUID_STORAGE} quiet ${EXTRA_CMDLINE}
+EOF
+
+		mcopy -i ${DISK}@@${OFFSET} "${LE_TMP}/cmdline.txt" ::
+
+		# copy files
+		echo -e "\tCopying files to part1.."
+		mcopy -i ${DISK}@@${OFFSET} "${TARGETS}/${IMAGE_NAME}.kernel" "::/${KERNEL_NAME}"
+		mcopy -i ${DISK}@@${OFFSET} "${TARGETS}/${IMAGE_NAME}.system" ::/SYSTEM
+		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/target/KERNEL.md5" "::/${KERNEL_NAME}.md5"
+		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/target/SYSTEM.md5" ::/SYSTEM.md5
+
+		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/bootcode.bin" ::
+		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/fixup.dat" ::
+		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/start.elf" ::
+		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/config.txt" ::
+		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/distroconfig.txt" ::
+
+		if [ -f "${RELEASE_DIR}/3rdparty/bootloader/dt-blob.bin" ]; then
+			mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/dt-blob.bin" ::
+		fi
+
+		for dtb in "${RELEASE_DIR}/3rdparty/bootloader/"*.dtb; do
+			if [ -f "${dtb}" ]; then
+				mcopy -i ${DISK}@@${OFFSET} "${dtb}" ::/$(basename "${dtb}")
+			fi
+		done
+
+		if [ -d "${RELEASE_DIR}/3rdparty/bootloader/overlays" ]; then
+			mcopy -i ${DISK}@@${OFFSET} -s "${RELEASE_DIR}/3rdparty/bootloader/overlays" ::
+		fi
+
+		# extract part2 from image to format and copy files
+		echo -e "\tExtracting part2 from image.."
+		STORAGE_PART_COUNT=$((${STORAGE_PART_END} - ${STORAGE_PART_START} + 1))
+		sync
+		dd if="${DISK}" of="${LE_TMP}/part2.ext4" bs=512 skip="${STORAGE_PART_START}" count="${STORAGE_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+
+		# create filesystem on part2
+		echo -e "\tCreating filesystem on part2.."
+		mke2fs -F -q -t ext4 -m 0 "${LE_TMP}/part2.ext4"
+		tune2fs -L "${DISTRO_DISKLABEL}" -U ${UUID_STORAGE} "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		e2fsck -n "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		sync
+
+		# add resize mark
+		mkdir "${LE_TMP}/part2.fs"
+		touch "${LE_TMP}/part2.fs/.please_resize_me"
+		echo -e "\tPopulating filesystem on part2.."
+		populatefs -U -d "${LE_TMP}/part2.fs" "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		sync
+		e2fsck -n "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+
+		# merge part2 back to disk image
+		echo -e "\tMerging part2 back to image.."
+		dd if="${LE_TMP}/part2.ext4" of="${DISK}" bs=512 seek="${STORAGE_PART_START}" conv=fsync,notrunc >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+
+		# extract part1 from image to run fsck
+		echo -e "\tExtracting part1 from image.."
+		SYSTEM_PART_COUNT=$((${SYSTEM_PART_END} - ${SYSTEM_PART_START} + 1))
+		sync
+		dd if="${DISK}" of="${LE_TMP}/part1.fat" bs=512 skip="${SYSTEM_PART_START}" count="${SYSTEM_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		echo -e "\tChecking filesystem on part1.."
+		fsck.fat -n "${LE_TMP}/part1.fat" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+
+		# gzip
+		echo -e "\tCompressing.."
+		pigz --best --force "${DISK}"
+
+		# set owner
+		if [ -n "${SUDO_USER}" ]; then
+			chown "${SUDO_USER}:" "${DISK}.gz"
+		fi
+
+		# create sha256 checksum of image
+		cd "${TARGETS}"
+		sha256sum $(basename "${DISK}").gz >$(basename "${DISK}").gz.sha256
+
+		# cleanup
+		echo -e "\tCleaning up.."
+		rm -rf "${LE_TMP}"
+	fi
+
+	# Cleanup release dir
+	rm -rf ${RELEASE_DIR}
+fi
+
+# process ended
+echo -e "> Process ended..\n"

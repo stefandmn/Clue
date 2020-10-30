@@ -1,0 +1,8 @@
+#!/bin/sh
+
+. /etc/profile
+
+ADDON_DIR="$HOME/.kodi/addons/driver.dvb.sundtek-mediatv"
+
+logger -t Sundtek "### Sundtek driver stop ###"
+mediaclient --shutdown

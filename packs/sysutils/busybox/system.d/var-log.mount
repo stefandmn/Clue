@@ -1,0 +1,14 @@
+[Unit]
+Description=Persistent Log Storage
+RequiresMountsFor=/var /clue
+Requires=storage-log.service
+After=storage-log.service
+ConditionKernelCommandLine=!installer
+ConditionKernelCommandLine=|debugging
+ConditionPathExists=|/clue/.cache/debug.libreelec
+
+[Mount]
+What=/clue/.cache/log
+Where=/var/log
+Options=bind
+LazyUnmount=yes

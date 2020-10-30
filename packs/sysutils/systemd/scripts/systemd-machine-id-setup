@@ -1,0 +1,13 @@
+#!/bin/bash
+# remove old machine-id file
+[[ -f "/clue/.cache/machine-id" ]] && rm /clue/.cache/machine-id
+
+# test systemd-machine-id exists and is 32 hex chars or generate a new uuid
+MACHINEID="$(cat /clue/.cache/systemd-machine-id 2>/dev/null)"
+[ "${#MACHINEID}" != "32" ] && MACHINEID=
+[[ "${MACHINEID//[a-f0-9]/}" != "" ]] && MACHINEID=
+[ -z "${MACHINEID}" ] && MACHINEID=$(/usr/bin/dbus-uuidgen)
+
+# persist uuid
+mkdir -p /clue/.cache
+  echo "$MACHINEID" > /clue/.cache/systemd-machine-id

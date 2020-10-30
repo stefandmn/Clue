@@ -1,0 +1,33 @@
+#!/bin/bash
+
+. ${SYSTEM}/options "${1}"
+
+if [ -n "${1}" ]; then
+	build_msg "CLR_CLEAN" "CLEAN" "${1}" "indent"
+
+	# Removing source
+	if [ -d "${i}" -a -f "${i}/.clue-unpack" ]; then
+		build_msg "CLR_WARNING" "*" "$(print_color "CLR_WARNING_DIM" "Removing ${SOURCES}/${1} ...")"
+		rm -rf "${SOURCES}/${1}"
+	fi
+
+	# Use a wilcard here to remove all versions of the package
+	for i in "${BUILDPACKS}/${1}-"*; do
+		if [ -d "${i}" -a -f "${i}/.clue-unpack" ]; then
+			. "${i}/.clue-unpack"
+			if [ "${STAMP_PKG_NAME}" = "${1}" ]; then
+				build_msg "CLR_WARNING" "*" "$(print_color "CLR_WARNING_DIM" "Removing ${i} ...")"
+				rm -rf "${i}"
+			fi
+		elif [ -d "${i}" -a -f "${i}/.clue-package" ]; then
+			# force clean if no stamp found (previous unpack failed)
+			. "${i}/.clue-package"
+			if [ "${INFO_PKG_NAME}" = "${1}" ]; then
+				build_msg "" "" "* Removing ${i} ..."
+				rm -rf "${i}"
+			fi
+		fi
+	done
+
+	rm -f "${STAMPS}/${1}/build_"*
+fi
