@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-   <!-- net-snmp -->
-    <category label="32000">
+	<!-- net-snmp -->
+	<category label="32000">
 		<setting label="32001" id="COMMUNITY" type="text" default="libreelec"/>
 		<setting label="32002" id="LOCATION" type="text" default="HOME"/>
 		<setting label="32003" id="CONTACT" type="text" default="root@localhost"/>
@@ -12,5 +12,5 @@
 		<setting label="32008" type="lsep"/>
 		<setting label="32009" type="bool" id="CPUTEMP" default="true"/>
 		<setting label="32010" type="bool" id="GPUTEMP" default="false"/>
-    </category>
+	</category>
 </settings>

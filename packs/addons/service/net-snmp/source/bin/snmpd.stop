@@ -7,5 +7,5 @@ ADDON_ID=service.net-snmp
 ADDON_DIR="$HOME/.kodi/addons/$ADDON_ID"
 ADDON_HOME="$HOME/.kodi/userdata/addon_data/$ADDON_ID"
 
-PID=`cat /var/run/snmpd.pid`
+PID=$(cat /var/run/snmpd.pid)
 kill -TERM $PID

@@ -70,7 +70,7 @@ get_addons() {
 		fi
 
 		exited=0
-		source_package "${pkgpath%%@*}/package.mk" &>/dev/null
+		source_package "${pkgpath%%@*}/descriptor.csh" &>/dev/null
 		[ ${exited} -eq 1 ] && continue
 
 		validpkg="no"
@@ -95,7 +95,7 @@ get_addons() {
 	unset -f exit
 
 	if [ ${count} -eq 0 -a -n "${filter}" ]; then
-		echo "$(print_color CLR_ERROR "ERROR: no addons matched for filter ${filter}")" >&2
+		echo "$(print_color CLR_ERROR "Error: no addons matched for filter ${filter}")" >&2
 		echo "For more information type: ./${CONFIG}/create_addon --help" >&2
 		die
 	fi
@@ -130,7 +130,7 @@ if [ $# -eq 0 ]; then
 fi
 
 # check environment and configure toolchains
-${CONFIG}/tools/checkdeps
+${CONFIG}/tools/checkdeps || exit 1
 
 (setup_toolchain host)
 setup_toolchain target
@@ -168,11 +168,11 @@ fi
 # Build all addons at once using a single plan
 if MTADDONBUILD=yes start_multithread_build "${wanted_addons:1}"; then
 	echo
-	echo "$(print_color CLR_INFO "All Addons build successfully")"
+	echo "$(print_color CLR_INFO "All addons build successfully")"
 	exit 0
-elif [ -f "${THREAD_CONTROL}/addons.failed" ]; then
+elif [ -f "${BUILDER_THREADS}/addons.failed" ]; then
 	echo >&2
-	print_color CLR_ERROR "Failed Addons:\n" >&2
+	print_color CLR_ERROR "Failed addons:\n" >&2
 	while read -r addon logfile; do
 		if [ -n "${addon}" ]; then
 			if [ -n "${logfile}" ]; then
@@ -181,7 +181,7 @@ elif [ -f "${THREAD_CONTROL}/addons.failed" ]; then
 				echo "    $(print_color CLR_ERROR "${addon}")" >&2
 			fi
 		fi
-	done <"${THREAD_CONTROL}/addons.failed"
+	done <"${BUILDER_THREADS}/addons.failed"
 	die
 else
 	die "$(print_color CLR_ERROR "Unknown build failure or Inability to generate plan")"

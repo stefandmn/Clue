@@ -4,7 +4,7 @@ unset _CACHE_PACKAGE_LOCAL _CACHE_PACKAGE_GLOBAL _DEBUG_DEPENDS_LIST _DEBUG_PACK
 
 . ${SYSTEM}/options ""
 
-${CONFIG}/tools/checkdeps
+${CONFIG}/tools/checkdeps || exit 1
 
 # Setup both toolchain cmake configs to avoid potentially racy behaviour later.
 # Use a fork for host to isolate any variable modifications.
@@ -19,42 +19,33 @@ echo -e "\n\n> Process started.."
 echo -e ">> Reading versioning details.."
 GIT_HASH=$(git rev-parse HEAD)
 
-if [ "${DISTROSTATUS}" = "devel" ]; then
-	GIT_ABBREV=${GIT_HASH:0:7}
-	DEVEL_VERSION=${DISTROSTATUS}
-	case "${BUILD_PERIODIC}" in
-		nightly)
-			DISTROSTATUS=nightly-$(date +%Y%m%d)-${GIT_ABBREV}
-			;;
-		daily)
-			DISTROSTATUS=daily-$(date +%Y%j)-${GIT_ABBREV}
-			;;
-		weekly)
-			DISTROSTATUS=weekly-$(date +%G%V)-${GIT_ABBREV}
-			;;
-		monthly)
-			DISTROSTATUS=monthly-$(date +%Y%m)-${GIT_ABBREV}
-			;;
-		*)
-			DISTROSTATUS=devel-$(date +%Y%m%d%H%M%S)-${GIT_ABBREV}
-			;;
-	esac
-fi
+GIT_ABBREV=${GIT_HASH:0:7}
+DISTRO_LABEL=${DISTRO_STATUS}
+case "${DISTRO_STATUS}" in
+	nightly)
+		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%Y%m%d)-${GIT_ABBREV}
+		;;
+	daily)
+		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%Y%j)-${GIT_ABBREV}
+		;;
+	weekly)
+		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%G%V)-${GIT_ABBREV}
+		;;
+	monthly)
+		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%Y%m)-${GIT_ABBREV}
+		;;
+	devel)
+		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%Y%m%d%H%M%S)-${GIT_ABBREV}
+		;;
+	stable)
+		DISTRO_LABEL=${DISTRO_STATUS}
+		;;
+esac
 
-CLUE_ARCH="${DEVICE}.${TARGET_ARCH}"
-TARGET_VERSION="${CLUE_ARCH}-${DISTROSTATUS}"
+TARGET_VERSION="${DEVICE}.${TARGET_ARCH}-${DISTRO_LABEL}"
+IMAGE_NAME="${DISTRO_NAME}-${DISTRO_VERSION},${TARGET_VERSION}"
 
-if [ "${DEVEL_VERSION}" = "devel" ]; then
-	IMAGE_NAME="${DISTRONAME}-${CLUE_ARCH}-${OS_VERSION}-${DISTROSTATUS}"
-else
-	IMAGE_NAME="${DISTRONAME}-${TARGET_VERSION}"
-fi
-
-if [ -n "${IMAGE_SUFFIX}" ]; then
-	IMAGE_NAME="${IMAGE_NAME}-${IMAGE_SUFFIX}"
-fi
-
-echo "${IMAGE_NAME}" >${BUILD}/BUILD_FILENAME
+echo "${IMAGE_NAME}" >${BUILDER}/BUILD_FILENAME
 
 # Setup fakeroot
 echo ">> Building fake root.."
@@ -65,7 +56,7 @@ echo "chown -R 0:0 ${INSTALL}" >>${FAKEROOT_SCRIPT}
 
 # Clean old install dirs
 rm -rf ${INSTALL}
-rm -rf ${STAMPS_INSTALL}
+rm -rf ${INSTALL_STAMPS}
 mkdir -p ${INSTALL}
 
 # Create base layout of Clue read-only file system
@@ -92,11 +83,11 @@ echo "${TARGET_VERSION}" >${INSTALL}/etc/release
 # Create /etc/os-release
 echo ">> Creating /etc/os-release.."
 cat <<EOF >${INSTALL}/etc/os-release
-NAME="${DISTRONAME}"
-VERSION="${DISTROSTATUS}"
+NAME="${DISTRO_NAME}"
+VERSION="${DISTRO_STATUS}"
 ID="clue"
-VERSION_ID="${OS_VERSION}"
-PRETTY_NAME="${DISTRONAME} (${DISTROSTATUS})"
+VERSION_ID="${DISTRO_VERSION}"
+PRETTY_NAME="${DISTRO_NAME} (${DISTRO_STATUS})"
 HOME_URL="https://amsd.go.ro/clue"
 BUILD_ID="${GIT_HASH}"
 DEVICE="${DEVICE}"
@@ -121,10 +112,10 @@ ln -sf /etc/issue ${INSTALL}/etc/motd
 
 # Copy system related files to filesystem
 echo ">> Copying system related files to filesystem.."
-if [ -d "${SYSTEM}/filesystem" ]; then
-	cp -PR ${SYSTEM}/filesystem/* ${INSTALL}
+if [ -d "${SYSTEM}/control/filesystem" ]; then
+	cp -PR ${SYSTEM}/control/filesystem/* ${INSTALL}
 	# Install project specific systemd services
-	for service in ${SYSTEM}/filesystem/usr/lib/systemd/system/*.service; do
+	for service in ${SYSTEM}/control/filesystem/usr/lib/systemd/system/*.service; do
 		if [ -f "${service}" ]; then
 			enable_service $(basename ${service})
 		fi
@@ -149,7 +140,7 @@ MODVER=$(basename $(ls -d ${INSTALL}/usr/lib/kernel-overlays/base/lib/modules/*)
 find ${INSTALL}/usr/lib/kernel-overlays/base/lib/modules/${MODVER}/ -name *.ko |
 	sed -e "s,${INSTALL}/usr/lib/kernel-overlays/base/lib/modules/${MODVER}/,," \
 		>${INSTALL}/usr/lib/kernel-overlays/base/lib/modules/${MODVER}/modules.order
-${TOOLCHAIN}/bin/depmod -b ${INSTALL}/usr/lib/kernel-overlays/base -a -e -F "${BUILDPACKS}/linux-$(kernel_version)/System.map" ${MODVER} 2>&1
+${TOOLCHAIN}/bin/depmod -b ${INSTALL}/usr/lib/kernel-overlays/base -a -e -F "${BUILDER_PACKS}/linux-$(kernel_version)/System.map" ${MODVER} 2>&1
 
 # Strip kernel modules
 echo ">> Striping kernel modules.."
@@ -172,7 +163,7 @@ rm -rf ${TARGETS}/${IMAGE_NAME}.kernel
 
 # Copy kernel to target dir
 echo ">> Copying kernel to target folder.."
-cp -PR ${BUILDPACKS}/linux-$(kernel_version)/arch/${TARGET_KERNEL_ARCH}/boot/${KERNEL_TARGET} ${TARGETS}/${IMAGE_NAME}.kernel
+cp -PR ${BUILDER_PACKS}/linux-$(kernel_version)/arch/${TARGET_KERNEL_ARCH}/boot/${KERNEL_TARGET} ${TARGETS}/${IMAGE_NAME}.kernel
 chmod 0644 ${TARGETS}/${IMAGE_NAME}.kernel
 
 # Set mksquashfs options for each compression method
@@ -190,7 +181,7 @@ fi
 # Create squashfs file, default to gzip if no compression configured
 echo ">> Creating squashfs file, default to gzip if no compression configured.."
 echo "rm -rf \"${TARGETS}/${IMAGE_NAME}.system\"" >>${FAKEROOT_SCRIPT}
-echo "${TOOLCHAIN}/bin/mksquashfs \"${BUILD}/image/system\" \"${TARGETS}/${IMAGE_NAME}.system\" -noappend -comp ${SQUASHFS_COMPRESSION:-gzip} ${SQUASHFS_COMPRESSION_OPTION}" >>${FAKEROOT_SCRIPT}
+echo "${TOOLCHAIN}/bin/mksquashfs \"${BUILDER}/image/system\" \"${TARGETS}/${IMAGE_NAME}.system\" -noappend -comp ${SQUASHFS_COMPRESSION:-gzip} ${SQUASHFS_COMPRESSION_OPTION}" >>${FAKEROOT_SCRIPT}
 
 # Run fakeroot
 echo ">> Running fakeroot.."
@@ -217,16 +208,26 @@ if [ "${1}" = "release" -o "${1}" = "image" ]; then
 	echo -e "\tCreating release and bootloader resources.."
 	mkdir -p ${RELEASE_DIR}
 
-	if [ -n "${BOOTLOADER}" ]; then
-		BOOTLOADER_DIR="$(get_pkg_directory "${BOOTLOADER}")"
-
-		if [ -d ${BOOTLOADER_DIR}/files ]; then
-			cp -R ${BOOTLOADER_DIR}/files/* ${RELEASE_DIR}
+	# Deploy bootloaded resources
+	BOOTLOADER_DIR="$(get_pkg_directory "bcm2835-bootloader")"
+	if [ -d ${BOOTLOADER_DIR}/files ]; then
+		echo -e "\t\tDeploy bootloaded resources from ${BOOTLOADER_DIR} and ${INSTALL} into ${RELEASE_DIR}"
+		cp -R ${BOOTLOADER_DIR}/files/* ${RELEASE_DIR}
+		mkdir -p ${RELEASE_DIR}/3rdparty/bootloader
+		cp -PR ${INSTALL}/usr/share/bootloader/LICENCE* ${RELEASE_DIR}/3rdparty/bootloader/
+		cp -PR ${INSTALL}/usr/share/bootloader/bootcode.bin ${RELEASE_DIR}/3rdparty/bootloader/
+		cp -PR ${INSTALL}/usr/share/bootloader/fixup.dat ${RELEASE_DIR}/3rdparty/bootloader/
+		cp -PR ${INSTALL}/usr/share/bootloader/start.elf ${RELEASE_DIR}/3rdparty/bootloader/
+		if [ -f $(get_build_dir slice-firmware)/dt-blob.bin ]; then
+			cp -PR $(get_build_dir slice-firmware)/dt-blob.bin ${RELEASE_DIR}/3rdparty/bootloader/
 		fi
-
-		if find_file_path bootloader/release ${BOOTLOADER_DIR}/release; then
-			echo -e "\t\tRunning ${FOUND_PATH}"
-			. ${FOUND_PATH}
+		cp -PR ${INSTALL}/usr/share/bootloader/*.dtb ${RELEASE_DIR}/3rdparty/bootloader/
+		cp -PR ${INSTALL}/usr/share/bootloader/overlays ${RELEASE_DIR}/3rdparty/bootloader/
+		if [ -f ${INSTALL}/usr/share/bootloader/config.txt ]; then
+			cp -PR ${INSTALL}/usr/share/bootloader/config.txt ${RELEASE_DIR}/3rdparty/bootloader/
+		fi
+		if [ -f ${INSTALL}/usr/share/bootloader/distroconfig.txt ]; then
+			cp -PR ${INSTALL}/usr/share/bootloader/distroconfig.txt ${RELEASE_DIR}/3rdparty/bootloader/
 		fi
 	fi
 
@@ -241,23 +242,23 @@ if [ "${1}" = "release" -o "${1}" = "image" ]; then
 	cp ${TARGETS}/${IMAGE_NAME}.system ${RELEASE_DIR}/target/SYSTEM
 	cp ${TARGETS}/${IMAGE_NAME}.kernel ${RELEASE_DIR}/target/KERNEL
 
-	( # Create md5sum's
-	cd ${RELEASE_DIR}
-	md5sum -t target/SYSTEM >target/SYSTEM.md5
-	md5sum -t target/KERNEL >target/KERNEL.md5
+	(	# Create md5sum's
+		cd ${RELEASE_DIR}
+		md5sum -t target/SYSTEM >target/SYSTEM.md5
+		md5sum -t target/KERNEL >target/KERNEL.md5
 	)
 
 	# Create release tarball
 	echo -e "\tCreating release tarball.."
 	tar cf ${TARGETS}/${IMAGE_NAME}.tar -C ${TARGETS} ${IMAGE_NAME} || die "An error has occurred creating release tarball: $(echo '${TARGETS}/${IMAGE_NAME}.tar, over location ${TARGETS} for directory ${IMAGE_NAME}')"
 
-	( # Create sha256 checksum of tarball
-	cd ${TARGETS}
-	sha256sum ${IMAGE_NAME}.tar >${IMAGE_NAME}.tar.sha256
+	(	# Create sha256 checksum of tarball
+		cd ${TARGETS}
+		sha256sum ${IMAGE_NAME}.tar >${IMAGE_NAME}.tar.sha256
 	)
 
 	# Create image files if requested
-	if [[ ("${1}" == "image") && -n "${BOOTLOADER}" ]]; then
+	if [[ ("${1}" == "image") ]]; then
 		echo -e "\n> Making OS image.."
 
 		UUID_SYSTEM="$(date '+%d%m')-$(date '+%M%S')"

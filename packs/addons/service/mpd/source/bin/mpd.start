@@ -15,7 +15,7 @@ touch $ADDON_HOME/state
 chmod a+x $ADDON_DIR/bin/*
 
 if [ ! -f "$ADDON_HOME/config/mpd.conf" ]; then
-  cp $ADDON_DIR/config/mpd.conf $ADDON_HOME/config/mpd.conf
+	cp $ADDON_DIR/config/mpd.conf $ADDON_HOME/config/mpd.conf
 fi
 
-exec mpd --no-daemon $ADDON_HOME/config/mpd.conf > /dev/null 2>&1
+exec mpd --no-daemon $ADDON_HOME/config/mpd.conf >/dev/null 2>&1

@@ -2,7 +2,7 @@
 
 . /usr/lib/clue/functions
 
-# Get NAME, which is DISTRONAME, ie. Clue
+# Get NAME, which is DISTRO_NAME, ie. Clue
 . /etc/os-release
 
 hidecursor
@@ -12,7 +12,7 @@ BACKUP_FILE=$(ls -1 /clue/.restore/??????????????.tar 2>/dev/null | tail -1)
 if [ -f "$BACKUP_FILE" ]; then
 	echo "RESTORE IN PROGRESS"
 	echo ""
-	echo "Please do not reboot or turn off your ${NAME} device!"
+	echo "Please do not reboot or turn off your ${NAME}/RPi device!"
 	echo ""
 
 	StartProgress spinner "Checking backup file... "

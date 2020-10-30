@@ -5,7 +5,7 @@ Requires=storage-log.service
 After=storage-log.service
 ConditionKernelCommandLine=!installer
 ConditionKernelCommandLine=|debugging
-ConditionPathExists=|/clue/.cache/debug.libreelec
+ConditionPathExists=|/clue/.cache/debug.clue
 
 [Mount]
 What=/clue/.cache/log

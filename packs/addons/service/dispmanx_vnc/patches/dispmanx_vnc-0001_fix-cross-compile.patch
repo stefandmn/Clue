@@ -10,10 +10,10 @@ diff -Naur a/Makefile b/Makefile
 -INCLUDES = -I/opt/vc/include/ -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux
 -LIB_PATHS = -L/opt/vc/lib/
 -LIBS = -lGLESv2 -lEGL -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt -lvncserver -lconfig++
-+SYSROOT_PREFIX ?=
++TARGET_SYSROOT ?=
 +
-+INCLUDES = -I$(SYSROOT_PREFIX)/usr/include/ -I$(SYSROOT_PREFIX)/usr/include/interface/vcos/pthreads -I$(SYSROOT_PREFIX)/usr/include/interface/vmcs_host/linux
-+LIB_PATHS = -L$(SYSROOT_PREFIX)/usr/lib/
++INCLUDES = -I$(TARGET_SYSROOT)/usr/include/ -I$(TARGET_SYSROOT)/usr/include/interface/vcos/pthreads -I$(TARGET_SYSROOT)/usr/include/interface/vmcs_host/linux
++LIB_PATHS = -L$(TARGET_SYSROOT)/usr/lib/
 +LIBS = -lbrcmGLESv2 -lbrcmEGL -lopenmaxil -lbcm_host -lvcos -lvchiq_arm -lpthread -lrt -lconfig++ -lz -lssl -lcrypto -lresolv -lvncserver -ljpeg -lpng16 -lsystemd
  
  SOURCES = main.cpp \

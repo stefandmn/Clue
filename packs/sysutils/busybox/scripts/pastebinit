@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ -n "${PASTEUSR}" -a "${PASTEPWD}" ]; then
-  cat "$@" | curl -F 'f:1=<-' ${PASTEUSR}:${PASTEPWD}@ix.io
+	cat "$@" | curl -F 'f:1=<-' ${PASTEUSR}:${PASTEPWD}@ix.io
 else
-  cat "$@" | curl -F 'f:1=<-' http://ix.io
+	cat "$@" | curl -F 'f:1=<-' http://ix.io
 fi

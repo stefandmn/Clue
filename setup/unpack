@@ -7,7 +7,7 @@ if [ -z "${1}" ]; then
 fi
 
 if [ -z "${PKG_NAME}" ]; then
-	die "$(print_color CLR_ERROR "${1}: no package.mk file found")"
+	die "$(print_color CLR_ERROR "${1}: no descriptor.csh file found")"
 fi
 PARENT_PKG="${2:-${PKG_NAME}}"
 
@@ -23,12 +23,12 @@ fi
 
 STAMP="${PKG_BUILD}/.clue-unpack"
 
-mkdir -p ${BUILD}
-mkdir -p ${BUILDPACKS}
+mkdir -p ${BUILDER}
+mkdir -p ${BUILDER_PACKS}
 
 # Perform a wildcard match on the package to ensure old versions are cleaned too
 PKG_DEEPHASH=
-for i in ${BUILDPACKS}/${PKG_NAME}-*; do
+for i in ${BUILDER_PACKS}/${PKG_NAME}-*; do
 	if [ -d ${i} -a -f "${i}/.clue-unpack" ]; then
 		. "${i}/.clue-unpack"
 		if [ "${STAMP_PKG_NAME}" = "${PKG_NAME}" ]; then
@@ -56,7 +56,7 @@ if [ -d "${SOURCES}/${PKG_NAME}" -o -d "${PKG_DIR}/sources" ] || pkg_call_exists
 	build_msg "CLR_UNPACK" "UNPACK" "${PKG_NAME}" "indent"
 
 	# unpack into a unique location as unpacking into a single ${BUILD} directory is not thread-safe
-	PKG_UNPACK_DIR="${BUILD}/.unpack/${PKG_NAME}"
+	PKG_UNPACK_DIR="${BUILDER}/.unpack/${PKG_NAME}"
 	rm -rf "${PKG_UNPACK_DIR}"
 	mkdir -p "${PKG_UNPACK_DIR}"
 
@@ -85,7 +85,7 @@ if [ -d "${SOURCES}/${PKG_NAME}" -o -d "${PKG_DIR}/sources" ] || pkg_call_exists
 				mv "${PKG_UNPACK_DIR}"/${PKG_SOURCE_DIR} "${PKG_UNPACK_DIR}/.intermediate"
 			else
 				# fallback
-				mv "${BUILD}"/${PKG_SOURCE_DIR} "${PKG_UNPACK_DIR}/.intermediate"
+				mv "${BUILDER}"/${PKG_SOURCE_DIR} "${PKG_UNPACK_DIR}/.intermediate"
 			fi
 		fi
 	fi
@@ -199,7 +199,7 @@ if [ "${PKG_SECTION}" != "virtual" ]; then
 	mkdir -p "${PKG_BUILD}"
 	echo "INFO_PKG_NAME=\"${PKG_NAME}\"" >"${PKG_BUILD}/.clue-package"
 
-	rm -f ${STAMPS}/${PKG_NAME}/build_*
+	rm -f ${BUILDER_STAMPS}/${PKG_NAME}/build_*
 
 	PKG_DEEPHASH=$(calculate_stamp)
 	for i in PKG_NAME PKG_DEEPHASH; do

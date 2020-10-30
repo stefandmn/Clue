@@ -8,17 +8,17 @@ false | cp -iRp /usr/cache/* /clue/.cache/ &>/dev/null
 
 # Merge default and custom shadow file details
 if [ -f /clue/.cache/shadow -a -f /usr/cache/shadow ]; then
-  # Get existing root details (possibly user defined)
-  userroot="$(grep "^root:" /clue/.cache/shadow)"
+	# Get existing root details (possibly user defined)
+	userroot="$(grep "^root:" /clue/.cache/shadow)"
 
-  # Overwrite users shadow file with default details, replacing root with any existing value
-  # If current file is garbage (ie. missing root) then replace it
-  if [ -n "${userroot}" ]; then
-    sed -e "s ^root:.* ${userroot} " /usr/cache/shadow >/clue/.cache/shadow
-  else
-    cp -fp /usr/cache/shadow /clue/.cache/shadow
-  fi
+	# Overwrite users shadow file with default details, replacing root with any existing value
+	# If current file is garbage (ie. missing root) then replace it
+	if [ -n "${userroot}" ]; then
+		sed -e "s ^root:.* ${userroot} " /usr/cache/shadow >/clue/.cache/shadow
+	else
+		cp -fp /usr/cache/shadow /clue/.cache/shadow
+	fi
 
-  # Make sure we have the correct permission
-  chmod 000 /clue/.cache/shadow
+	# Make sure we have the correct permission
+	chmod 000 /clue/.cache/shadow
 fi

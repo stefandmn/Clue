@@ -4,17 +4,17 @@
 oe_setup_addon service.lcdd
 
 if [ -z "$LCD_DRIVER" -o "$LCD_DRIVER" == "none" ]; then
-  exit 0
+	exit 0
 fi
 
 LCDCONF=$ADDON_HOME/LCDd.conf
 
 if [ ! -f $LCDCONF ]; then
-  if [ -f /clue/.cache/LCDd.conf ]; then
-    mv /clue/.cache/LCDd.conf $LCDCONF
-  else
-    cp $ADDON_DIR/config/LCDd.conf $LCDCONF
-  fi
+	if [ -f /clue/.cache/LCDd.conf ]; then
+		mv /clue/.cache/LCDd.conf $LCDCONF
+	else
+		cp $ADDON_DIR/config/LCDd.conf $LCDCONF
+	fi
 fi
 
 LCDd -f -c $LCDCONF -d $LCD_DRIVER

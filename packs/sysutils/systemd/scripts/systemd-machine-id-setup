@@ -10,4 +10,4 @@ MACHINEID="$(cat /clue/.cache/systemd-machine-id 2>/dev/null)"
 
 # persist uuid
 mkdir -p /clue/.cache
-  echo "$MACHINEID" > /clue/.cache/systemd-machine-id
+echo "$MACHINEID" >/clue/.cache/systemd-machine-id

@@ -7,7 +7,7 @@
 #  Available devices:
 #  /dev/input/event0:	Video Bus
 #  /dev/input/event1:	Goodix Capacitive TouchScreen
-#  Select the device event number [0-1]: 
+#  Select the device event number [0-1]:
 
 TOUCHSCREEN_NAME="Goodix Capacitive TouchScreen"
 

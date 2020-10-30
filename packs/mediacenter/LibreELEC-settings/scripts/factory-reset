@@ -2,7 +2,7 @@
 
 . /usr/lib/clue/functions
 
-# Get NAME, which is DISTRONAME, ie. Clue
+# Get NAME, which is DISTRO_NAME, ie. Clue
 . /etc/os-release
 
 hidecursor
@@ -37,7 +37,7 @@ get_target() {
 show_reset_msg() {
 	echo "RESET IN PROGRESS"
 	echo ""
-	echo "Please do not reboot or turn off your ${NAME} device!"
+	echo "Please do not reboot or turn off your ${NAME}/RPi device!"
 	echo ""
 }
 

@@ -5,14 +5,14 @@
 SERVICE="service.multimedia.boblightd.service"
 
 case "$1" in
-  pre)
-    if systemctl is-active "$SERVICE" &>/dev/null ; then
-      systemctl stop "$SERVICE"
-    fi
-    ;;
-  post)
-    if systemctl is-enabled "$SERVICE" &>/dev/null ; then
-      systemctl start "$SERVICE"
-    fi
-    ;;
+	pre)
+		if systemctl is-active "$SERVICE" &>/dev/null; then
+			systemctl stop "$SERVICE"
+		fi
+		;;
+	post)
+		if systemctl is-enabled "$SERVICE" &>/dev/null; then
+			systemctl start "$SERVICE"
+		fi
+		;;
 esac

@@ -1,82 +1,39 @@
-# OS_VERSION: OS Version
-OS_VERSION="2.0"
-
-# ADDON_VERSION: Addon version
-ADDON_VERSION="2.0.0"
-
 # Name of the Distro to build (full name, without special characters)
-DISTRONAME="Clue"
+DISTRO_NAME="Clue"
+
+# Project long name or description
+DISTRO_LONGNAME="Clue Media Experience"
 
 # Set status, use "devel" for development version and stable for any stable version
-DISTROSTATUS="devel"
+DISTRO_STATUS="${STATUS:-devel}"
 
-# LTO (Link Time Optimization) support
-LTO_SUPPORT="yes"
+# DISTRO_VERSION: Distribution Version
+DISTRO_VERSION="2.0"
 
-# GOLD (Google Linker) support
-GOLD_SUPPORT="yes"
+# DISTRO_PROVIDER: Distribution Provider
+DISTRO_PROVIDER="AMSD"
 
-# HARDENING (security relevant linker and compiler flags) support
-HARDENING_SUPPORT="no"
-
-# short project description
-DESCRIPTION="Clue Media Experience"
-
-# Root password to integrate in the target system
-ROOT_PASSWORD="clue"
-
-# Install glibc locales to the build (yes / no)
-GLIBC_LOCALES="yes"
+# ADDON_VERSION: Addon version
+ADDON_VERSION="${DISTRO_VERSION}.0"
 
 # Mediacenter to use (kodi / no)
 MEDIACENTER="kodi"
 
-# Skins to install (Estuary)
-# Space separated list is supported,
-# e.g. SKINS="Estuary"
-SKINS="Estuary"
-
 # Default Skin (Estuary)
-SKIN_DEFAULT="Estuary"
+KODI_SKIN_DEFAULT="Estuary"
 
 # install extra subtitle Fonts for KODI (yes / no)
 KODI_EXTRA_FONTS="yes"
 
-# build and install PulseAudio support (yes / no)
-PULSEAUDIO_SUPPORT="yes"
-
-# build and install espeak support (yes / no)
-ESPEAK_SUPPORT="yes"
-
 # build and install with BluRay support (yes / no)
 KODI_BLURAY_SUPPORT="yes"
-
-# build and install with BD+ support
-# (BD+ decryption support in KODI) (yes / no)
-BLURAY_BDPLUS_SUPPORT="yes"
-
-# build and install with AACS support
-# (BD decryption support in KODI) (yes / no)
-BLURAY_AACS_SUPPORT="yes"
-
-# build and install with DVDCSS support
-# (DVD decryption support in KODI) (yes / no)
-KODI_DVDCSS_SUPPORT="yes"
-
-# additional drivers to install:
-# for a list of additional drivers see ${PACKAGES}/linux-drivers
-# Space separated list is supported,
-# e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
-ADDITIONAL_DRIVERS="RTL8192CU RTL8192DU RTL8192EU RTL8188EU RTL8812AU rpi-cirrus-config bcm2835-driver"
-
-# build and install bluetooth support (yes / no)
-BLUETOOTH_SUPPORT="yes"
 
 # build and install with KODI webfrontend (yes / no)
 KODI_WEBSERVER_SUPPORT="yes"
 
-# build and install Avahi (Zeroconf) daemon (yes / no)
-AVAHI_DAEMON="yes"
+# build and install with DVDCSS support
+# (DVD decryption support in KODI) (yes / no)
+KODI_DVDCSS_SUPPORT="yes"
 
 # build with UPnP support (yes / no)
 KODI_UPNP_SUPPORT="yes"
@@ -98,6 +55,50 @@ KODI_NFS_SUPPORT="yes"
 
 # build with Samba Client support (mounting SAMBA shares with KODI) (yes / no)
 KODI_SAMBA_SUPPORT="yes"
+
+# build and install Joystick support (yes / no)
+KODI_JOYSTICK_SUPPORT="yes"
+
+# LTO (Link Time Optimization) support
+LTO_SUPPORT="yes"
+
+# GOLD (Google Linker) support
+GOLD_SUPPORT="yes"
+
+# HARDENING (security relevant linker and compiler flags) support
+HARDENING_SUPPORT="no"
+
+# Root password to integrate in the target system
+ROOT_PASSWORD="clue"
+
+# Install glibc locales to the build (yes / no)
+GLIBC_LOCALES="yes"
+
+# build and install PulseAudio support (yes / no)
+PULSEAUDIO_SUPPORT="yes"
+
+# build and install espeak support (yes / no)
+ESPEAK_SUPPORT="yes"
+
+# build and install with BD+ support
+# (BD+ decryption support in KODI) (yes / no)
+BLURAY_BDPLUS_SUPPORT="yes"
+
+# build and install with AACS support
+# (BD decryption support in KODI) (yes / no)
+BLURAY_AACS_SUPPORT="yes"
+
+# additional drivers to install:
+# for a list of additional drivers see ${PACKAGES}/linux-drivers
+# Space separated list is supported,
+# e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
+ADDITIONAL_DRIVERS="RTL8192CU RTL8192DU RTL8192EU RTL8188EU RTL8812AU rpi-cirrus-config bcm2835-driver"
+
+# build and install bluetooth support (yes / no)
+BLUETOOTH_SUPPORT="yes"
+
+# build and install Avahi (Zeroconf) daemon (yes / no)
+AVAHI_DAEMON="yes"
 
 # build with NFS support (mounting nfs shares via the OS) (yes / no)
 NFS_SUPPORT="yes"
@@ -130,9 +131,6 @@ NTFS3G="yes"
 
 # build and install hfs filesystem utilities (yes / no)
 HFSTOOLS="yes"
-
-# build and install Joystick support (yes / no)
-JOYSTICK_SUPPORT="yes"
 
 # build and install CEC adapter support (yes / no)
 CEC_SUPPORT="yes"
@@ -167,9 +165,19 @@ NANO_EDITOR="yes"
 # cron support (yes / no)
 CRON_SUPPORT="yes"
 
+# Default size of system partition, in MB, eg. 512
+SYSTEM_SIZE=512
+
+# Default system partition offset, in sectors, eg. 2048
+SYSTEM_PART_START=8192
+
+# Partition labels for USB/SD installation media
+DISTRO_BOOTLABEL="BOOT"
+DISTRO_DISKLABEL="HOME"
+
 # Distribution Specific source location
 DISTRO_MIRROR="http://sources.libreelec.tv/mirror"
-DISTRO_SRC="http://sources.libreelec.tv/${DISTROSTATUS}"
+DISTRO_SRC="http://sources.libreelec.tv/${DISTRO_STATUS}"
 
 # Addon Server Url
 ADDON_SERVER_URL="https://addons.libreelec.tv"
@@ -181,12 +189,6 @@ SOURCEFORGE_SRC="https://prdownloads.sourceforge.net"
 ADDON_PATH="${ADDON_VERSION}/${DEVICE}/${TARGET_ARCH}"
 ADDON_URL="${ADDON_SERVER_URL}/${ADDON_PATH}"
 
-# Default size of system partition, in MB, eg. 512
-SYSTEM_SIZE=512
-
-# Default system partition offset, in sectors, eg. 2048
-SYSTEM_PART_START=8192
-
 # Configure debug groups (space delimited key=value pairs, with each value comma-delimited) and default group when DEBUG=yes
 # Use ! or - prefix to prevent a dependent package from being built with debug. Add + suffix to build dependencies with debug.
 DEBUG_GROUPS="kodi+=kodi+,kodi-platform+,p8-platform+,!mesa"
@@ -194,10 +196,6 @@ DEBUG_GROUP_YES="kodi+"
 
 # Default supported get handlers (archive, git, file etc.)
 GET_HANDLER_SUPPORT="archive"
-
-# Partition labels for USB/SD installation media
-DISTRO_BOOTLABEL="BOOT"
-DISTRO_DISKLABEL="HOME"
 
 # Settings package name - blank if not required
 DISTRO_PKG_SETTINGS="LibreELEC-settings"
@@ -207,9 +205,6 @@ IR_REMOTE_PROTOCOLS="RC6 NEC"
 
 # IR remote keymaps supported in default config
 IR_REMOTE_KEYMAPS="rc6_mce xbox_360 xbox_one"
-
-# Bootloader to use (bcm2835-bootloader)
-BOOTLOADER="bcm2835-bootloader"
 
 # Kernel target
 KERNEL_TARGET="zImage"
@@ -246,9 +241,6 @@ UVESAFB_SUPPORT="no"
 # e.g. GRAPHIC_DRIVERS="vc4" (for RPi4)
 GRAPHIC_DRIVERS=""
 
-# Use a vendor specific KODI repo
-KODI_VENDOR="raspberrypi"
-
 # KODI Player implementation to use (default / bcm2835-driver / mesa)
 KODIPLAYER_DRIVER="bcm2835-driver"
 
@@ -259,10 +251,6 @@ INITRAMFS_MODULES=""
 # Space separated list is supported,
 # e.g. FIRMWARE="dvb-firmware misc-firmware wlan-firmware"
 FIRMWARE="misc-firmware wlan-firmware dvb-firmware brcmfmac_sdio-firmware"
-
-# build debug with valgrind (yes / no)
-# Not available for armv6. Increases image size significantly
-VALGRIND="no"
 
 # kernel image name
 KERNEL_NAME="kernel.img"
@@ -278,8 +266,21 @@ DRIVER_ADDONS="crazycat dvb-latest"
 # debug tty path
 DEBUG_TTY="/dev/console"
 
-# debug flag
-DEBUG="no"
+# build debug with valgrind (yes / no)
+# Not available for armv6. Increases image size significantly
+VALGRIND="no"
+
+# debug flag (yes/no)
+DEBUG="${DEBUG:-no}"
+
+# verbose compilation mode (yes/no)
+VERBOSE="${VERBOSE:-yes}"
+
+# setup TARGET_ARCH
+TARGET_ARCH="arm"
+
+# set default independent variables
+ROOT="${PWD}"
 
 # Do not build as root. Ever.
 if [[ "${EUID}" -eq 0 ]]; then
@@ -298,12 +299,6 @@ fi
 # set default language for buildsystem
 export LC_ALL=C
 
-# set default independent variables
-ROOT="${PWD}"
-
-# setup TARGET_ARCH
-TARGET_ARCH="arm"
-
 # include helper functions
 . ${SYSTEM}/functions
 
@@ -319,7 +314,7 @@ fi
 
 # projects can set KERNEL_NAME (kernel.img)
 KERNEL_NAME="${KERNEL_NAME:-KERNEL}"
-LINUX_DEPENDS="${SYSTEM}/linux ${SYSTEM}/patches/linux ${SYSTEM}/${PACKAGES}/linux ${ROOT}/${PACKAGES}/linux"
+LINUX_DEPENDS="${ROOT}/${SYSTEM}/control/linux ${ROOT}/${SYSTEM}/control/patches/linux ${ROOT}/${PACKAGES}/linux"
 [ -n "${DEVICE}" ] && LINUX_DEPENDS+=" ${SYSTEM}/devices/${DEVICE}/linux ${SYSTEM}/devices/${DEVICE}/patches/linux ${SYSTEM}/devices/${DEVICE}/${PACKAGES}/linux"
 
 # Need to point to your actual cc
@@ -333,9 +328,6 @@ fi
 # Need to point to your actual g++
 # If you have ccache installed, take care that LOCAL_CXX does not point to it
 [ -z "${LOCAL_CXX}" ] && export LOCAL_CXX="$(command -v g++)"
-
-# verbose compilation mode (yes/no)
-VERBOSE="${VERBOSE:-yes}"
 
 # Concurrency make level (-j option)
 #  Try values between 1 and number of processor cores present.
@@ -382,12 +374,6 @@ TARGET_FEATURES="32bit"
 
 # Check configuration
 check_config
-
-# Include additional variables and environment configurations for path
-# setup initial directories (relative to root)
-SOURCES=${SOURCES_DIR:-${BUILD_DIR}/sources}
-TARGETS=${TARGETS_DIR:-${BUILD_DIR}/targets}
-ADDONS=addons
 
 # TARGET_CPU:
 # arm2 arm250 arm3 arm6 arm60 arm600 arm610 arm620 arm7 arm7m arm7d
@@ -450,25 +436,22 @@ TARGET_LDFLAGS="-march=$TARGET_VARIANT -mtune=$TARGET_CPU"
 GCC_OPTS="--with-abi=aapcs-linux --with-arch=$TARGET_SUBARCH --with-float=$TARGET_FLOAT --with-fpu=$TARGET_FPU"
 
 [ -z "${HOST_NAME}" ] && export HOST_NAME="$($LOCAL_CC -dumpmachine)"
-TARGET_NAME=$TARGET_GCC_ARCH-libreelec-linux-gnu${TARGET_ABI}
+TARGET_NAME=${TARGET_GCC_ARCH}-clue-linux-gnu${TARGET_ABI}
 
-if [ "${DISTROSTATUS}" = "devel" ]; then
-	BUILD=${BUILD_DIR}/build.${DISTRONAME}-${OS_VERSION}.${DISTROSTATUS}-${DEVICE}
-else
-	BUILD=${BUILD_DIR}/build.${DISTRONAME}-${OS_VERSION}-${DEVICE}
-fi
+# Include additional variables and environment configurations for path
+# setup initial directories (relative to root)
+SOURCES=${OUTPUT_DIR}/sources
+TARGETS=${OUTPUT_DIR}/targets
+BUILDER=${OUTPUT_DIR}/${DISTRO_STATUS}-${DEVICE}.${TARGET_ARCH}-${DISTRO_NAME}-${DISTRO_VERSION}
 
-BUILDPACKS=${BUILD}/${PACKAGES}
-THREAD_CONTROL=${BUILD}/.threads
-TARGET_ADDONS="${TARGETS}/${ADDONS}/${ADDON_PATH}"
-ADDON_BUILD="${BUILD}/${ADDONS}/$1"
-STAMPS_NOARCH=.stamps
-STAMPS=${BUILD}/.stamps
-STAMPS_INSTALL=${BUILD}/image/.stamps
-TOOLCHAIN=${BUILD}/toolchain
-SYSROOT_PREFIX=${TOOLCHAIN}/${TARGET_NAME}/sysroot
-LIB_PREFIX=${SYSROOT_PREFIX}/usr
-TARGET_PREFIX=${TOOLCHAIN}/bin/$TARGET_NAME-
+BUILDER_PACKS=${BUILDER}/${PACKAGES}
+BUILDER_ADDON="${BUILDER}/addons/$1"
+BUILDER_THREADS=${BUILDER}/.threads
+BUILDER_STAMPS=${BUILDER}/.stamps
+INSTALL_STAMPS=${BUILDER}/image/.stamps
+TOOLCHAIN=${BUILDER}/toolchain
+TARGET_SYSROOT=${TOOLCHAIN}/${TARGET_NAME}/sysroot
+TARGET_PREFIX=${TOOLCHAIN}/bin/${TARGET_NAME}-
 
 # use ARM toolchain on 64/32 split builds
 if [ -z "$KERNEL_TOOLCHAIN" -a "$TARGET_KERNEL_ARCH" = "arm64" -a "$TARGET_ARCH" = "arm" ]; then
@@ -480,12 +463,12 @@ else
 	TARGET_KERNEL_PREFIX=$TARGET_PREFIX
 fi
 
-FAKEROOT_SCRIPT=$BUILD/.fakeroot
+FAKEROOT_SCRIPT=${BUILDER}/.fakeroot
 
 if [ -z "$INSTALL" ]; then
-	INSTALL=$BUILD/image/system
+	INSTALL=${BUILDER}/image/system
 fi
-INSTALL_INIT=$BUILD/image/initramfs/root-image
+INSTALL_INIT=${BUILDER}/image/initramfs/root-image
 
 MAKE="$TOOLCHAIN/bin/make"
 
@@ -517,8 +500,8 @@ TARGET_CPPFLAGS=""
 TARGET_CFLAGS="$TARGET_CFLAGS -Wall -pipe $GCC_OPTIM $PROJECT_CFLAGS"
 TARGET_CXXFLAGS="$TARGET_CFLAGS"
 TARGET_LDFLAGS="$TARGET_LDFLAGS $LD_OPTIM"
-TARGET_LIBDIR="$SYSROOT_PREFIX/lib $SYSROOT_PREFIX/usr/lib"
-TARGET_INCDIR="$SYSROOT_PREFIX/include $SYSROOT_PREFIX/usr/include"
+TARGET_LIBDIR="$TARGET_SYSROOT/lib $TARGET_SYSROOT/usr/lib"
+TARGET_INCDIR="$TARGET_SYSROOT/include $TARGET_SYSROOT/usr/include"
 
 HOST_CPPFLAGS=""
 HOST_CFLAGS="-march=native -O2 -Wall -pipe -I$TOOLCHAIN/include"
@@ -575,7 +558,7 @@ fi
 
 ## setup build environment
 if [ -z "$CCACHE_DIR" ]; then
-	export CCACHE_DIR=${BUILD_DIR}/.ccache
+	export CCACHE_DIR=${OUTPUT_DIR}/.ccache
 fi
 
 if [[ -z "$PATH" || ("$PATH" != "$TOOLCHAIN/bin:$TOOLCHAIN/sbin" && "$PATH" == "${PATH#$TOOLCHAIN/bin:$TOOLCHAIN/sbin:}") ]]; then
@@ -617,8 +600,8 @@ source_package "${1}"
 ## Multithread configuration
 THREADCOUNT=${THREADCOUNT:-100%}
 
-# This function is passed a list of package.mk paths to be processed.
-# Each package.mk is sourced with relevant variables output in JSON format.
+# This function is passed a list of descriptor.csh paths to be processed.
+# Each descriptor.csh is sourced with relevant variables output in JSON format.
 json_worker() {
 	local packages="$@"
 	local pkgpath hierarchy exited
@@ -631,9 +614,9 @@ json_worker() {
 		pkgpath="${pkgpath%%@*}"
 
 		exited=0
-		if ! source_package "${pkgpath}/package.mk" &>/dev/null; then
+		if ! source_package "${pkgpath}/descriptor.csh" &>/dev/null; then
 			unset -f exit
-			die "$(print_color CLR_ERROR "FAILURE: sourcing package ${pkgpath}/package.mk")"
+			die "$(print_color CLR_ERROR "FAILURE: sourcing package ${pkgpath}/descriptor.csh")"
 		fi
 
 		[ ${exited} -eq 1 ] && continue
@@ -671,7 +654,7 @@ package_worker() {
 
 	. ${SYSTEM}/options "${pkgname}"
 
-	[ ! -f "${THREAD_CONTROL}/parallel.pid" ] && echo "${PARALLEL_PID}" >"${THREAD_CONTROL}/parallel.pid"
+	[ ! -f "${BUILDER_THREADS}/parallel.pid" ] && echo "${PARALLEL_PID}" >"${BUILDER_THREADS}/parallel.pid"
 
 	${CONFIG}/${task} ${pkgname} 2>&1 && result=0 || result=1
 
@@ -685,10 +668,10 @@ package_worker() {
 		fi
 
 		if [ ${result} -ne 0 ]; then
-			if [ -d "${THREAD_CONTROL}/logs" ]; then
-				echo "${PKG_NAME} ${THREAD_CONTROL}/logs/${job}/stdout" >>"${THREAD_CONTROL}/addons.failed"
+			if [ -d "${BUILDER_THREADS}/logs" ]; then
+				echo "${PKG_NAME} ${BUILDER_THREADS}/logs/${job}/stdout" >>"${BUILDER_THREADS}/addons.failed"
 			else
-				echo "${PKG_NAME}" >>"${THREAD_CONTROL}/addons.failed"
+				echo "${PKG_NAME}" >>"${BUILDER_THREADS}/addons.failed"
 			fi
 		fi
 	fi
@@ -696,12 +679,12 @@ package_worker() {
 	(
 		flock --exclusive 95
 		[ ${result} -eq 0 ] && status="DONE" || status="FAIL"
-		num=$(<"${THREAD_CONTROL}/progress")
-		mv "${THREAD_CONTROL}/progress" "${THREAD_CONTROL}/progress.prev"
+		num=$(<"${BUILDER_THREADS}/progress")
+		mv "${BUILDER_THREADS}/progress" "${BUILDER_THREADS}/progress.prev"
 		num=$((num + 1))
-		echo ${num} >"${THREAD_CONTROL}/progress"
+		echo ${num} >"${BUILDER_THREADS}/progress"
 		printf "[%0*d/%0*d] [%-4s] %-7s %s\n" ${#jobs} ${num} ${#jobs} ${jobs} "${status}" "${task}" "${pkgname}" >&2
-	) 95>"${THREAD_CONTROL}/locks/.progress"
+	) 95>"${BUILDER_THREADS}/locks/.progress"
 
 	if [ ${result} -eq 0 ]; then
 		pkg_lock_status "IDLE"
@@ -710,12 +693,12 @@ package_worker() {
 
 		print_color CLR_ERROR "FAILURE: ${CONFIG}/${task} ${pkgname} has failed!\n"
 
-		if [ -d "${THREAD_CONTROL}/logs" ]; then
+		if [ -d "${BUILDER_THREADS}/logs" ]; then
 			cat >&2 <<EOF
 
 The following logs for this failure are available:
-  stdout: ${THREAD_CONTROL}/logs/${job}/stdout
-  stderr: ${THREAD_CONTROL}/logs/${job}/stderr
+  stdout: ${BUILDER_THREADS}/logs/${job}/stdout
+  stderr: ${BUILDER_THREADS}/logs/${job}/stderr
 
 EOF
 		fi
@@ -730,12 +713,12 @@ start_multithread_build() {
 	local singlethread buildopts result=0
 
 	# init thread control folder
-	rm -rf "${THREAD_CONTROL}"
-	mkdir -p "${THREAD_CONTROL}/locks"
-	echo -1 >"${THREAD_CONTROL}/progress.prev"
-	echo 0 >"${THREAD_CONTROL}/progress"
-	echo 0 >"${THREAD_CONTROL}/status.max"
-	touch "${THREAD_CONTROL}/status"
+	rm -rf "${BUILDER_THREADS}"
+	mkdir -p "${BUILDER_THREADS}/locks"
+	echo -1 >"${BUILDER_THREADS}/progress.prev"
+	echo 0 >"${BUILDER_THREADS}/progress"
+	echo 0 >"${BUILDER_THREADS}/status.max"
+	touch "${BUILDER_THREADS}/status"
 
 	# Increase file descriptors if building one thread/package
 	[ "${THREADCOUNT}" = "0" ] && ulimit -n ${ULIMITN:-10240}
@@ -750,8 +733,8 @@ start_multithread_build() {
 	if [ "${singlethread}" = "yes" -a "${ONELOG,,}" != "no" ] || [ "${ONELOG,,}" = "yes" ]; then
 		buildopts+=" --ungroup"
 	else
-		mkdir -p "${THREAD_CONTROL}/logs"
-		buildopts+=" --group --results ${THREAD_CONTROL}/logs/{#}/"
+		mkdir -p "${BUILDER_THREADS}/logs"
+		buildopts+=" --group --results ${BUILDER_THREADS}/logs/{#}/"
 	fi
 
 	# When building addons, don't halt on error - keep building all ${PACKAGES}/addons
@@ -762,14 +745,14 @@ start_multithread_build() {
 
 	cat ${_CACHE_PACKAGE_GLOBAL} ${_CACHE_PACKAGE_LOCAL} |
 		${TOOLCHAIN}/bin/parallel --plain --no-notice --max-args 30 --halt now,fail=1 json_worker |
-		${CONFIG}/tools/planner.py --no-reorder --show-wants --build ${@} >"${THREAD_CONTROL}"/plan || result=1
+		${CONFIG}/tools/planner.py --no-reorder --show-wants --build ${@} >"${BUILDER_THREADS}"/plan || result=1
 
 	if [ ${result} -eq 0 ]; then
-		cat "${THREAD_CONTROL}"/plan | awk '{print $1 " " $2}' |
+		cat "${BUILDER_THREADS}"/plan | awk '{print $1 " " $2}' |
 			MTBUILDSTART=$(date +%s) MTWITHLOCKS=yes ${TOOLCHAIN}/bin/parallel \
-				--plain --no-notice --max-procs ${THREADCOUNT} --joblog="${THREAD_CONTROL}/joblog" --plus ${buildopts} \
+				--plain --no-notice --max-procs ${THREADCOUNT} --joblog="${BUILDER_THREADS}/joblog" --plus ${buildopts} \
 				package_worker {%} {#} {##} {} || result=1
-		rm -f "${THREAD_CONTROL}/parallel.pid"
+		rm -f "${BUILDER_THREADS}/parallel.pid"
 	fi
 
 	set +o pipefail

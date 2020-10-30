@@ -20,9 +20,11 @@ force_turbo=0
 # hdmi_force_hotplug=1
 
 # Doesn't sent initial active source message.
-# Avoids bringing CEC (enabled TV) out of standby and channel switch when
-# rebooting.
-hdmi_ignore_cec_init=1
+# Avoids bringing CEC (enabled TV) out of standby and channel switch when rebooting.
+hdmi_ignore_cec_init=0
+
+# Enable/disable boot splash screen
+disable_splash=1
 
 ################################################################################
 # End of default configuration

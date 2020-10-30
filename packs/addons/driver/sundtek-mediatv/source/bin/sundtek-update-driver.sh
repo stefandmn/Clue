@@ -7,10 +7,10 @@ SUNDTEK_ADDON_HOME="$HOME/.kodi/userdata/addon_data/driver.dvb.sundtek-mediatv"
 SUNDTEK_ADDON_SETTINGS="$SUNDTEK_ADDON_HOME/settings.xml"
 
 trap_exit_install() {
-  kodi-send -a "Notification(Sundtek, Something went wrong. Cleaning..., 8000, $SUNDTEK_ADDON_DIR/icon.png)"
-  cd "$SUNDTEK_ADDON_DIR"
-  rm -fr tmp
-  exit 5
+	kodi-send -a "Notification(Sundtek, Something went wrong. Cleaning..., 8000, $SUNDTEK_ADDON_DIR/icon.png)"
+	cd "$SUNDTEK_ADDON_DIR"
+	rm -fr tmp
+	exit 5
 }
 
 # kill process
@@ -37,55 +37,55 @@ kodi-send -a "Notification(Sundtek, Starting updating driver, 3000, $SUNDTEK_ADD
 
 wget -O ../version.used http://sundtek.de/media/latest.phtml
 if [ $? -ne 0 ]; then
-  logger -t Sundtek "### Can't get latest version ###"
-  kodi-send -a "Notification(Sundtek, Cant get latest version, 8000, $SUNDTEK_ADDON_DIR/icon.png)"
-  cd ..
-  rm -fr tmp/
-  exit 1
+	logger -t Sundtek "### Can't get latest version ###"
+	kodi-send -a "Notification(Sundtek, Cant get latest version, 8000, $SUNDTEK_ADDON_DIR/icon.png)"
+	cd ..
+	rm -fr tmp/
+	exit 1
 fi
 
 LOCAL_ARCH=$(sed -n 's|.*\.\([^-]*\)-.*|\1|p' /etc/release | tr -d '\n')
 if [ "$LOCAL_ARCH" = "x86_64" ]; then
-  INSTALLER_URL="http://sundtek.de/media/netinst/64bit/installer.tar.gz"
+	INSTALLER_URL="http://sundtek.de/media/netinst/64bit/installer.tar.gz"
 elif [ "$LOCAL_ARCH" = "arm" ]; then
-  INSTALLER_URL="http://sundtek.de/media/netinst/armsysvhf/installer.tar.gz"
+	INSTALLER_URL="http://sundtek.de/media/netinst/armsysvhf/installer.tar.gz"
 elif [ "$LOCAL_ARCH" = "aarch64" ]; then
-  INSTALLER_URL="http://sundtek.de/media/netinst/arm64/installer.tar.gz"
+	INSTALLER_URL="http://sundtek.de/media/netinst/arm64/installer.tar.gz"
 else
-  logger -t Sundtek "### Unsupported architecture ###"
-  kodi-send -a "Notification(Sundtek, Unsupported architecture, 8000, $SUNDTEK_ADDON_DIR/icon.png)"
-  cd ..
-  rm -fr tmp
-  exit 2
+	logger -t Sundtek "### Unsupported architecture ###"
+	kodi-send -a "Notification(Sundtek, Unsupported architecture, 8000, $SUNDTEK_ADDON_DIR/icon.png)"
+	cd ..
+	rm -fr tmp
+	exit 2
 fi
 
 logger -t Sundtek "### Downloading driver archive for $LOCAL_ARCH ###"
 kodi-send -a "Notification(Sundtek, Downloading driver archive for $LOCAL_ARCH, 3000, $SUNDTEK_ADDON_DIR/icon.png)"
 wget -O installer.tar.gz $INSTALLER_URL
 if [ $? -ne 0 ]; then
-  logger -t Sundtek "### Archive damaged ###"
-  kodi-send -a "Notification(Sundtek, Download failed, 8000, $SUNDTEK_ADDON_DIR/icon.png)"
-  cd ..
-  rm -fr tmp/
-  exit 3
+	logger -t Sundtek "### Archive damaged ###"
+	kodi-send -a "Notification(Sundtek, Download failed, 8000, $SUNDTEK_ADDON_DIR/icon.png)"
+	cd ..
+	rm -fr tmp/
+	exit 3
 fi
 
 logger -t Sundtek "### Extracting archive ###"
 kodi-send -a "Notification(Sundtek, Extracting archive, 3000, $SUNDTEK_ADDON_DIR/icon.png)"
 tar -xzf installer.tar.gz
 if [ $? -ne 0 ]; then
-  logger -t Sundtek "### Archive damaged ###"
-  kodi-send -a "Notification(Sundtek, Archive damaged, 8000, $SUNDTEK_ADDON_DIR/icon.png)"
-  cd ..
-  rm -fr tmp/
-  exit 4
+	logger -t Sundtek "### Archive damaged ###"
+	kodi-send -a "Notification(Sundtek, Archive damaged, 8000, $SUNDTEK_ADDON_DIR/icon.png)"
+	cd ..
+	rm -fr tmp/
+	exit 4
 fi
 
 # fix permissions
 chmod -R 755 opt/ etc/
 
-rm -f  opt/bin/getinput.sh
-rm -f  opt/bin/lirc.sh
+rm -f opt/bin/getinput.sh
+rm -f opt/bin/lirc.sh
 rm -fr opt/lib/pm/
 
 cp -Pa opt/bin/* ../bin/

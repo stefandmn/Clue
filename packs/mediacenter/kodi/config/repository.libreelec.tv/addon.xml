@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="repository.libreelec.tv"
-		name="Clue Add-ons"
-		version="@ADDON_VERSION@"
-		provider-name="Team Clue">
+	   name="Clue Add-ons"
+	   version="@ADDON_VERSION@"
+	   provider-name="Team Clue">
 	<extension point="xbmc.addon.repository"
-		name="Clue Add-ons">
+			   name="Clue Add-ons">
 		<info>@ADDON_URL@/addons.xml.gz</info>
 		<checksum verify="sha256">@ADDON_URL@/addons.xml.gz.sha256</checksum>
 		<datadir zip="true">@ADDON_URL@</datadir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary>Clue Add-ons</summary>
-		<description>The Clue add-on repository contains Kodi PVR Clients and Servers, Screensavers, Visualisations, and more. Add-ons in this repository are maintained and supported by LibreELEC staff and YOU the community. If you find a broken or non-working add-on please report it via the forums, or help by submitting fixes via GitHub.</description>
+		<description>The Clue add-on repository contains Kodi PVR Clients and Servers, Screensavers, Visualisations, and more. Add-ons in this repository are maintained and supported by AMSD.</description>
 		<platform>all</platform>
 	</extension>
 </addon>

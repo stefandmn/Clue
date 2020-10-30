@@ -1,0 +1,6 @@
+PKG_NAME="wireless-regdb"
+PKG_VERSION="2019.06.03"
+PKG_SHA256="cd917ed86b63ce8d93947979f1f18948f03a4ac0ad89ec25227b36ac00dc54bf"
+PKG_URL="https://www.kernel.org/pub/software/network/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_LONGDESC="wireless-regdb is a regulatory database"
+PKG_TOOLCHAIN="manual"

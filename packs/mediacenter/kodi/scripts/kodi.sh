@@ -28,113 +28,108 @@ KODI_MAX_RESTARTS=@KODI_MAX_RESTARTS@
 KODI_MAX_SECONDS=@KODI_MAX_SECONDS@
 
 cleanup() {
-  # make systemd happy by not exiting immediately but
-  # wait for kodi to exit
-  while killall -0 kodi.bin &>/dev/null; do
-    sleep 0.5
-  done
+	# make systemd happy by not exiting immediately but
+	# wait for kodi to exit
+	while killall -0 kodi.bin &>/dev/null; do
+		sleep 0.5
+	done
 }
 
-command_exists()
-{
-  command -v $1 &>/dev/null
+command_exists() {
+	command -v $1 &>/dev/null
 }
 
-single_stacktrace()
-{
-  # core filename is "core.*kodi.bin.*"
-  find "$1" -name 'core.*kodi.bin.*' | while read core; do
-    echo "=====>  Core file: "$core"" >> $FILE
-    echo "        =========================================" >> $FILE
-    if [ -f /clue/.config/debug.enhanced ]; then
-      gdb /usr/lib/kodi/kodi.bin --core="$core" --batch -ex "thread apply all bt full" -ex "info registers" -ex "set print asm-demangle on" -ex "disassemble" 2>/dev/null >> $FILE
-    else
-      gdb /usr/lib/kodi/kodi.bin --core="$core" --batch -ex "thread apply all bt" 2>/dev/null >> $FILE
-    fi
-    rm -f "$core"
-  done
+single_stacktrace() {
+	# core filename is "core.*kodi.bin.*"
+	find "$1" -name 'core.*kodi.bin.*' | while read core; do
+		echo "=====>  Core file: "$core"" >>$FILE
+		echo "        =========================================" >>$FILE
+		if [ -f /clue/.config/debug.enhanced ]; then
+			gdb /usr/lib/kodi/kodi.bin --core="$core" --batch -ex "thread apply all bt full" -ex "info registers" -ex "set print asm-demangle on" -ex "disassemble" 2>/dev/null >>$FILE
+		else
+			gdb /usr/lib/kodi/kodi.bin --core="$core" --batch -ex "thread apply all bt" 2>/dev/null >>$FILE
+		fi
+		rm -f "$core"
+	done
 }
 
-detect_crash_loop()
-{
-  # use monotonic time (in case date/time changes after booting)
-  NOW_TIME=$(awk '/^now/ {print int($3 / 1000000000)}' /proc/timer_list)
-  echo "$NOW_TIME" >> $CRASH_HIST
+detect_crash_loop() {
+	# use monotonic time (in case date/time changes after booting)
+	NOW_TIME=$(awk '/^now/ {print int($3 / 1000000000)}' /proc/timer_list)
+	echo "$NOW_TIME" >>$CRASH_HIST
 
-  NUM_RESTARTS=$(wc -l $CRASH_HIST | cut -d' ' -f1)
-  FIRST_RESTART_TIME=$(tail -n $KODI_MAX_RESTARTS $CRASH_HIST | head -n 1)
+	NUM_RESTARTS=$(wc -l $CRASH_HIST | cut -d' ' -f1)
+	FIRST_RESTART_TIME=$(tail -n $KODI_MAX_RESTARTS $CRASH_HIST | head -n 1)
 
-  # kodi restart loop detected? fail this kodi install
-  if [ $NUM_RESTARTS -ge $KODI_MAX_RESTARTS -a $KODI_MAX_SECONDS -ge $((NOW_TIME - FIRST_RESTART_TIME)) ]; then
-    return 0
-  else
-    return 1
-  fi
+	# kodi restart loop detected? fail this kodi install
+	if [ $NUM_RESTARTS -ge $KODI_MAX_RESTARTS -a $KODI_MAX_SECONDS -ge $((NOW_TIME - FIRST_RESTART_TIME)) ]; then
+		return 0
+	else
+		return 1
+	fi
 }
 
-activate_safe_mode()
-{
-  [ -f $NOSAFE_MODE ] && return 0
+activate_safe_mode() {
+	[ -f $NOSAFE_MODE ] && return 0
 
-  BOOT_STATE="$(cat $BOOT_STATUS 2>/dev/null)"
+	BOOT_STATE="$(cat $BOOT_STATUS 2>/dev/null)"
 
-  if [ "${BOOT_STATE:-OK}" = "OK" ]; then
-    # generate logfiles zip for the failed kodi
-    /usr/bin/createlog
-    lastlog=$(ls -1 /clue/logfiles/*.zip | tail -n 1)
-    mv $lastlog /clue/logfiles/log-$(date -u +%Y-%m-%d-%H.%M.%S)-FAILED.zip
+	if [ "${BOOT_STATE:-OK}" = "OK" ]; then
+		# generate logfiles zip for the failed kodi
+		/usr/bin/createlog
+		lastlog=$(ls -1 /clue/logfiles/*.zip | tail -n 1)
+		mv $lastlog /clue/logfiles/log-$(date -u +%Y-%m-%d-%H.%M.%S)-FAILED.zip
 
-    echo "SAFE" > $BOOT_STATUS
-  fi
+		echo "SAFE" >$BOOT_STATUS
+	fi
 
-  return 0
+	return 0
 }
 
-print_crash_report()
-{
-  mkdir -p $CRASHLOG_DIR
+print_crash_report() {
+	mkdir -p $CRASHLOG_DIR
 
-  DATE=`date +%Y%m%d%H%M%S`
-  FILE="$CRASHLOG_DIR/.kodi_crashlog.log"
-  echo "############## kodi CRASH LOG ###############" > $FILE
-  echo >> $FILE
-  echo "################ SYSTEM INFO ################" >> $FILE
-  echo -n " Date: " >> $FILE
-  date >> $FILE
-  echo " kodi Options: $SAVED_ARGS" >> $FILE
-  echo -n " Arch: " >> $FILE
-  uname -m >> $FILE
-  echo -n " Kernel: " >> $FILE
-  uname -rvs >> $FILE
-  echo -n " Release: " >> $FILE
-  . /etc/os-release
-  echo $NAME $VERSION >> $FILE
-  echo "############## END SYSTEM INFO ##############" >> $FILE
-  echo >> $FILE
-  echo "############### STACK TRACE #################" >> $FILE
-  if command_exists gdb; then
-    single_stacktrace /clue/.cache/cores
-  else
-    echo "gdb not installed, can't get stack trace." >> $FILE
-  fi
-  echo "############# END STACK TRACE ###############" >> $FILE
-  echo >> $FILE
-  echo "################# LOG FILE ##################" >> $FILE
-  echo >> $FILE
-  cat $KODI_ROOT/temp/kodi.log >> $FILE
-  echo >> $FILE
-  echo "############### END LOG FILE ################" >> $FILE
-  echo >> $FILE
-  echo "############ END kodi CRASH LOG #############" >> $FILE
-  OFILE="$FILE"
-  FILE="$CRASHLOG_DIR/kodi_crashlog_$DATE.log"
-  mv "$OFILE" "$FILE"
-  ln -sf "$(basename $FILE)" "$CRASHLOG_DIR/kodi_crash.log"
-  echo "Crash report available at $FILE"
+	DATE=$(date +%Y%m%d%H%M%S)
+	FILE="$CRASHLOG_DIR/.kodi_crashlog.log"
+	echo "############## kodi CRASH LOG ###############" >$FILE
+	echo >>$FILE
+	echo "################ SYSTEM INFO ################" >>$FILE
+	echo -n " Date: " >>$FILE
+	date >>$FILE
+	echo " kodi Options: $SAVED_ARGS" >>$FILE
+	echo -n " Arch: " >>$FILE
+	uname -m >>$FILE
+	echo -n " Kernel: " >>$FILE
+	uname -rvs >>$FILE
+	echo -n " Release: " >>$FILE
+	. /etc/os-release
+	echo $NAME $VERSION >>$FILE
+	echo "############## END SYSTEM INFO ##############" >>$FILE
+	echo >>$FILE
+	echo "############### STACK TRACE #################" >>$FILE
+	if command_exists gdb; then
+		single_stacktrace /clue/.cache/cores
+	else
+		echo "gdb not installed, can't get stack trace." >>$FILE
+	fi
+	echo "############# END STACK TRACE ###############" >>$FILE
+	echo >>$FILE
+	echo "################# LOG FILE ##################" >>$FILE
+	echo >>$FILE
+	cat $KODI_ROOT/temp/kodi.log >>$FILE
+	echo >>$FILE
+	echo "############### END LOG FILE ################" >>$FILE
+	echo >>$FILE
+	echo "############ END kodi CRASH LOG #############" >>$FILE
+	OFILE="$FILE"
+	FILE="$CRASHLOG_DIR/kodi_crashlog_$DATE.log"
+	mv "$OFILE" "$FILE"
+	ln -sf "$(basename $FILE)" "$CRASHLOG_DIR/kodi_crash.log"
+	echo "Crash report available at $FILE"
 }
 
 if command_exists gdb; then
-  ulimit -c unlimited
+	ulimit -c unlimited
 fi
 
 # clean up any stale cores. just in case
@@ -142,23 +137,23 @@ find /clue/.cache/cores -type f -delete
 
 # clean zero-byte database files that prevent migration/startup
 for file in $KODI_ROOT/userdata/Database/*.db; do
-  if [ -e "$file" ]; then
-    [ -s $file ] || rm -f $file
-  fi
+	if [ -e "$file" ]; then
+		[ -s $file ] || rm -f $file
+	fi
 done
 
 /usr/lib/kodi/kodi.bin $SAVED_ARGS
 RET=$?
 
-if [ $(( ($RET >= 131 && $RET <= 136) || $RET == 139 )) = "1" ] ; then
-  # Crashed with core dump
-  print_crash_report
+if [ $((($RET >= 131 && $RET <= 136) || $RET == 139)) = "1" ]; then
+	# Crashed with core dump
+	print_crash_report
 
-  # Cleanup. Keep only youngest 10 reports
-  rm -f $(ls -1t $CRASHLOG_DIR/kodi_crashlog_*.log | tail -n +11)
+	# Cleanup. Keep only youngest 10 reports
+	rm -f $(ls -1t $CRASHLOG_DIR/kodi_crashlog_*.log | tail -n +11)
 
-  # Enable safe mode if a crash loop is detected
-  detect_crash_loop && activate_safe_mode
+	# Enable safe mode if a crash loop is detected
+	detect_crash_loop && activate_safe_mode
 fi
 
 # Filter Kodi powerdown/restartapp/reboot codes to satisfy systemd

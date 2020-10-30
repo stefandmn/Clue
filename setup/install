@@ -5,7 +5,7 @@
 if [ -n "${1}" ]; then
 
 	if [ -z "${PKG_NAME}" ]; then
-		die "$(print_color CLR_ERROR "${1}: no package.mk file found")"
+		die "$(print_color CLR_ERROR "${1}: no descriptor.csh file found")"
 	fi
 
 	if [ -z "${INSTALL}" ]; then
@@ -29,13 +29,13 @@ if [ -n "${1}" ]; then
 
 	pkg_lock "${PKG_NAME}:${TARGET}" "install" "${PARENT_PKG}"
 
-	STAMP=${STAMPS_INSTALL}/${PKG_NAME}/install_${TARGET}
+	STAMP=${INSTALL_STAMPS}/${PKG_NAME}/install_${TARGET}
 	if [ -f ${STAMP} ]; then
 		pkg_lock_status "UNLOCK" "${PKG_NAME}:${TARGET}" "install" "already installed"
 		exit 0
 	fi
 
-	mkdir -p ${STAMPS_INSTALL}/${PKG_NAME}
+	mkdir -p ${INSTALL_STAMPS}/${PKG_NAME}
 
 	${CONFIG}/build "${1}" "${PARENT_PKG}"
 
@@ -47,7 +47,7 @@ if [ -n "${1}" ]; then
 		for p in ${PKG_DEPENDS_INIT}; do
 			${CONFIG}/install "${p}" "${PARENT_PKG}"
 		done
-		INSTALL=${BUILD}/initramfs
+		INSTALL=${BUILDER}/initramfs
 	fi
 
 	pkg_lock_status "ACTIVE" "${PKG_NAME}:${TARGET}" "install"
@@ -58,7 +58,6 @@ if [ -n "${1}" ]; then
 
 	if [ "${TARGET}" = "target" ]; then
 		for PKG_TMP_DIR in ${PKG_DIR} \
-			${SYSTEM}/${PACKAGES}/${PKG_NAME} \
 			${SYSTEM}/devices/${DEVICE}/${PACKAGES}/${PKG_NAME}; do
 
 			[ -d ${PKG_TMP_DIR} ] || continue

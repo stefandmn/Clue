@@ -1,7 +1,7 @@
 [Unit]
 Description=Kodi clean debug logs
 ConditionKernelCommandLine=!debugging
-ConditionPathExists=!/clue/.cache/debug.libreelec
+ConditionPathExists=!/clue/.cache/debug.clue
 Before=kodi.service
 
 [Service]

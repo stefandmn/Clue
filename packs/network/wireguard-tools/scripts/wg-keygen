@@ -2,18 +2,18 @@
 
 if [ -x /usr/bin/wg ]; then
 
-  umask 077
-  mkdir -p /clue/.cache/wireguard
+	umask 077
+	mkdir -p /clue/.cache/wireguard
 
-  if [ ! -f /clue/.cache/wireguard/privatekey ]; then
-    wg genkey > /clue/.cache/wireguard/privatekey
-  fi
-  if [ ! -f /clue/.cache/wireguard/publickey ]; then
-    wg pubkey < /clue/.cache/wireguard/privatekey > /clue/.cache/wireguard/publickey
-  fi
-  if [ ! -f /clue/.cache/wireguard/preshared ]; then
-    wg genpsk > /clue/.cache/wireguard/preshared
-  fi
+	if [ ! -f /clue/.cache/wireguard/privatekey ]; then
+		wg genkey >/clue/.cache/wireguard/privatekey
+	fi
+	if [ ! -f /clue/.cache/wireguard/publickey ]; then
+		wg pubkey </clue/.cache/wireguard/privatekey >/clue/.cache/wireguard/publickey
+	fi
+	if [ ! -f /clue/.cache/wireguard/preshared ]; then
+		wg genpsk >/clue/.cache/wireguard/preshared
+	fi
 
 fi
 

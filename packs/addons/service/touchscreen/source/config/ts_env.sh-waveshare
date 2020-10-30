@@ -17,29 +17,28 @@ export TSLIB_CONFFILE=/clue/.kodi/userdata/addon_data/service.touchscreen/ts.con
 export TSLIB_RES_X=800
 export TSLIB_RES_Y=480
 
-
 # find touchscreen device
 if [ "$TSLIB_TSDEVICE" = "" ]; then
-  PRODUCT_VID_PID="0000${PRODUCT_VID}:0000${PRODUCT_PID}"
-  echo "PRODUCT_VID_PID: $PRODUCT_VID_PID"
+	PRODUCT_VID_PID="0000${PRODUCT_VID}:0000${PRODUCT_PID}"
+	echo "PRODUCT_VID_PID: $PRODUCT_VID_PID"
 
-  hidrawN=""
-  for dev in /sys/class/hidraw/hidraw*/device/uevent; do
-    echo
-    echo "device: $dev"
+	hidrawN=""
+	for dev in /sys/class/hidraw/hidraw*/device/uevent; do
+		echo
+		echo "device: $dev"
 
-    HID_ID=$(cat $dev | grep HID_ID | grep "$PRODUCT_VID_PID")
-    if [ -n "$HID_ID" ]; then
-      hidrawN=$(echo $dev | awk -F "/" '{print $5}')
-      hidrawN="/dev/$hidrawN"
-      echo "OK HID_ID: $HID_ID"
-      echo "OK hidrawN: $hidrawN"
-      break
-    fi
-  done
+		HID_ID=$(cat $dev | grep HID_ID | grep "$PRODUCT_VID_PID")
+		if [ -n "$HID_ID" ]; then
+			hidrawN=$(echo $dev | awk -F "/" '{print $5}')
+			hidrawN="/dev/$hidrawN"
+			echo "OK HID_ID: $HID_ID"
+			echo "OK hidrawN: $hidrawN"
+			break
+		fi
+	done
 
-  if [ -n "$hidrawN" ]; then
-    echo "found hidrawN: $hidrawN"
-    export TSLIB_TSDEVICE=$hidrawN
-  fi
+	if [ -n "$hidrawN" ]; then
+		echo "found hidrawN: $hidrawN"
+		export TSLIB_TSDEVICE=$hidrawN
+	fi
 fi

@@ -10,7 +10,7 @@
     esac
   done
 
-  if [ -e /clue/.cache/debug.libreelec ] ; then
+  if [ -e /clue/.cache/debug.clue ] ; then
     export DEBUG=yes
   fi
 

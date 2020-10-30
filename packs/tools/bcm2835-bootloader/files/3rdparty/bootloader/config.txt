@@ -7,12 +7,12 @@
 ################################################################################
 
 # Default GPU memory split (do not change if you do not know what you are doing)
-  gpu_mem=128
+gpu_mem=128
 
 # Configure GPU memory based on SDRAM size - overrides above setting
-  gpu_mem_256=112
-  gpu_mem_512=160
-  gpu_mem_1024=256
+gpu_mem_256=112
+gpu_mem_512=160
+gpu_mem_1024=256
 
 ################################################################################
 # For overclocking and various other settings, see:
@@ -34,9 +34,11 @@ force_turbo=0
 # hdmi_force_hotplug=1
 
 # Doesn't sent initial active source message.
-# Avoids bringing CEC (enabled TV) out of standby and channel switch when
-# rebooting.
-hdmi_ignore_cec_init=1
+# Avoids bringing CEC (enabled TV) out of standby and channel switch when rebooting.
+hdmi_ignore_cec_init=0
+
+# Enable/disable boot splash screen
+disable_splash=1
 
 ################################################################################
 # License keys to enable GPU hardware decoding for various codecs
