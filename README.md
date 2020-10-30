@@ -113,6 +113,11 @@ _B+ model specific_
 
 ## Development Process
 
+Development process is always driven __GNU make__ utility, providing the entire set command to 
+build the entire distro, creater OS image, or to build or install particular packages or addons.
+Also, __Makefile__ gives you details how to configure your environment in order to run the processes
+and to optimize your resources. Just to identify all these details try a simple ```make help``` command.
+
 Development process for ***Clue*** project means to update existing packages or to add new 
 packages. In base cases you need to understand the `descriptor.csh` file that provides a set of 
 variables and functions for integrated building and deployment process.
@@ -124,15 +129,11 @@ just to control the build behaviour of the package (use variables in the top-dow
 | Variable    | Default | Required | Description |
 |-------------|---------|----------|-------------|
 | PKG_NAME    | -       | yes | Name of the packaged software module. Should be lowercase |
-| PKG_VERSION | -       | yes | Version of the packaged software module. If the version is a 
-githash, please use the full githash, not the abbreviated form. |
+| PKG_VERSION | -       | yes | Version of the packaged software module. If the version is a githash, please use the full githash, not the abbreviated form. |
 | PKG_SHA256  | -       | yes | SHA256 hashsum of the application download file |
-| PKG_ARCH    | any     | no  | Architectures for which the package builds. `any` or a space separated 
-list of `aarch64`and/or `arm` |
+| PKG_ARCH    | any     | no  | Architectures for which the package builds. `any` or a space separated list of `aarch64`and/or `arm` |
 | PKG_URL     | -       | yes | Address at which the source of the software application can be retrieved |
-| PKG_DEPENDS_BOOTSTRAP<br>PKG_DEPENDS_HOST<br>PKG_DEPENDS_INIT<br>PKG_DEPENDS_TARGET | - | no | A space 
-separated list of name of packages required to build the software application (thos package should be also part of
-this ***Clue** idstribution - watch out to circular depdencies) |
+| PKG_DEPENDS_BOOTSTRAP<br>PKG_DEPENDS_HOST<br>PKG_DEPENDS_INIT<br>PKG_DEPENDS_TARGET | - | no | A space separated list of name of packages required to build the software application (thos package should be also part of this ***Clue** idstribution - watch out to circular depdencies) |
 | PKG_SECTION | -       | no  | `virtual` if the package only defines dependencies |
 | PKG_SHORTDESC | -     | no<br>yes&nbsp;for&nbsp;addons | Short description of the software package |
 | PKG_LONGDESC | -      | yes | Long description of the package including purpose or function within ***Clue*** or ***Kodi*** |
@@ -140,20 +141,12 @@ this ***Clue** idstribution - watch out to circular depdencies) |
 #### Universal Build Option
 | Variable    | Default | Required | Description |
 |-------------|---------|----------|-------------|
-| PKG_SOURCE_DIR | -    | no  | Force the folder name that application sources are unpacked to. Used when 
-sources do not automatically unpack to a folder with the `PKG_NAME-PKG_VERSION` naming convention. |
-| PKG_SOURCE_NAME | -   | no  | Force the filename of the application sources. Used when the filename is 
-not the basename of `PKG_URL` |
-| PKG_PATCH_DIRS | -    | no  | Patches in `./patches` are automatically applied after package unpack. 
-Use this option to include patches from an additional folder, e.g. `./patches/$PKG_PATCH_DIRS` |
-| PKG_NEED_UNPACK | -   | no  | Space separated list of files or folders to include in package stamp 
-calculation. If the stamp is invalidated through changes to package files or dependent files/folders 
-the package is cleaned and rebuilt. e.g. `PKG_NEED_UNPACK="$(get_pkg_directory linux)"` will trigger 
-clean/rebuild of a Linux kernel driver package when a change to the `linux` kernel package is detected. |
+| PKG_SOURCE_DIR | -    | no  | Force the folder name that application sources are unpacked to. Used when sources do not automatically unpack to a folder with the `PKG_NAME-PKG_VERSION` naming convention. |
+| PKG_SOURCE_NAME | -   | no  | Force the filename of the application sources. Used when the filename is not the basename of `PKG_URL` |
+| PKG_PATCH_DIRS | -    | no  | Patches in `./patches` are automatically applied after package unpack. Use this option to include patches from an additional folder, e.g. `./patches/$PKG_PATCH_DIRS` |
+| PKG_NEED_UNPACK | -   | no  | Space separated list of files or folders to include in package stamp calculation. If the stamp is invalidated through changes to package files or dependent files/folders the package is cleaned and rebuilt. e.g. `PKG_NEED_UNPACK="$(get_pkg_directory linux)"` will trigger clean/rebuild of a Linux kernel driver package when a change to the `linux` kernel package is detected. |
 | PKG_TOOLCHAIN | auto  | no  | Control which build toolchain is used. |
-| PKG_BUILD_FLAGS | -   | no  | A space separated list of flags with which to fine-tune the build process. 
-Flags can be enabled or disabled with a `+` or `-` prefix. For detailed information, 
-see the [Reference](#build_flags-options). |
+| PKG_BUILD_FLAGS | -   | no  | A space separated list of flags with which to fine-tune the build process. Flags can be enabled or disabled with a `+` or `-` prefix. For detailed information, see the [Reference](#build_flags-options). |
 | PKG_PYTHON_VERSION | python2.7 | no | Define the Python version to be used. |
 | PKG_IS_KERNEL_PKG | - | no  | Set to `yes` for packages that include Linux kernel modules |
 
@@ -173,33 +166,27 @@ see the [Reference](#build_flags-options). |
 | Variable    | Default | Required | Description |
 |-------------|---------|----------|-------------|
 | PKG_CONFIGURE_SCRIPT | $PKG_BUILD/configure | no | configure script to use |
-| PKG_CONFIGURE_OPTS<br>PKG_CONFIGURE_OPTS_BOOTSTRAP<br>PKG_CONFIGURE_OPTS_HOST<br>
-PKG_CONFIGURE_OPTS_INIT<br>PKG_CONFIGURE_OPTS_TARGET | - | no | Options directly passed to configure |
+| PKG_CONFIGURE_OPTS<br>PKG_CONFIGURE_OPTS_BOOTSTRAP<br>PKG_CONFIGURE_OPTS_HOST<br>PKG_CONFIGURE_OPTS_INIT<br>PKG_CONFIGURE_OPTS_TARGET | - | no | Options directly passed to configure |
 
 #### Make Options
 | Variable    | Default | Required | Description |
 |-------------|---------|----------|-------------|
-| PKG_MAKE_OPTS<br>PKG_MAKE_OPTS_BOOTSTRP<br>PKG_MAKE_OPTS_HOST<br>PKG_MAKE_OPTS_INIT<br>
-PKG_MAKE_OPTS_TARGET | - | no | Options directly passed to make in the build step
-| PKG_MAKEINSTALL_OPTS_HOST<br>
-PKG_MAKEINSTALL_OPTS_TARGET | - | no | Options directly passed to make in the install step
+| PKG_MAKE_OPTS<br>PKG_MAKE_OPTS_BOOTSTRP<br>PKG_MAKE_OPTS_HOST<br>PKG_MAKE_OPTS_INIT<br>PKG_MAKE_OPTS_TARGET | - | no | Options directly passed to make in the build step
+| PKG_MAKEINSTALL_OPTS_HOST<br>PKG_MAKEINSTALL_OPTS_TARGET | - | no | Options directly passed to make in the install step
 
 #### Addons
 Additional options used when the package builds an addon.
 
 | Variable    | Default | Required | Description |
 |-------------|---------|----------|-------------|
-| PKG_REV     | -       | yes      | The revision number of the addon (starts at 100). Must be placed 
-after `PKG_VERSION`. Must be incremented for each new version else Kodi clients will not detect version 
-change and download the updated addon. |
+| PKG_REV     | -       | yes      | The revision number of the addon (starts at 100). Must be placed after `PKG_VERSION`. Must be incremented for each new version else Kodi clients will not detect version change and download the updated addon. |
 | PKG_IS_ADDON | no     | yes      | Must be set to `yes` <br>or to `embedded` when this addon is part of the image |
 | PKG_ADDON_NAME | -    | yes      | Proper name of the addon that is shown at the repo |
 | PKG_ADDON_TYPE | -    | yes      | See LE/config/addon/ for other possibilities |
 | PKG_ADDON_VERSION | - | no       | The version of the addon, used in addon.xml |
 | PKG_ADDON_PROVIDES | - | no      | [Provides](http://kodi.wiki/view/addon.xml#.3Cprovides.3E_element) in addon-xml |
 | PKG_ADDON_REQUIRES | - | no      | [Requires](http://kodi.wiki/view/addon.xml#.3Crequires.3E) used in addon.xml |
-| PKG_ADDON_DEVICES | @DEVICES@ | no | for available projects or devices, see projects subdirectory 
-(note: Use `RPi` for RPi project, etc.) |
+| PKG_ADDON_DEVICES | @DEVICES@ | no | for available projects or devices, see projects subdirectory (note: Use `RPi` for RPi project, etc.) |
 | PKG_DISCLAIMER | -    | no       | [Disclaimer](https://kodi.wiki/view/Addon.xml#.3Cdisclaimer.3E) in addon-xml |
 | PKG_ADDON_IS_STANDALONE | - | no | Defines if an addon depends on Kodi (on) or is standalone (yes) |
 | PKG_ADDON_BROKEN | -  | no       | Marks an addon as broken for the user |
@@ -247,15 +234,9 @@ It is a space separated list. The flags can enabled with a `+` prefix, and disab
 |----------|----------|----------------|-------------|
 | pic      | disabled | target/init    | [Position Independent Code](https://en.wikipedia.org/wiki/Position-independent_code) |
 | pic:host | disabled | host/bootstrap | see above |
-| lto      | disabled | target/init    | enable LTO (Link Time optimization) in the compiler and 
-linker unless disabled via `LTO_SUPPORT`. Compiles non-fat LTO objects (only bytecode) and performs 
-single-threaded optimization at link stage |
-| lto-parallel | disabled | target/init | same as `lto` but enable parallel optimization at link stage. 
-Only enable this if the package build doesn't run multiple linkers in parallel otherwise this can 
-result in lots of parallel processes! |
-| lto-fat  | disabled | target/init | same as `lto` but compile fat LTO objects (bytecode plus 
-optimized assembly). This increases compile time but can be useful to create static libraries 
-suitable both for LTO and non-LTO linking |
+| lto      | disabled | target/init    | enable LTO (Link Time optimization) in the compiler and linker unless disabled via `LTO_SUPPORT`. Compiles non-fat LTO objects (only bytecode) and performs single-threaded optimization at link stage |
+| lto-parallel | disabled | target/init | same as `lto` but enable parallel optimization at link stage. Only enable this if the package build doesn't run multiple linkers in parallel otherwise this can result in lots of parallel processes! |
+| lto-fat  | disabled | target/init | same as `lto` but compile fat LTO objects (bytecode plus optimized assembly). This increases compile time but can be useful to create static libraries suitable both for LTO and non-LTO linking |
 | lto-off  | disabled | target/init | explicitly disable LTO in the compiler and linker |
 | gold     | depend on `GOLD_SUPPORT` | target/init | can only disabled, use of the GOLD-Linker |
 | parallel | enabled  | all | `make` or `ninja` builds with multiple threads/processes (or not) |
@@ -285,16 +266,11 @@ Full list of overwrittable functions.
 |-------------------------|-------|-------------|
 | configure_package | - | Optional function to implement late binding variable assignment (see below) |
 | unpack<br>pre_unpack<br>post_unpack | - | Extract the source from the downloaded file |
-| pre_patch<br>post_patch | -      | Apply the patches to the source, after extraction. The patch function 
-it self is not allowed to overwritten |
+| pre_patch<br>post_patch | -      | Apply the patches to the source, after extraction. The patch function it self is not allowed to overwritten |
 | pre_build_\[stage]      | yes    | Runs before of the start of the build |
-| pre_configure<br>pre_configure_\[stage]<br>configure_\[stage]<br>post_configure_\[stage] | yes | Configure 
-the package for the compile. This is only relevant for toolchain, that supports it (e.g. meson, cmake, 
-configure, manual) |
+| pre_configure<br>pre_configure_\[stage]<br>configure_\[stage]<br>post_configure_\[stage] | yes | Configure the package for the compile. This is only relevant for toolchain, that supports it (e.g. meson, cmake, configure, manual) |
 | make_\[stage]<br>pre_make_\[stage]<br>post_make_\[stage] | yes | Build of the package |
-| makeinstall_\[stage]<br>pre_makeinstall_\[stage]<br>post_makeinstall_\[stage] | yes | Installation of the 
-files in the correct pathes<br>host: TOOLCHAIN<br>target: SYSROOT and IMAGE<br>bootstrap and init: temporary 
-destination
+| makeinstall_\[stage]<br>pre_makeinstall_\[stage]<br>post_makeinstall_\[stage] | yes | Installation of the files in the correct pathes<br>host: TOOLCHAIN<br>target: SYSROOT and IMAGE<br>bootstrap and init: temporary destination
 | addon                   | -      | Copy all files together for addon creation. This is required for addons |
 
 
@@ -396,16 +372,11 @@ It can detect the following type of issues:
 Issue | Level | Meaning |
 | :--- | :----: | ---- |
 | late&nbsp;binding&nbsp;violation | FAIL | Late binding variables referenced outside of a function |
-| duplicate&nbsp;function&nbsp;def | FAIL | Function defined multiple times, only last definition 
-will be used |
-| bad&nbsp;func&nbsp;-&nbsp;missing&nbsp;brace | FAIL | Opening brace (`{`) for function definition 
-should be on same line as the function def, ie. `pre_configure_target() {` |
-| intertwined&nbsp;vars&nbsp;&&nbsp;funcs | WARN | Variable assignments and logic is intertwined 
-with functions - this is cosmetic, but variables and logic should be specified before all functions |
-| unknown&nbsp;function | WARN | Could be a misspelled function, ie. `per_configure_target() {` 
-which might fail silently.|
-| ignored&nbsp;depends&nbsp;assign | WARN | Values assigned to `PKG_DEPENDS_*` outside of the global 
-section or `configure_package()` will be ignored. |
+| duplicate&nbsp;function&nbsp;def | FAIL | Function defined multiple times, only last definition will be used |
+| bad&nbsp;func&nbsp;-&nbsp;missing&nbsp;brace | FAIL | Opening brace (`{`) for function definition should be on same line as the function def, ie. `pre_configure_target() {` |
+| intertwined&nbsp;vars&nbsp;&&nbsp;funcs | WARN | Variable assignments and logic is intertwined with functions - this is cosmetic, but variables and logic should be specified before all functions |
+| unknown&nbsp;function | WARN | Could be a misspelled function, ie. `per_configure_target() {` which might fail silently.|
+| ignored&nbsp;depends&nbsp;assign | WARN | Values assigned to `PKG_DEPENDS_*` outside of the global section or `configure_package()` will be ignored. |
 
 
 ### Add a new package to the distribution

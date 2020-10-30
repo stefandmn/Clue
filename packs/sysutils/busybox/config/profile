@@ -1,31 +1,36 @@
 # parse command line arguments
-  for arg in $(cat /proc/cmdline); do
-    case $arg in
-      debugging)
-        export DEBUG=yes
-        ;;
-      progress)
-        PROGRESS=yes
-        ;;
-    esac
-  done
+for arg in $(cat /proc/cmdline); do
+	case $arg in
+		debugging)
+			export DEBUG=yes
+			;;
+		progress)
+			PROGRESS=yes
+			;;
+	esac
+done
 
-  if [ -e /clue/.cache/debug.clue ] ; then
-    export DEBUG=yes
-  fi
+if [ -e /clue/.cache/debug.clue ]; then
+	export DEBUG=yes
+fi
 
 # functions
-  progress() {
-    if test "$PROGRESS" = yes; then
-      logger -s -t Boot "### $1 ###"
-    else
-      logger -t Boot "### $1 ###"
-    fi
-  }
+progress() {
+	if test "$PROGRESS" = yes; then
+		logger -s -t Boot "### $1 ###"
+	else
+		logger -t Boot "### $1 ###"
+	fi
+}
 
 # read config files
-  for config in /etc/profile.d/*; do
-    if [ -f "$config" ] ; then
-      . $config
-    fi
-  done
+for config in /etc/profile.d/*; do
+	if [ -f "$config" ]; then
+		. $config
+	fi
+done
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'

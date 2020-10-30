@@ -18,7 +18,6 @@ echo -e "\n\n> Process started.."
 # Collect versioning details
 echo -e ">> Reading versioning details.."
 GIT_HASH=$(git rev-parse HEAD)
-
 GIT_ABBREV=${GIT_HASH:0:7}
 DISTRO_LABEL=${DISTRO_STATUS}
 case "${DISTRO_STATUS}" in
@@ -43,7 +42,7 @@ case "${DISTRO_STATUS}" in
 esac
 
 TARGET_VERSION="${DEVICE}.${TARGET_ARCH}-${DISTRO_LABEL}"
-IMAGE_NAME="${DISTRO_NAME}-${DISTRO_VERSION},${TARGET_VERSION}"
+IMAGE_NAME="${DISTRO_NAME}-${DISTRO_VERSION}-${TARGET_VERSION}"
 
 echo "${IMAGE_NAME}" >${BUILDER}/BUILD_FILENAME
 
@@ -399,7 +398,7 @@ EOF
 		sha256sum $(basename "${DISK}").gz >$(basename "${DISK}").gz.sha256
 
 		# cleanup
-		echo -e "\tCleaning up.."
+		#echo -e "\tCleaning up.."
 		rm -rf "${LE_TMP}"
 	fi
 

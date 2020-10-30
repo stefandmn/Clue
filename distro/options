@@ -1,3 +1,8 @@
+########################################################################################
+## Project Global Variables
+## Basic variables and options for distribution and media center application
+##
+
 # Name of the Distro to build (full name, without special characters)
 DISTRO_NAME="Clue"
 
@@ -253,7 +258,7 @@ INITRAMFS_MODULES=""
 FIRMWARE="misc-firmware wlan-firmware dvb-firmware brcmfmac_sdio-firmware"
 
 # kernel image name
-KERNEL_NAME="kernel.img"
+KERNEL_NAME="${KERNEL:-kernel.img}"
 
 # build and install driver addons (yes / no)
 DRIVER_ADDONS_SUPPORT="yes"
@@ -266,9 +271,14 @@ DRIVER_ADDONS="crazycat dvb-latest"
 # debug tty path
 DEBUG_TTY="/dev/console"
 
-# build debug with valgrind (yes / no)
-# Not available for armv6. Increases image size significantly
-VALGRIND="no"
+# setup TARGET_ARCH
+TARGET_ARCH="arm"
+
+# Cache size for ccache: set the maximum size of the files stored in the cache.
+# You can specify a value in gigabytes, megabytes or kilobytes by appending a G, # M or K
+# to the value. The default is gigabytes. The actual value stored is rounded # down to the
+# nearest multiple of 16 kilobytes.  Keep in mind this per project .ccache directory.
+CCACHE_CACHE_SIZE="${CACHE_SIZE:5G}"
 
 # debug flag (yes/no)
 DEBUG="${DEBUG:-no}"
@@ -276,13 +286,19 @@ DEBUG="${DEBUG:-no}"
 # verbose compilation mode (yes/no)
 VERBOSE="${VERBOSE:-yes}"
 
-# setup TARGET_ARCH
-TARGET_ARCH="arm"
+# Build debug with valgrind (yes / no) - not available for armv6. Increases image size significantly
+VALGRIND="no"
 
 # set default independent variables
 ROOT="${PWD}"
 
-# Do not build as root. Ever.
+# set default language for build system
+export LC_ALL=C
+
+## Multi-thread configuration for building process
+THREADCOUNT=${THREADCOUNT:-100%}
+
+# Do not build as root
 if [[ "${EUID}" -eq 0 ]]; then
 	echo "Building as the root user is NOT supported. Use a regular user account for the build." 1>&2
 	exit 1
@@ -296,24 +312,30 @@ if [[ ${PWD} =~ [[:space:]] ]]; then
 	exit 1
 fi
 
-# set default language for buildsystem
-export LC_ALL=C
+
+########################################################################################
+## Include references (set of gerenal functions and same options to be overwritten)
+##
 
 # include helper functions
 . ${SYSTEM}/functions
 
-# read DEVICE options if available
-if [ -f "${SYSTEM}/devices/${DEVICE}/options" ]; then
-	. "${SYSTEM}/devices/${DEVICE}/options"
-fi
-
-# read global persistent options from $HOME if available
+# Read global persistent options from $HOME if available
 if [ -f "${HOME}/.clue/options" ]; then
 	. "${HOME}/.clue/options"
 fi
 
+# Read DEVICE options if available
+if [ -f "${SYSTEM}/devices/${DEVICE}/options" ]; then
+	. "${SYSTEM}/devices/${DEVICE}/options"
+fi
+
+
+########################################################################################
+## Build up dynamic options and project variables and run environment procedures
+##
+
 # projects can set KERNEL_NAME (kernel.img)
-KERNEL_NAME="${KERNEL_NAME:-KERNEL}"
 LINUX_DEPENDS="${ROOT}/${SYSTEM}/control/linux ${ROOT}/${SYSTEM}/control/patches/linux ${ROOT}/${PACKAGES}/linux"
 [ -n "${DEVICE}" ] && LINUX_DEPENDS+=" ${SYSTEM}/devices/${DEVICE}/linux ${SYSTEM}/devices/${DEVICE}/patches/linux ${SYSTEM}/devices/${DEVICE}/${PACKAGES}/linux"
 
@@ -334,14 +356,6 @@ fi
 #  default: use all cores
 [ -z "${CONCURRENCY_MAKE_LEVEL}" ] && export CONCURRENCY_MAKE_LEVEL=$(nproc)
 
-# cache size for ccache
-# Set the maximum size of the files stored in the cache. You can specify a
-# value in gigabytes, megabytes or kilobytes by appending a G, M or K to the
-# value. The default is gigabytes. The actual value stored is rounded down to
-# the nearest multiple of 16 kilobytes.  Keep in mind this per project .ccache
-# directory.
-CCACHE_CACHE_SIZE="5G"
-
 # The TARGET_CPU variable controls which processor should be targeted for generated code.
 # Valid TARGET_CPU for Raspberry Pi based devices are:
 # arm1176jzf-s cortex-a7 cortex-a53
@@ -354,9 +368,7 @@ elif [ "$DEVICE" = "RPi4" ]; then
 	TARGET_CPU_FLAGS="+crc"
 fi
 
-# TARGET_FLOAT:
-# Specifies which floating-point ABI to use. Permissible values are:
-# soft hard
+# Specifies which floating-point ABI to use. Permissible values are: soft hard
 TARGET_FLOAT="hard"
 
 # Valid TARGET_FPU for Raspberry Pi based devices:
@@ -375,26 +387,7 @@ TARGET_FEATURES="32bit"
 # Check configuration
 check_config
 
-# TARGET_CPU:
-# arm2 arm250 arm3 arm6 arm60 arm600 arm610 arm620 arm7 arm7m arm7d
-# arm7dm arm7di arm7dmi arm70 arm700 arm700i arm710 arm710c
-# arm7100 arm720 arm7500 arm7500fe arm7tdmi arm7tdmi-s arm710t
-# arm720t arm740t strongarm strongarm110 strongarm1100
-# strongarm1110 arm8 arm810 arm9 arm9e arm920 arm920t arm922t
-# arm946e-s arm966e-s arm968e-s arm926ej-s arm940t arm9tdmi
-# arm10tdmi arm1020t arm1026ej-s arm10e arm1020e arm1022e
-# arm1136j-s arm1136jf-s mpcore mpcorenovfp arm1156t2-s
-# arm1176jz-s arm1176jzf-s cortex-a8 cortex-a9 cortex-r4
-# cortex-r4f cortex-m3 cortex-m1 xscale iwmmxt iwmmxt2 ep9312.
-
-# TARGET_FPU:
-# This specifies what floating point hardware (or hardware emulation) is
-# available on the target. Permissible names are:
-# fpa fpe2 fpe3 maverick vfp vfpv3 vfpv3-fp16 vfpv3-d16 vfpv3-d16-fp16
-# vfpv3xd vfpv3xd-fp16 neon neon-fp16 vfpv4 vfpv4-d16 fpv4-sp-d16
-# neon-vfpv4.
-
-# determine architecture's family
+# Determine architecture's family
 case $TARGET_CPU in
 	arm1176jzf-s)
 		TARGET_SUBARCH=armv6zk
@@ -509,8 +502,7 @@ HOST_CXXFLAGS="$HOST_CFLAGS"
 HOST_LDFLAGS="-Wl,-rpath,$TOOLCHAIN/lib -L$TOOLCHAIN/lib"
 HOST_INCDIR="$TOOLCHAIN/include /usr/include"
 
-# work around Ubuntu default C*FLAGS
-# see https://wiki.ubuntu.com/ToolChain/CompilerFlags#A-Wformat_-Wformat-security
+# Workaround Ubuntu default C*FLAGS
 HOST_CFLAGS="$HOST_CFLAGS -Wno-format-security"
 HOST_CXXFLAGS="$HOST_CXXFLAGS -Wno-format-security"
 
@@ -565,7 +557,10 @@ if [[ -z "$PATH" || ("$PATH" != "$TOOLCHAIN/bin:$TOOLCHAIN/sbin" && "$PATH" == "
 	export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/sbin${PATH:+":$PATH"}"
 fi
 
-VERSION_SUFFIX=$TARGET_ARCH
+
+########################################################################################
+## Package processing (calls and routines' implementation)
+##
 
 # redirect formatted output
 export BUILD_INDENT_SIZE=4
@@ -589,16 +584,11 @@ unset CONFIG_SITE
 unset PYTHONSTARTUP
 unset PYTHONPATH
 
-## package processing
-
 # If the package caches are unset, then populate them
 init_package_cache
 
 # set package metadata
 source_package "${1}"
-
-## Multithread configuration
-THREADCOUNT=${THREADCOUNT:-100%}
 
 # This function is passed a list of descriptor.csh paths to be processed.
 # Each descriptor.csh is sourced with relevant variables output in JSON format.
