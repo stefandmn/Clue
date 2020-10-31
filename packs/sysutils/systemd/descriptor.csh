@@ -115,7 +115,7 @@ post_makeinstall_target() {
 	safe_remove $INSTALL/usr/lib/udev/hwdb.d/20-sdio-classes.hwdb
 	safe_remove $INSTALL/usr/lib/udev/hwdb.d/20-sdio-vendor-model.hwdb
 
-	# remove Network adaper renaming rule, this is confusing
+	# remove Network adapter renaming rule, this is confusing
 	safe_remove $INSTALL/usr/lib/udev/rules.d/80-net-setup-link.rules
 
 	# remove the uaccess rules as we don't build systemd with ACL (see https://github.com/systemd/systemd/issues/4107)

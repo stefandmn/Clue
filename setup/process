@@ -44,8 +44,6 @@ esac
 TARGET_VERSION="${DEVICE}.${TARGET_ARCH}-${DISTRO_LABEL}"
 IMAGE_NAME="${DISTRO_NAME}-${DISTRO_VERSION}-${TARGET_VERSION}"
 
-echo "${IMAGE_NAME}" >${BUILDER}/BUILD_FILENAME
-
 # Setup fakeroot
 echo ">> Building fake root.."
 rm -rf ${FAKEROOT_SCRIPT}   # remove ${FAKEROOT_SCRIPT} if it exist

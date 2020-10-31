@@ -276,7 +276,7 @@ if [ -n "${1}" ]; then
 				echo "Executing (bootstrap): meson ${BOOTSTRAP_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_BOOTSTRAP} $(dirname ${PKG_MESON_SCRIPT})" | tr -s " "
 				meson ${BOOTSTRAP_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_BOOTSTRAP} $(dirname ${PKG_MESON_SCRIPT})
 				;;
-				# cmake builds with ninja
+			# cmake builds with ninja
 			"cmake:target")
 				echo "Executing (target): cmake ${CMAKE_GENERATOR_NINJA} ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
 				cmake ${CMAKE_GENERATOR_NINJA} ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})
@@ -293,7 +293,7 @@ if [ -n "${1}" ]; then
 				echo "Executing (bootstrap): cmake ${CMAKE_GENERATOR_NINJA} ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
 				cmake ${CMAKE_GENERATOR_NINJA} ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})
 				;;
-				# cmake builds with make
+			# cmake builds with make
 			"cmake-make:target")
 				echo "Executing (target): cmake ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
 				cmake ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})
@@ -310,7 +310,7 @@ if [ -n "${1}" ]; then
 				echo "Executing (bootstrap): cmake ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
 				cmake ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})
 				;;
-				# configure builds
+			# configure builds
 			"configure:target" | "autotools:target")
 				echo "Executing (target): ${PKG_CONFIGURE_SCRIPT} ${TARGET_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_TARGET}" | tr -s " "
 				${PKG_CONFIGURE_SCRIPT} ${TARGET_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_TARGET}
@@ -356,7 +356,7 @@ if [ -n "${1}" ]; then
 				echo "Executing (bootstrap): ninja ${PKG_MAKE_OPTS_BOOTSTRAP}" | tr -s " "
 				ninja ${NINJA_OPTS} ${PKG_MAKE_OPTS_BOOTSTRAP}
 				;;
-				# make based builds
+			# make based builds
 			"configure:target" | "cmake-make:target" | "autotools:target" | "make:target")
 				echo "Executing (target): make ${PKG_MAKE_OPTS_TARGET}" | tr -s " "
 				make ${PKG_MAKE_OPTS_TARGET}
@@ -411,8 +411,7 @@ if [ -n "${1}" ]; then
 			"meson:bootstrap" | "cmake:bootstrap")
 				ninja install ${PKG_MAKEINSTALL_OPTS_BOOTSTRAP}
 				;;
-
-				# make based builds
+			# make based builds
 			"configure:target" | "cmake-make:target" | "autotools:target" | "make:target")
 				make install DESTDIR=${TARGET_SYSROOT} -j1 ${PKG_MAKEINSTALL_OPTS_TARGET}
 				make install DESTDIR=${INSTALL} ${PKG_MAKEINSTALL_OPTS_TARGET}
