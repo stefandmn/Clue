@@ -186,7 +186,7 @@ Additional options used when the package builds an addon.
 | PKG_ADDON_VERSION | - | no       | The version of the addon, used in addon.xml |
 | PKG_ADDON_PROVIDES | - | no      | [Provides](http://kodi.wiki/view/addon.xml#.3Cprovides.3E_element) in addon-xml |
 | PKG_ADDON_REQUIRES | - | no      | [Requires](http://kodi.wiki/view/addon.xml#.3Crequires.3E) used in addon.xml |
-| PKG_ADDON_DEVICES | @DEVICES@ | no | for available projects or devices, see projects subdirectory (note: Use `RPi` for RPi project, etc.) |
+| PKG_ADDON_DEVICES | RPi,RPi2, RPi4 | no | for available projects or devices, see projects subdirectory (note: Use `RPi` for RPi project, etc.) |
 | PKG_DISCLAIMER | -    | no       | [Disclaimer](https://kodi.wiki/view/Addon.xml#.3Cdisclaimer.3E) in addon-xml |
 | PKG_ADDON_IS_STANDALONE | - | no | Defines if an addon depends on Kodi (on) or is standalone (yes) |
 | PKG_ADDON_BROKEN | -  | no       | Marks an addon as broken for the user |
