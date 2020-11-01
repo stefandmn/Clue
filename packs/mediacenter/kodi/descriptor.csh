@@ -264,14 +264,11 @@ post_makeinstall_target() {
 	ln -sf /usr/bin/pastekodi $INSTALL/usr/bin/pastecrash
 
 	mkdir -p $INSTALL/usr/share/kodi/addons
-	cp -R $PKG_DIR/config/os.openelec.tv $INSTALL/usr/share/kodi/addons
-	sed -e "s|@DISTRO_VERSION@|$DISTRO_VERSION|g" -i $INSTALL/usr/share/kodi/addons/os.openelec.tv/addon.xml
-	cp -R $PKG_DIR/config/os.libreelec.tv $INSTALL/usr/share/kodi/addons
-	sed -e "s|@DISTRO_VERSION@|$DISTRO_VERSION|g" -i $INSTALL/usr/share/kodi/addons/os.libreelec.tv/addon.xml
-	cp -R $PKG_DIR/config/repository.libreelec.tv $INSTALL/usr/share/kodi/addons
-	sed -e "s|@ADDON_URL@|$ADDON_URL|g" -i $INSTALL/usr/share/kodi/addons/repository.libreelec.tv/addon.xml
-	sed -e "s|@ADDON_VERSION@|$ADDON_VERSION|g" -i $INSTALL/usr/share/kodi/addons/repository.libreelec.tv/addon.xml
-	cp -R $PKG_DIR/config/repository.kodi.game $INSTALL/usr/share/kodi/addons
+	cp -R $PKG_DIR/config/os.clue $INSTALL/usr/share/kodi/addons
+	sed -e "s|@DISTRO_VERSION@|$DISTRO_VERSION|g" -i $INSTALL/usr/share/kodi/addons/os.clue/addon.xml
+	cp -R $PKG_DIR/config/repository.clue $INSTALL/usr/share/kodi/addons
+	sed -e "s|@ADDON_URL@|$ADDON_URL|g" -i $INSTALL/usr/share/kodi/addons/repository.clue/addon.xml
+	sed -e "s|@ADDON_VERSION@|$ADDON_VERSION|g" -i $INSTALL/usr/share/kodi/addons/repository.clue/addon.xml
 
 	mkdir -p $INSTALL/usr/share/kodi/config
 
@@ -303,10 +300,8 @@ post_makeinstall_target() {
 	ADDON_MANIFEST=$INSTALL/usr/share/kodi/system/addon-manifest.xml
 	xmlstarlet ed -L -d "/addons/addon[text()='service.xbmc.versioncheck']" $ADDON_MANIFEST
 	xmlstarlet ed -L -d "/addons/addon[text()='skin.estouchy']" $ADDON_MANIFEST
-	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "repository.kodi.game" $ADDON_MANIFEST
-	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "os.libreelec.tv" $ADDON_MANIFEST
-	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "os.openelec.tv" $ADDON_MANIFEST
-	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "repository.libreelec.tv" $ADDON_MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "os.clue" $ADDON_MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "repository.clue" $ADDON_MANIFEST
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.libreelec.settings" $ADDON_MANIFEST
 
 	if [ "$DRIVER_ADDONS_SUPPORT" = "yes" ]; then

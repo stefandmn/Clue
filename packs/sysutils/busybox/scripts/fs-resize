@@ -35,7 +35,7 @@ if [ -e /clue/.please_resize_me ]; then
 	if [ ! -z "$DISK" -a ! -z "$PART" ]; then
 		umount $PART
 
-		echo "PARTITION RESIZING IN PROGRESS"
+		echo "Initial Setup - PARTITION RESIZING"
 		echo ""
 		echo "Please do not reboot or turn off your RPi/@DISTRO_NAME@ device!"
 		echo ""

@@ -108,8 +108,6 @@ ProgressTask_Spinner() {
 	echo -e "\b${donemsg:-done}"
 
 	rm -f /dev/.progress/run
-
-	exit 0
 }
 
 # Use this task when transferring a file of known size
@@ -128,8 +126,6 @@ ProgressTask_Percent() {
 	echo -e "\b\b\b\b${donemsg:-100%}"
 
 	rm -f /dev/.progress/run
-
-	exit 0
 }
 
 # Use this task to countdown a number of seconds
@@ -148,6 +144,4 @@ ProgressTask_Countdown() {
 	echo -e "\b\b${donemsg:-  }"
 
 	rm -f /dev/.progress/run
-
-	return 0
 }

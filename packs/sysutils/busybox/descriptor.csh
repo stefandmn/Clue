@@ -112,12 +112,12 @@ makeinstall_host() {
 
 makeinstall_target() {
 	mkdir -p $INSTALL/usr/bin
-	[ $TARGET_ARCH = x86_64 ] && cp $PKG_DIR/scripts/getedid $INSTALL/usr/bin
 	cp $PKG_DIR/scripts/createlog $INSTALL/usr/bin/
 	cp $PKG_DIR/scripts/dtfile $INSTALL/usr/bin
 	cp $PKG_DIR/scripts/dtname $INSTALL/usr/bin
 	cp $PKG_DIR/scripts/lsb_release $INSTALL/usr/bin/
 	cp $PKG_DIR/scripts/pastebinit $INSTALL/usr/bin/
+	cp $PKG_DIR/scripts/welcome $INSTALL/usr/bin/
 	ln -sf pastebinit $INSTALL/usr/bin/paste
 
 	mkdir -p $INSTALL/usr/lib/clue
@@ -170,7 +170,7 @@ post_install() {
 	add_group nogroup 65534
 
 	enable_service shell.service
-	enable_service show-version.service
+	enable_service welcome.service
 	enable_service var.mount
 	enable_service fs-resize.service
 	listcontains "${FIRMWARE}" "rpi-eeprom" && enable_service rpi-flash-firmware.service

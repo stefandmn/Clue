@@ -19,29 +19,38 @@ echo -e "\n\n> Process started.."
 echo -e ">> Reading versioning details.."
 GIT_HASH=$(git rev-parse HEAD)
 GIT_ABBREV=${GIT_HASH:0:7}
-DISTRO_LABEL=${DISTRO_STATUS}
 case "${DISTRO_STATUS}" in
 	nightly)
-		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%Y%m%d)-${GIT_ABBREV}
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m%d)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
 		;;
 	daily)
-		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%Y%j)-${GIT_ABBREV}
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%j)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
 		;;
 	weekly)
-		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%G%V)-${GIT_ABBREV}
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%G%V)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
 		;;
 	monthly)
-		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%Y%m)-${GIT_ABBREV}
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
 		;;
 	devel)
-		DISTRO_LABEL=${DISTRO_STATUS}-$(date +%Y%m%d%H%M%S)-${GIT_ABBREV}
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m%d%H%M%S)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
 		;;
 	stable)
-		DISTRO_LABEL=${DISTRO_STATUS}
+		DISTRO_CODE=${DISTRO_STATUS}-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
+		;;
+	*)
+		DISTRO_CODE=${DISTRO_STATUS}
+		DISTRO_LABEL="${DISTRO_CODE}"
 		;;
 esac
 
-TARGET_VERSION="${DEVICE}.${TARGET_ARCH}-${DISTRO_LABEL}"
+TARGET_VERSION="${DEVICE}.${TARGET_ARCH}-${DISTRO_CODE}"
 IMAGE_NAME="${DISTRO_NAME}-${DISTRO_VERSION}-${TARGET_VERSION}"
 
 # Setup fakeroot
@@ -81,10 +90,12 @@ echo "${TARGET_VERSION}" >${INSTALL}/etc/release
 echo ">> Creating /etc/os-release.."
 cat <<EOF >${INSTALL}/etc/os-release
 NAME="${DISTRO_NAME}"
-VERSION="${DISTRO_STATUS}"
+VERSION="${DISTRO_VERSION} ${DISTRO_LABEL}"
 ID="clue"
+ID_LIKE="libreelec"
+PRETTY_NAME="${DISTRO_LONGNAME} ${DISTRO_VERSION} ${DISTRO_LABEL}"
 VERSION_ID="${DISTRO_VERSION}"
-PRETTY_NAME="${DISTRO_NAME} (${DISTRO_STATUS})"
+VERSION_CODE="${DISTRO_CODE}"
 HOME_URL="https://amsd.go.ro/clue"
 BUILD_ID="${GIT_HASH}"
 DEVICE="${DEVICE}"
@@ -208,7 +219,7 @@ if [ "${1}" = "release" -o "${1}" = "image" ]; then
 	# Deploy bootloaded resources
 	BOOTLOADER_DIR="$(get_pkg_directory "bcm2835-bootloader")"
 	if [ -d ${BOOTLOADER_DIR}/files ]; then
-		echo -e "\t\tDeploy bootloaded resources from ${BOOTLOADER_DIR} and ${INSTALL} into ${RELEASE_DIR}"
+		echo -e "\t\tDeploy bootloaded resources from ${BOOTLOADER_DIR}"
 		cp -R ${BOOTLOADER_DIR}/files/* ${RELEASE_DIR}
 		mkdir -p ${RELEASE_DIR}/3rdparty/bootloader
 		cp -PR ${INSTALL}/usr/share/bootloader/LICENCE* ${RELEASE_DIR}/3rdparty/bootloader/
@@ -396,7 +407,7 @@ EOF
 		sha256sum $(basename "${DISK}").gz >$(basename "${DISK}").gz.sha256
 
 		# cleanup
-		#echo -e "\tCleaning up.."
+		echo -e "\tCleaning up.."
 		rm -rf "${LE_TMP}"
 	fi
 

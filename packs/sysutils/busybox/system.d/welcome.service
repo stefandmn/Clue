@@ -1,11 +1,11 @@
 [Unit]
-Description=Show Version
+Description=Welcome Message
 DefaultDependencies=false
 ConditionKernelCommandLine=!morequiet
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/lsb_release
+ExecStart=/usr/bin/welcome
 RemainAfterExit=yes
 StandardOutput=tty
 

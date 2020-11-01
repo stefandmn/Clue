@@ -742,7 +742,7 @@ check_update() {
 	mkdir -p $UPDATE_DIR/.tmp &>/dev/null
 	sync
 
-	echo "UPDATE IN PROGRESS"
+	echo "System Setup - UPDATE"
 	echo ""
 	echo "Please do not reboot or turn off your RPi/@DISTRO_NAME@ device!"
 	echo ""
