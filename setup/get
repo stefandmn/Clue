@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ${SYSTEM}/options "${1}"
+. ${ROOT}/devices/options "${1}"
 
 if [ -z "${1}" ]; then
 	for i in $(find "${PACKAGES}/" -type f -name "descriptor.csh"); do

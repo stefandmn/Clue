@@ -179,10 +179,9 @@ Additional options used when the package builds an addon.
 
 | Variable    | Default | Required | Description |
 |-------------|---------|----------|-------------|
-| PKG_REV     | -       | yes      | The revision number of the addon (starts at 100). Must be placed after `PKG_VERSION`. Must be incremented for each new version else Kodi clients will not detect version change and download the updated addon. |
 | PKG_IS_ADDON | no     | yes      | Must be set to `yes` <br>or to `embedded` when this addon is part of the image |
 | PKG_ADDON_NAME | -    | yes      | Proper name of the addon that is shown at the repo |
-| PKG_ADDON_TYPE | -    | yes      | See LE/config/addon/ for other possibilities |
+| PKG_ADDON_TYPE | -    | xbmc.gui.skin, xbmc.service, xbmc.python.library, xbmc.python.script, xbmc.python.module | See distro/resources/addon/ for other possibilities |
 | PKG_ADDON_VERSION | - | no       | The version of the addon, used in addon.xml |
 | PKG_ADDON_PROVIDES | - | no      | [Provides](http://kodi.wiki/view/addon.xml#.3Cprovides.3E_element) in addon-xml |
 | PKG_ADDON_REQUIRES | - | no      | [Requires](http://kodi.wiki/view/addon.xml#.3Crequires.3E) used in addon.xml |
@@ -296,7 +295,7 @@ relative to `${PKG_BUILD}`:
 
 Further to this, toolchain variables that are defined in `setup_toolchain()` must not be referenced 
 "globally" in the package as they will only be configured reliably after `setup_toolchain()` has been 
-called during `build/build`. Any variable in the following list must instead be referenced in a package 
+called during `setup/build`. Any variable in the following list must instead be referenced in a package 
 function such as `pre_build_*`, `pre_configure_*`, `pre_make_*` etc.:
 ```
   TARGET_CFLAGS TARGET_CXXFLAGS TARGET_LDFLAGS
@@ -319,7 +318,7 @@ function such as `pre_build_*`, `pre_configure_*`, `pre_make_*` etc.:
   _python_sysroot _python_prefix _python_exec_prefix
 ```
 
-Lastly, the following variables are assigned during `build/build` but some packages may need to use 
+Lastly, the following variables are assigned during `setup/build` but some packages may need to use 
 alternative values for these variables. To do so, the package must assign alternative values 
 in `pre_build_*`/`pre_configure_*`/`pre_make_*` etc. functions as these functions will be called after 
 the variables are initialised with default values in `scripts/build` but before they are used by `scripts/build`.
@@ -390,13 +389,13 @@ Issue | Level | Meaning |
     * do not place it in an existing package (directory that includes a `descriptor.csh`)
     * when you found a place, create a directory with the name of your package (use same value for `PKG_NAME`!!)
 3. Create an initial `descriptor.csh`
-    * you can find a template under `packs/descriptor.csh.template`. Copy the template into the new directory and call it `descriptor.csh`
+    * you can find a template within this documentation. Copy the template into the new directory and call it `descriptor.csh`
     * apply any required changes to your new `descriptor.csh`
 4. Find a place in the dependency tree
     * when it extend an existing package, add it there to the `PKG_DEPENDS_TARGET`/`PKG_DEPENDS_HOST` etc.
     * take a look into the path `packs/virtual`, there you should find a virtual packages, that match your new package (misc-packages should be the last option)
 5. Now you can build your image
-    * after the build, inside the `build-*` folder you should find a directory with your package name and -version, eg. `widget-1.2.3`.
+    * after the build, inside the `devel-*` folder you should find a directory with your package name and -version, eg. `widget-1.2.3`.
 
 #### Example
 ```

@@ -1,13 +1,12 @@
 SHELL:=/bin/bash
-ROOT=$(shell pwd)
 
 ifndef VERBOSE
 .SILENT:
 endif
 
+export ROOT=$(shell pwd)
 export CONFIG=setup
-export SYSTEM=distro
-export PACKAGES=packs
+export PACKAGES=packages
 
 ifeq ($(DEVICE),)
 	export DEVICE=RPi
@@ -16,6 +15,7 @@ endif
 ifeq ($(OUTPUT),)
 	export OUTPUT_DIR=$(ROOT)/../Clue-out
 endif
+
 
 # Build particular package or the entire system
 #	@package - package name with optional target [:<host|target|init|bootstrap>]
@@ -52,6 +52,13 @@ else
 endif
 
 
+# Setup and push the new versioning label in the GitHUB
+version:
+	git add .
+	git commit -m "Distro update $(DISTRO_VER)"
+	git push
+
+
 # Clean-up all build distributions, cache and stamps
 cleanall:
 	rm -rf $(OUTPUT_DIR)/* $(OUTPUT_DIR)/.stamp $(OUTPUT_DIR)/.ccache
@@ -74,8 +81,9 @@ cachestats:
 
 # Display the building plan for the current distribution
 viewplan:
-	./$(CONFIG)/tools/viewplan | tee $(OUTPUT_DIR)/viewplan_$(DEVICE).txt
+	./$(CONFIG)/tools/viewplan | tee $(OUTPUT_DIR)/viewplan-$(DEVICE).txt
 
+plan:viewplan
 
 # Display specified package attributes and also the dependencies' list
 #	@package - package name with optional target [:<host|target|init|bootstrap>]
@@ -99,8 +107,8 @@ monitor:viewbuild
 help:
 	echo -e "\
 \nSYNOPSIS\n\
-       make build|install|clean|cleanall|release|image\n\
-       make cachestats|viewplan|viewpack|viewbuild\n\
+       make build | install | clean | cleanall | release | image\n\
+       make cachestats | viewplan | viewpack | viewbuild\n\
        make help\n\
 \nDESCRIPTION\n\
     Executes one of the make tasks defined through this Makefile flow, according \n\
@@ -125,11 +133,11 @@ help:
                   Build the system release and create OS image for the current DEVICE\n\
     cachestats\n\
                   Displays cache statistics\n\
-    viewplan\n\
+    viewplan | plan\n\
                   Shows the building plan for the current DEVICE\n\
     viewpack\n\
                   Shows the package descriptor and properties\n\
-    viewbuild\n\
+    viewbuild | monitor\n\
                   Display the real time build process for the current DEVICE\n\
     help\n\
                   Shows this text\n\
@@ -151,7 +159,7 @@ help:
                   Verbose compilation mode (yes/no). Default value is 'yes'\n\
 \n\
 EXAMPLES\n\
-       build the entire distribution ('build' make task is default)\n\
+       build the entire distribution ('build' task is default)\n\
        > make\n\
        > make build\n\n\
        build 'sed' package\n\
@@ -164,4 +172,4 @@ EXAMPLES\n\
        > make image\n\n\
        view the building plan (it is saved in viewplan.txt file from $(OUTPUT_DIR) folder)\n\
        > make viewplan\n\n\
-"
+" | more

@@ -1,5 +1,0 @@
-#!/bin/sh
-
-# show release information
-. /etc/os-release
-echo "$PRETTY_NAME"

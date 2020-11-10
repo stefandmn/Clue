@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ${SYSTEM}/options ""
+. ${ROOT}/devices/options ""
 
 get_deps() {
 	need_res=()

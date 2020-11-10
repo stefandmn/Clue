@@ -1,6 +1,0 @@
-PKG_NAME="autotools"
-PKG_VERSION=""
-PKG_URL=""
-PKG_DEPENDS_HOST="ccache:host autoconf:host automake:host intltool:host libtool:host autoconf-archive:host"
-PKG_SECTION="virtual"
-PKG_LONGDESC="autotools: Metapackage"

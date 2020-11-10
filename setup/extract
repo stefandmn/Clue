@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ${SYSTEM}/options "${1}"
+. ${ROOT}/devices/options "${1}"
 
 if [ -z "${2}" ]; then
 	die "usage: ${0} package_name target_dir"

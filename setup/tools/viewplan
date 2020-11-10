@@ -2,7 +2,7 @@
 
 unset _CACHE_PACKAGE_LOCAL _CACHE_PACKAGE_GLOBAL _DEBUG_DEPENDS_LIST _DEBUG_PACKAGE_LIST
 
-. ${SYSTEM}/options ""
+. ${ROOT}/devices/options ""
 
 # Fake the parallel command if GNU parallel is not available - slow, but works.
 fake_parallel() {

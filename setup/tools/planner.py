@@ -18,8 +18,8 @@ class DistroPackage:
 					 "init": [],
 					 "host": [],
 					 "target": []}
-		self.wants = []
-		self.wantedby = []
+		self.needs = []
+		self.neededby = []
 
 	def __repr__(self):
 		s = "%-9s: %s" % ("name", self.name)
@@ -28,8 +28,8 @@ class DistroPackage:
 		for t in self.deps:
 			s = "%s\n%-9s: %s" % (s, t, self.deps[t])
 
-		s = "%s\n%-9s: %s" % (s, "NEEDS", self.wants)
-		s = "%s\n%-9s: %s" % (s, "WANTED BY", self.wantedby)
+		s = "%s\n%-9s: %s" % (s, "NEEDS", self.needs)
+		s = "%s\n%-9s: %s" % (s, "WANTED BY", self.neededby)
 
 		return s
 
@@ -37,34 +37,34 @@ class DistroPackage:
 		for d in " ".join(packages.split()).split():
 			self.deps[target].append(d)
 			name = d.split(":")[0]
-			if name not in self.wants and name != self.name:
-				self.wants.append(name)
+			if name not in self.needs and name != self.name:
+				self.needs.append(name)
 
 	def delDependency(self, target, package):
 		if package in self.deps[target]:
 			self.deps[target].remove(package)
 			name = package.split(":")[0]
-			if name in self.wants:
-				self.wants.remove(name)
+			if name in self.needs:
+				self.needs.remove(name)
 
 	def addReference(self, package):
 		name = package.split(":")[0]
-		if name not in self.wantedby:
-			self.wantedby.append(name)
+		if name not in self.neededby:
+			self.neededby.append(name)
 
 	def delReference(self, package):
 		name = package.split(":")[0]
-		if name in self.wantedby:
-			self.wantedby.remove(name)
+		if name in self.neededby:
+			self.neededby.remove(name)
 
 	def isReferenced(self):
-		return False if self.wants == [] else True
+		return False if self.needs == [] else True
 
 	def isWanted(self):
-		return False if self.wantedby == [] else True
+		return False if self.neededby == [] else True
 
 	def references(self, package):
-		return package in self.wants
+		return package in self.needs
 
 
 # Reference material:
@@ -248,7 +248,7 @@ def processPackages(args, packages, build):
 		for pkgname in packages:
 			pkg = packages[pkgname]
 			if pkg.isWanted():
-				for opkgname in pkg.wantedby:
+				for opkgname in pkg.neededby:
 					if opkgname != ROOT_PKG:
 						if not packages[opkgname].isWanted():
 							pkg.delReference(opkgname)
@@ -348,11 +348,11 @@ eprint("")
 # Output ${CONFIG}/install steps
 if args.show_wants:
 	for step in steps:
-		wants = []
+		needs = []
 		node = (REQUIRED_PKGS[step[1]])
 		for e in node.edges:
-			wants.append(e.fqname)
-		print("%-7s %-25s (wants: %s)" % (step[0], step[1].replace(":target", ""), ", ".join(wants).replace(":target", "")))
+			needs.append(e.fqname)
+		print("%-7s %-25s (needs: %s)" % (step[0], step[1].replace(":target", ""), ", ".join(needs).replace(":target", "")))
 else:
 	for step in steps:
 		print("%-7s %s" % (step[0], step[1].replace(":target", "")))

@@ -1,7 +1,0 @@
-#!/bin/sh
-
-if [ -e "/clue/.config/lirc_options.conf" ]; then
-	LIRCD_OPTIONS="-O /clue/.config/lirc_options.conf"
-fi
-
-exec /usr/sbin/lircd-uinput $LIRCD_OPTIONS "$@"

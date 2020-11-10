@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ${SYSTEM}/options "${1}"
+. ${ROOT}/devices/options "${1}"
 
 if [ -z "${1}" ]; then
 	die "usage: ${0} package_name [parent_pkg]"
@@ -77,6 +77,8 @@ if [ -d "${SOURCES}/${PKG_NAME}" -o -d "${PKG_DIR}/sources" ] || pkg_call_exists
 
 	if [ -z "${PKG_SOURCE_DIR}" -a -d "${PKG_UNPACK_DIR}/${PKG_NAME}-${PKG_VERSION}"* ]; then
 		mv "${PKG_UNPACK_DIR}/${PKG_NAME}-${PKG_VERSION}"* "${PKG_UNPACK_DIR}/.intermediate"
+	elif [ -z "${PKG_SOURCE_DIR}" -a "${PKG_IS_ADDON}" = "yes" -a -d "${PKG_UNPACK_DIR}/${PKG_NAME}" ]; then
+		mv "${PKG_UNPACK_DIR}/${PKG_NAME}" "${PKG_UNPACK_DIR}/.intermediate"
 	fi
 
 	if [ ! -d "${PKG_UNPACK_DIR}/.intermediate" ]; then
@@ -123,8 +125,8 @@ if [ -d "${SOURCES}/${PKG_NAME}" -o -d "${PKG_DIR}/sources" ] || pkg_call_exists
 					[ -d ${patch_dir} ] && PATCH_DIRS_PKG+=" ${patch_dir}/*.patch"
 				else
 					[ -d ${PKG_DIR}/patches/${patch_dir} ] && PATCH_DIRS_PKG+=" ${PKG_DIR}/patches/${patch_dir}/*.patch"
-					[ -d ${SYSTEM}/patches/${PKG_NAME}/${patch_dir} ] && PATCH_DIRS_PRJ+=" ${SYSTEM}/patches/${PKG_NAME}/${patch_dir}/*.patch"
-					[ -d ${SYSTEM}/devices/${DEVICE}/patches/${PKG_NAME}/${patch_dir} ] && PATCH_DIRS_PRJ+=" ${SYSTEM}/devices/${DEVICE}/patches/${PKG_NAME}/${patch_dir}/*.patch"
+					[ -d ${ROOT}/basis/patches/${PKG_NAME}/${patch_dir} ] && PATCH_DIRS_PRJ+=" ${ROOT}/basis/patches/${PKG_NAME}/${patch_dir}/*.patch"
+					[ -d ${ROOT}/devices/${DEVICE}/patches/${PKG_NAME}/${patch_dir} ] && PATCH_DIRS_PRJ+=" ${ROOT}/devices/${DEVICE}/patches/${PKG_NAME}/${patch_dir}/*.patch"
 				fi
 			done
 		fi
@@ -134,11 +136,11 @@ if [ -d "${SOURCES}/${PKG_NAME}" -o -d "${PKG_DIR}/sources" ] || pkg_call_exists
 			${PATCH_DIRS_PKG} \
 			${PKG_DIR}/patches/${PKG_VERSION}/*.patch \
 			${PKG_DIR}/patches/${PKG_VERSION}/${PATCH_ARCH}/*.patch \
-			${SYSTEM}/patches/${PKG_NAME}/*.patch \
-			${SYSTEM}/patches/${PKG_NAME}/${PATCH_ARCH}/*.patch \
+			${ROOT}/basis/patches/${PKG_NAME}/*.patch \
+			${ROOT}/basis/patches/${PKG_NAME}/${PATCH_ARCH}/*.patch \
 			${PATCH_DIRS_PRJ} \
-			${SYSTEM}/patches/${PKG_NAME}/${PKG_VERSION}/*.patch \
-			${SYSTEM}/devices/${DEVICE}/patches/${PKG_NAME}/*.patch; do
+			${ROOT}/basis/atches/${PKG_NAME}/${PKG_VERSION}/*.patch \
+			${ROOT}/devices/${DEVICE}/patches/${PKG_NAME}/*.patch; do
 
 			thisdir="$(dirname "${i}")"
 
@@ -150,20 +152,20 @@ if [ -d "${SOURCES}/${PKG_NAME}" -o -d "${PKG_DIR}/sources" ] || pkg_call_exists
 				PATCH_DESC="(common - ${PKG_VERSION})"
 			elif [ "${thisdir}" = "${PKG_DIR}/patches/${PKG_VERSION}/${PATCH_ARCH}" ]; then
 				PATCH_DESC="(${PKG_VERSION} - ${PATCH_ARCH})"
-			elif [ "${thisdir}" = "${SYSTEM}/patches/${PKG_NAME}" ]; then
+			elif [ "${thisdir}" = "${ROOT}/basis/patches/${PKG_NAME}" ]; then
 				PATCH_DESC="(project)"
-			elif [ "${thisdir}" = "${SYSTEM}/patches/${PKG_NAME}/${PATCH_ARCH}" ]; then
+			elif [ "${thisdir}" = "${ROOT}/basis/patches/${PKG_NAME}/${PATCH_ARCH}" ]; then
 				PATCH_DESC="(project - ${PATCH_ARCH})"
-			elif [ "${thisdir}" = "${SYSTEM}/patches/${PKG_NAME}/${PKG_VERSION}" ]; then
+			elif [ "${thisdir}" = "${ROOT}/basis/patches/${PKG_NAME}/${PKG_VERSION}" ]; then
 				PATCH_DESC="(project - ${PKG_VERSION})"
-			elif [ "${thisdir}" = "${SYSTEM}/devices/${DEVICE}/patches/${PKG_NAME}" ]; then
+			elif [ "${thisdir}" = "${ROOT}/devices/${DEVICE}/patches/${PKG_NAME}" ]; then
 				PATCH_DESC="(device)"
 			else
 				if [[ "${thisdir}" =~ ^${PKG_DIR}/.* ]]; then
 					PATCH_DESC="(common - $(basename "${thisdir}"))"
-				elif [[ "${thisdir}" =~ ^${SYSTEM}/.*/devices/.* ]]; then
+				elif [[ "${thisdir}" =~ ^${ROOT}/.*/devices/.* ]]; then
 					PATCH_DESC="(device - $(basename "${thisdir}"))"
-				elif [[ "${thisdir}" =~ ^${SYSTEM}/.* ]]; then
+				elif [[ "${thisdir}" =~ ^${ROOT}/.* ]]; then
 					PATCH_DESC="(project - $(basename "${thisdir}"))"
 				else
 					PATCH_DESC="(absolute - ${i})"

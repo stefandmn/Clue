@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ${SYSTEM}/options "${1}"
+. ${ROOT}/devices/options "${1}"
 
 if [ -n "${1}" ]; then
 
@@ -58,7 +58,7 @@ if [ -n "${1}" ]; then
 
 	if [ "${TARGET}" = "target" ]; then
 		for PKG_TMP_DIR in ${PKG_DIR} \
-			${SYSTEM}/devices/${DEVICE}/${PACKAGES}/${PKG_NAME}; do
+			${ROOT}/devices/${DEVICE}/${PACKAGES}/${PKG_NAME}; do
 
 			[ -d ${PKG_TMP_DIR} ] || continue
 

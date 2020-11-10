@@ -2,7 +2,7 @@
 
 unset _CACHE_PACKAGE_LOCAL _CACHE_PACKAGE_GLOBAL _DEBUG_DEPENDS_LIST _DEBUG_PACKAGE_LIST
 
-. ${SYSTEM}/options ""
+. ${ROOT}/devices/options ""
 
 ${CONFIG}/tools/checkdeps || exit 1
 
@@ -120,10 +120,10 @@ ln -sf /etc/issue ${INSTALL}/etc/motd
 
 # Copy system related files to filesystem
 echo ">> Copying system related files to filesystem.."
-if [ -d "${SYSTEM}/control/filesystem" ]; then
-	cp -PR ${SYSTEM}/control/filesystem/* ${INSTALL}
+if [ -d "${ROOT}/basis/filesystem" ]; then
+	cp -PR ${ROOT}/basis/filesystem/* ${INSTALL}
 	# Install project specific systemd services
-	for service in ${SYSTEM}/control/filesystem/usr/lib/systemd/system/*.service; do
+	for service in ${ROOT}/basis/filesystem/usr/lib/systemd/system/*.service; do
 		if [ -f "${service}" ]; then
 			enable_service $(basename ${service})
 		fi
@@ -132,10 +132,10 @@ fi
 
 # Copy DEVICE related files to filesystem
 echo ">> Copying DEVICE related files to filesystem.."
-if [ -n "${DEVICE}" -a -d "${SYSTEM}/devices/${DEVICE}/filesystem" ]; then
-	cp -PR ${SYSTEM}/devices/${DEVICE}/filesystem/* ${INSTALL}
+if [ -n "${DEVICE}" -a -d "${ROOT}/devices/${DEVICE}/filesystem" ]; then
+	cp -PR ${ROOT}/devices/${DEVICE}/filesystem/* ${INSTALL}
 	# Install device specific systemd services
-	for service in ${SYSTEM}/devices/${DEVICE}/filesystem/usr/lib/systemd/system/*.service; do
+	for service in ${ROOT}/devices/${DEVICE}/filesystem/usr/lib/systemd/system/*.service; do
 		if [ -f "${service}" ]; then
 			enable_service $(basename ${service})
 		fi

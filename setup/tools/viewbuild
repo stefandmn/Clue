@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ${SYSTEM}/options ""
+. ${ROOT}/devices/options ""
 
 _find_latest_tcdir() {
 	local IFS=$'\n'

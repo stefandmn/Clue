@@ -1,5 +1,0 @@
-ACTION!="add|change", GOTO="end"
-
-DRIVER=="ehci-pci|xhci_hcd", RUN+="/usr/bin/sh -c 'echo disabled > /sys/$devpath/power/wakeup'"
-
-LABEL="end"
