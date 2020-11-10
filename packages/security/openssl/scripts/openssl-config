@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cp /etc/ssl/cacert.pem.system /run/clue/cacert.pem
+
+[ -f /clue/.config/cacert.pem ] && cat /clue/.config/cacert.pem >>/run/clue/cacert.pem
+
+exit 0

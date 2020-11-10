@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# setup hostname
+if [ -f /clue/.cache/hostname ]; then
+	cat /clue/.cache/hostname >/proc/sys/kernel/hostname
+fi
+
+# setup /etc/hosts
+rm -f /run/clue/hosts
+if [ -f /clue/.config/hosts.conf ]; then
+	cat /clue/.config/hosts.conf >/run/clue/hosts
+fi
+
+# setup /etc/resolv.conf
+rm -f /run/clue/resolv.conf
+if [ -f /clue/.config/resolv.conf ]; then
+	cat /clue/.config/resolv.conf >/run/clue/resolv.conf
+elif [ -f /dev/.kernel_ipconfig -a -f /proc/net/pnp ]; then
+	cat /proc/net/pnp >/run/clue/resolv.conf
+else
+	cat <<EOF >/run/clue/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+EOF
+fi

@@ -1,0 +1,58 @@
+#!/bin/sh
+
+. /usr/lib/clue/functions
+
+# Get NAME, which is DISTRO_NAME, ie. Clue
+. /etc/os-release
+
+hidecursor
+
+BACKUP_FILE=$(ls -1 /clue/.restore/??????????????.tar 2>/dev/null | tail -1)
+
+if [ -f "$BACKUP_FILE" ]; then
+	echo "System Setup - RESTORE"
+	echo ""
+	echo "Please do not reboot or turn off your ${NAME}/RPi device!"
+	echo ""
+
+	StartProgress spinner "Checking backup file... "
+	tar tf $BACKUP_FILE &>/dev/null
+	ret=$?
+
+	if [ $ret -eq 0 ]; then
+		StopProgress "OK"
+
+		echo
+		echo "This may take some time to complete, please be patient."
+		echo
+
+		StartProgress spinner "Restoring... "
+		rm -rf /clue/.kodi &>/dev/null
+		rm -rf /clue/.cache &>/dev/null
+		rm -rf /clue/.config &>/dev/null
+		tar xf $BACKUP_FILE -C / &>/dev/null
+		rm -f $BACKUP_FILE &>/dev/null
+		sync
+		StopProgress "done!"
+
+		echo
+		StartProgress countdown "Rebooting in 5s... " 5 "NOW"
+	else
+		StopProgress "FAILED"
+
+		echo
+		echo "Backup file is not valid, or corrupt."
+
+		echo
+		StartProgress spinner "Removing file to allow normal restart... "
+		rm -f $BACKUP_FILE &>/dev/null
+		sync
+		StopProgress "done"
+
+		echo
+		StartProgress countdown "Rebooting in 30s... " 30 "NOW"
+	fi
+fi
+
+sync
+reboot -f

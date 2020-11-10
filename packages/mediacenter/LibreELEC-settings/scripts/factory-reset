@@ -1,0 +1,82 @@
+#!/bin/sh
+
+. /usr/lib/clue/functions
+
+# Get NAME, which is DISTRO_NAME, ie. Clue
+. /etc/os-release
+
+hidecursor
+
+label=
+target=
+uuid=
+
+get_target() {
+	for arg in $(cat /proc/cmdline); do
+		case $arg in
+			disk=*)
+				disk="${arg#*=}"
+				case $disk in
+					LABEL=*)
+						label="${disk#*=}"
+						target="$(blkid -L $label)"
+						;;
+					UUID=*)
+						uuid="${disk#*=}"
+						target="$(blkid -U $uuid)"
+						;;
+					/*)
+						target="$disk"
+						;;
+				esac
+				;;
+		esac
+	done
+}
+
+show_reset_msg() {
+	echo "System Setup - RESET"
+	echo ""
+	echo "Please do not reboot or turn off your ${NAME}/RPi device!"
+	echo ""
+}
+
+if [ -f /clue/.cache/reset_oe ]; then
+	# hard reset
+	rm -f /clue/.cache/reset_oe
+	get_target
+	if [ ! -z $target ]; then
+		show_reset_msg
+
+		StartProgress spinner "Performing hard reset... "
+		umount /clue
+		mke2fs -t ext4 -m 0 $target &>/dev/null
+		if [ ! -z $label ]; then
+			tune2fs -U random -L $label $target &>/dev/null
+		fi
+		if [ ! -z $uuid ]; then
+			tune2fs -U $uuid $target &>/dev/null
+		fi
+		StopProgress "done!"
+
+		echo
+		StartProgress countdown "Rebooting in 5s... " 5 "NOW"
+	fi
+elif [ -f /clue/.cache/reset_xbmc ]; then
+	# soft reset
+	rm -f /clue/.cache/reset_xbmc
+	get_target
+	if [ ! -z $target ]; then
+		show_reset_msg
+
+		StartProgress spinner "Performing soft reset... "
+		rm -rf /clue/.??* &>/dev/null
+		StopProgress "done!"
+
+		echo
+		StartProgress countdown "Rebooting in 5s... " 5 "NOW"
+	fi
+fi
+
+sync
+reboot -f

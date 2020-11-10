@@ -1,0 +1,88 @@
+#!/bin/sh
+
+cat_data() {
+	echo "========== ${1} =========="
+	cat
+}
+
+cat_file() {
+	if [ -f "${1}" ]; then
+		cat "${1}" | cat_data "${2:-${1}}"
+	fi
+}
+
+usage() {
+	[ -n "${1}" ] && echo "Unknown argument: ${1}"
+	cat <<EOF
+Usage: $0 [-c] [-h]
+
+  -c   send output to stdout not via /usr/bin/pastebinit
+  -h   this help message
+EOF
+	exit 1
+}
+
+OUTPUT="/usr/bin/pastebinit"
+
+while getopts ":hc" opt; do
+	case ${opt} in
+		c) OUTPUT="cat" ;;
+		?) usage "${OPTARG}" ;;
+		h) usage ;;
+	esac
+done
+
+source /etc/os-release
+SYSTEM_ARCH="${CLUE_ARCH#*.}"
+
+# If running in SAFE mode, send FAILED logs
+if [ "$(cat "/clue/.config/boot.status" 2>/dev/null)" = "SAFE" ]; then
+	KODI_ROOT="/clue/.kodi.FAILED/temp"
+else
+	KODI_ROOT="/clue/.kodi/temp"
+fi
+
+if [ "$(basename $0)" = "pastekodi" ]; then
+	LOG_TYPE="System"
+	LOG_FILE="${KODI_ROOT}/kodi.log"
+else
+	LOG_TYPE="Crash"
+	LOG_FILE="${KODI_ROOT}/kodi_crash.log"
+fi
+
+(
+	echo "${LOG_TYPE} log output for: $(lsb_release)"
+
+	echo "RPi Hardware Revision: $(vcgencmd otp_dump | grep 30: | cut -d: -f2)"
+
+	cat_file "${LOG_FILE}"
+
+	journalctl -a | cat_data "journalctl -a"
+
+	bootloader_version="$(vcgencmd bootloader_version)"
+	if ! echo "${bootloader_version}" | grep -q "Command not registered"; then
+		echo "${bootloader_version}" | cat_data "Bootloader version"
+	fi
+
+	cat_file "/flash/config.txt"             # RPi
+	cat_file "/flash/distroconfig.txt"       # RPi
+	cat_file "/flash/cmdline.txt"            # RPi
+
+	cat_file "/flash/syslinux.cfg"           # x86 BIOS
+	cat_file "/flash/EFI/BOOT/syslinux.cfg"  # x86 EFI
+	cat_file "/flash/extlinux.conf"          # x86 legacy
+
+	cat_file "/flash/extlinux/extlinux.conf" # u-boot
+
+	cat_file "${KODI_ROOT}/.smb/smb.conf"
+	cat_file "${KODI_ROOT}/.smb/user.conf"
+	cat_file "/run/samba/smb.conf"
+
+	pem_sys="$(sha256sum /etc/ssl/cacert.pem.system | cut -d' ' -f1)"
+	pem_run="$(sha256sum /run/clue/cacert.pem | cut -d' ' -f1)"
+	if [ "${pem_sys}" = "${pem_run}" ]; then
+		cat_data "/run/clue/cacert.pem is default" </dev/null
+	else
+		cat_file /run/clue/cacert.pem "/run/clue/cacert.pem (modified)"
+	fi
+) | ${OUTPUT} 2>/dev/null

@@ -1,0 +1,13 @@
+[Unit]
+Description=Welcome Message
+DefaultDependencies=false
+ConditionKernelCommandLine=!morequiet
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/welcome
+RemainAfterExit=yes
+StandardOutput=tty
+
+[Install]
+WantedBy=basic.target

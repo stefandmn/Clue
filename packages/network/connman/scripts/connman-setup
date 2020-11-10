@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# creating initial settings file
+if [ ! -f /clue/.cache/connman/settings ]; then
+	mkdir -p /clue/.cache/connman
+	cp /usr/share/connman/settings /clue/.cache/connman
+fi
+
+# set variable for connman main.conf location
+if [ -f /clue/.config/connman_main.conf ]; then
+	export CONNMAN_MAIN="--config=/clue/.config/connman_main.conf"
+else
+	export CONNMAN_MAIN="--config=/etc/connman/main.conf"
+fi
+
+# switch resolv.conf management to connman and use current contents
+# as a fallback
+if [ -f /run/clue/resolv.conf ]; then
+	cat /run/clue/resolv.conf >/run/connman/resolv.conf
+fi
+rm -f /run/clue/resolv.conf
+ln -s /run/connman/resolv.conf /run/clue/resolv.conf
