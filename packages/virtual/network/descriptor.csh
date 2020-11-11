@@ -3,7 +3,7 @@ PKG_VERSION=""
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain connman netbase ethtool openssh iw"
 PKG_SECTION="virtual"
-PKG_DESCRIPTION="Metapackage for various packages to install network support"
+PKG_DESCRIPTION="Metapackage to install network support packages"
 
 if [ "$BLUETOOTH_SUPPORT" = "yes" ]; then
 	PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET bluez"

@@ -3,7 +3,7 @@ PKG_VERSION=""
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain gdb edid-decode memtester"
 PKG_SECTION="virtual"
-PKG_DESCRIPTION="debug is a Metapackage for installing debugging tools"
+PKG_DESCRIPTION="Metapackage for installing debugging tools"
 
 # configure GPU drivers and dependencies:
 get_graphicdrivers

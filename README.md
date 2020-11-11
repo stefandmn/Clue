@@ -1,24 +1,26 @@
 # Clue Media Experience
 
-**Clue** is a free and open source environment, developed as fork of **LibreELEC**,
+**Clue** is a free and open source environment, developed as fork of LibreELEC project,
 to provide you builtin functions like multimedia center, integrated webcam, multiple 
 networking pre-configurations (like Repeater, Router, Hotspot,etc.), etc., everything 
-out of the box, easy to be deployed and to use.
+out of the box, easy to be deployed and to use over **Kodi** media center.
 
 To install **Clue**  you need to download the installer image from [amsd.go.ro/clue](https://amsd.go.ro/clue),
-choosing the right image file corresponding to your RPi version, write it on the SD 
+choosing the right image file corresponding to your RPi device version, write it on the SD 
 (or min SD) card, and connect RPi device through LAN port to your local network. The 
 installer doesn't require human interaction and it will finish the installation process 
 in 1-2 minutes (depending by your RPi version).
 
-After installation **Clue** will boot loading automatically _Kodi_ media center 
-graphical interface. Furthermore, level you'll have access over SSH using __root__ account 
+After installation **Clue** will boot loading automatically _Kodi_ media center with a 
+dedicate graphical interface. Furthermore, you'll have access over SSH using __root__ account 
 (default password is `clue`) or over HTTP to control most of the system configurations.
 Connecting the RPi device to a TV over _HDMI_ you'll be able to setup the system directly 
-from TV remove control and also to control the entire _HDMI_ chain using **Setup** utility.
+from TV remove control and also to control the entire _HDMI_ chain using **System Setup** 
+utility (deployed like a _Kodi_ addon).
 
-**Clue** works mainly on all RPi devices, supported devices and their tech. specs. 
-are described below.
+**Clue** works mainly on all RPi devices, supported devices and their technical specifications 
+are described below. In addition, this documentation provides guidelines to extend the **Clue OS**
+setup or to adapt existing functionalities adjusting packages configuration.  
  
 _Enjoy!_
 

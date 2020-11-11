@@ -175,9 +175,6 @@ DISTRO_DISKLABEL="HOME"
 DISTRO_MIRROR="http://sources.libreelec.tv/mirror"
 DISTRO_SRC="http://sources.libreelec.tv/${DISTRO_STATUS}"
 
-# Addon Server Url
-ADDON_SERVER_URL="https://addons.libreelec.tv"
-
 # Sourceforge download site
 SOURCEFORGE_SRC="https://prdownloads.sourceforge.net"
 
@@ -285,7 +282,6 @@ if [[ ${PWD} =~ [[:space:]] ]]; then
 	exit 1
 fi
 
-
 ########################################################################################
 ## Include references (set of gerenal functions and same options to be overwritten)
 ##
@@ -299,7 +295,6 @@ fi
 if [ -f "${ROOT}/devices/${DEVICE}/options" ]; then
 	. "${ROOT}/devices/${DEVICE}/options"
 fi
-
 
 ########################################################################################
 ## Build up dynamic options and project variables and run environment procedures
@@ -405,7 +400,6 @@ TARGETS=${OUTPUT_DIR}/targets
 BUILDER=${OUTPUT_DIR}/${DISTRO_STATUS}-${DEVICE}.${TARGET_ARCH}-${DISTRO_NAME}-${DISTRO_VERSION}
 
 BUILDER_PACKS=${BUILDER}/${PACKAGES}
-BUILDER_ADDON="${BUILDER}/addons/$1"
 BUILDER_THREADS=${BUILDER}/.threads
 BUILDER_STAMPS=${BUILDER}/.stamps
 INSTALL_STAMPS=${BUILDER}/image/.stamps
@@ -524,7 +518,6 @@ if [[ -z "$PATH" || ("$PATH" != "$TOOLCHAIN/bin:$TOOLCHAIN/sbin" && "$PATH" == "
 	export PATH="$TOOLCHAIN/bin:$TOOLCHAIN/sbin${PATH:+":$PATH"}"
 fi
 
-
 ########################################################################################
 ## Package processing (calls and routines' implementation)
 ##
@@ -550,7 +543,6 @@ unset CONFIG_SITE
 # meh suse
 unset PYTHONSTARTUP
 unset PYTHONPATH
-
 
 # die (message, code) abort with optional message and code
 die() {
@@ -1807,14 +1799,14 @@ show_config() {
 	# Build options
 	config_message="$config_message\n\n Build options:"
 	config_message="$config_message\n$simple_dashes"
-	config_message="$config_message\n - CPU (ARCH):\t\t\t\t $TARGET_CPU ($TARGET_ARCH)"
-	config_message="$config_message\n - FLOAT:\t\t\t\t $TARGET_FLOAT"
-	config_message="$config_message\n - FPU:\t\t\t\t\t $TARGET_FPU"
-	config_message="$config_message\n - CPU features:\t\t\t $TARGET_FEATURES"
-	config_message="$config_message\n - LTO (Link Time Optimization) support: $LTO_SUPPORT"
-	config_message="$config_message\n - GOLD (Google Linker) Support:\t $GOLD_SUPPORT"
-	config_message="$config_message\n - LLVM support:\t\t\t $LLVM_SUPPORT"
-	config_message="$config_message\n - DEBUG:\t\t\t\t ${DEBUG:-no}"
+	config_message="$config_message\n - CPU (ARCH):\t\t\t\t ${TARGET_CPU} ($TARGET_ARCH)"
+	config_message="$config_message\n - FLOAT:\t\t\t\t ${TARGET_FLOAT}"
+	config_message="$config_message\n - FPU:\t\t\t\t\t ${TARGET_FPU}"
+	config_message="$config_message\n - CPU features:\t\t\t ${TARGET_FEATURES}"
+	config_message="$config_message\n - LTO (Link Time Optimization) support: ${LTO_SUPPORT}"
+	config_message="$config_message\n - GOLD (Google Linker) Support:\t ${GOLD_SUPPORT}"
+	config_message="$config_message\n - LLVM support:\t\t\t ${LLVM_SUPPORT}"
+	config_message="$config_message\n - DEBUG:\t\t\t\t ${DEBUG}"
 
 	# Graphic configuration
 	config_message="$config_message\n\n Graphic configuration:"
@@ -1911,7 +1903,6 @@ show_config() {
 	read -n 1 -p "Press any key to continue.."
 	echo
 }
-
 
 # Check configuration
 check_config
@@ -2045,7 +2036,7 @@ start_multithread_build() {
 
 	cat ${_CACHE_PACKAGE_GLOBAL} ${_CACHE_PACKAGE_LOCAL} |
 		${TOOLCHAIN}/bin/parallel --plain --no-notice --max-args 30 --halt now,fail=1 json_worker |
-		${CONFIG}/tools/planner.py --no-reorder --show-wants --build ${@} >"${BUILDER_THREADS}"/plan || result=1
+		${CONFIG}/tools/planner.py --no-reorder --show-needs --build ${@} >"${BUILDER_THREADS}"/plan || result=1
 
 	if [ ${result} -eq 0 ]; then
 		cat "${BUILDER_THREADS}"/plan | awk '{print $1 " " $2}' |

@@ -2,7 +2,7 @@
 
 . ${ROOT}/devices/options "$1"
 
-echo "DEVICE=${DEVICE}"
+echo "DEVICE=\"${DEVICE}\""
 
 for v in PKG_NAME PKG_VERSION PKG_URL PKG_DIR \
 	PKG_NEED_UNPACK PKG_DEPENDS_UNPACK \

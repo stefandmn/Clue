@@ -318,13 +318,14 @@ parser.add_argument("-b", "--build", nargs="+", metavar="PACKAGE", required=True
 parser.add_argument("--no-reorder", action="store_true", default="True", \
 					help="Do not resequence steps based on dependencies. This is the default.")
 parser.add_argument("--reorder", action="store_false", dest="no_reorder", \
-					help="Disable --no-reorder and resequence packages to try and reduce stalls etc.")
-parser.add_argument("--show-wants", action="store_true", \
-					help="Output \"wants\" dependencies for each step.")
-parser.add_argument("--hide-wants", action="store_false", dest="show_wants", default="True", \
-					help="Disable --show-wants.")
+					help="Disable --no-reorder and re-sequence packages to try and reduce stalls etc.")
+parser.add_argument("--show-needs", action="store_true", \
+					help="Output dependencies for each step.")
+parser.add_argument("--hide-needs", action="store_false", dest="show_needs", default="True", \
+					help="Disable --show-needs.")
 parser.add_argument("--ignore-invalid", action="store_true", \
 					help="Ignore invalid packages.")
+
 args = parser.parse_args()
 args.warn_invalid = False
 
@@ -346,7 +347,7 @@ eprint("Package steps   : %d" % len(steps))
 eprint("")
 
 # Output ${CONFIG}/install steps
-if args.show_wants:
+if args.show_needs:
 	for step in steps:
 		needs = []
 		node = (REQUIRED_PKGS[step[1]])
