@@ -6,7 +6,7 @@ PKG_DEPENDS_BOOTSTRAP="ccache:host autoconf:host binutils:host gmp:host mpfr:hos
 PKG_DEPENDS_TARGET="gcc:host"
 PKG_DEPENDS_HOST="ccache:host autoconf:host binutils:host gmp:host mpfr:host mpc:host glibc"
 PKG_DEPENDS_INIT="toolchain"
-PKG_LONGDESC="This package contains the GNU Compiler Collection."
+PKG_DESCRIPTION="This package contains the GNU Compiler Collection."
 
 GCC_COMMON_CONFIGURE_OPTS="--target=$TARGET_NAME \
                            --with-sysroot=$TARGET_SYSROOT \

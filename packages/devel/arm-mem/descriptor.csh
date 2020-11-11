@@ -5,7 +5,7 @@ PKG_ARCH="arm"
 PKG_URL="https://github.com/bavison/arm-mem/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_DEPENDS_INIT="toolchain arm-mem"
-PKG_LONGDESC="arm-mem is a ARM-accelerated versions of selected functions from string.h"
+PKG_DESCRIPTION="arm-mem is a ARM-accelerated versions of selected functions from string.h"
 PKG_BUILD_FLAGS="+pic"
 
 if target_has_feature neon; then

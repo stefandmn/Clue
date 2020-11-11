@@ -3,7 +3,7 @@ PKG_VERSION="2.13.1"
 PKG_SHA256="9f0d852b39d75fc655f9f53850eb32555394f36104a044bb2b2fc9e66dbbfa7f"
 PKG_URL="http://www.freedesktop.org/software/fontconfig/release/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain util-linux util-macros freetype libxml2 zlib expat"
-PKG_LONGDESC="Fontconfig is a library for font customization and configuration."
+PKG_DESCRIPTION="Fontconfig is a library for font customization and configuration."
 
 PKG_CONFIGURE_OPTS_TARGET="--with-arch=$TARGET_ARCH \
                            --with-cache-dir=/clue/.cache/fontconfig \

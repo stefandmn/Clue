@@ -3,7 +3,7 @@ PKG_VERSION="3.3.15"
 PKG_SHA256="191391fde24a1d3b9b0030d26f8dfdcbf641d36297aab7ecf2f941c5ca927e21"
 PKG_URL="https://gitlab.com/procps-ng/procps/-/archive/v${PKG_VERSION}/procps-v${PKG_VERSION}.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain ncurses"
-PKG_LONGDESC="Command line and full screen utilities for browsing procfs."
+PKG_DESCRIPTION="Command line and full screen utilities for browsing procfs."
 PKG_TOOLCHAIN="autotools"
 PKG_BUILD_FLAGS="+pic"
 

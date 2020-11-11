@@ -3,7 +3,7 @@ PKG_VERSION="20190514"
 PKG_SHA256="13dede60a1ba7b967f0eef72f40720a2ea0678dee54ea3fc44800f58ec38aafc"
 PKG_URL="https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/snapshot/$PKG_VERSION.tar.gz"
 PKG_NEED_UNPACK="${ROOT}/devices/${DEVICE}/${PACKAGES}/${PKG_NAME}"
-PKG_LONGDESC="kernel-firmware: kernel related firmware"
+PKG_DESCRIPTION="kernel-firmware: kernel related firmware"
 PKG_TOOLCHAIN="manual"
 
 # Install additional miscellaneous drivers

@@ -4,7 +4,7 @@ PKG_SHA256="2528b9f99dbbb7a9498b9e1657996c865a04fa2f7c5fb6fe484f3725b7723d9c"
 PKG_URL="https://git.zx2c4.com/wireguard-tools/snapshot/wireguard-tools-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain linux libmnl"
 PKG_NEED_UNPACK="$LINUX_DEPENDS"
-PKG_LONGDESC="WireGuard VPN userspace tools"
+PKG_DESCRIPTION="WireGuard VPN userspace tools"
 PKG_TOOLCHAIN="manual"
 PKG_IS_KERNEL_PKG="yes"
 

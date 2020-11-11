@@ -73,7 +73,7 @@ done
 
 # Build image contents
 echo ">> Building system packages.."
-MTADDONBUILD=no start_multithread_build image || die "Parallel build failure - see log for details. Time of failure: $(date)"
+start_multithread_build image || die "Parallel build failure - see log for details. Time of failure: $(date)"
 
 echo -e "<< Successful build, finalizing OS structure and components..\n"
 
@@ -242,9 +242,7 @@ if [ "${1}" = "release" -o "${1}" = "image" ]; then
 	cp ${ROOT}/README* ${RELEASE_DIR}
 	echo "${TARGET_VERSION}" >${RELEASE_DIR}/RELEASE
 
-	if [ ! "${MEDIACENTER}" = "no" ]; then
-		echo -e "\t\tKodi commit: $(get_pkg_version ${MEDIACENTER})" >>${RELEASE_DIR}/RELEASE
-	fi
+		echo -e "\t\tKodi commit: $(get_pkg_version kodi)" >>${RELEASE_DIR}/RELEASE
 
 	mkdir -p ${RELEASE_DIR}/target
 	cp ${TARGETS}/${IMAGE_NAME}.system ${RELEASE_DIR}/target/SYSTEM

@@ -3,7 +3,7 @@ PKG_VERSION="5.50"
 PKG_SHA256="c44b776660bf78e664e388b979da152976296e444dece833f3ddbd5be5a3b1b4"
 PKG_URL="https://git.kernel.org/pub/scm/bluetooth/bluez.git/snapshot/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain dbus glib readline systemd"
-PKG_LONGDESC="Bluetooth Tools and System Daemons for Linux."
+PKG_DESCRIPTION="Bluetooth Tools and System Daemons for Linux."
 PKG_TOOLCHAIN="autotools"
 PKG_BUILD_FLAGS="+lto"
 

@@ -3,7 +3,7 @@ PKG_VERSION="0.7"
 PKG_SHA256="fd45480cef0559b3eab965ea3ad4fe2d7a8f27db32c851a032ee0b487c378329"
 PKG_URL="https://github.com/lathiat/avahi/archive/v$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain expat libdaemon dbus connman"
-PKG_LONGDESC="Service Discovery for Linux using mDNS/DNS-SD, compatible with Bonjour."
+PKG_DESCRIPTION="Service Discovery for Linux using mDNS/DNS-SD, compatible with Bonjour."
 PKG_TOOLCHAIN="configure"
 
 PKG_CONFIGURE_OPTS_TARGET="py_cv_mod_gtk_=yes \

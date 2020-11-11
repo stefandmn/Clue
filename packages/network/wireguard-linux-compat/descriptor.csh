@@ -4,7 +4,7 @@ PKG_SHA256="81daddcf1ad1095cbbb03917d4b1e2ee151341e1261b6e2394b1d73c1d61bf20"
 PKG_URL="https://git.zx2c4.com/wireguard-linux-compat/snapshot/wireguard-linux-compat-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain linux libmnl"
 PKG_NEED_UNPACK="$LINUX_DEPENDS"
-PKG_LONGDESC="WireGuard VPN kernel module"
+PKG_DESCRIPTION="WireGuard VPN kernel module"
 PKG_TOOLCHAIN="manual"
 PKG_IS_KERNEL_PKG="yes"
 

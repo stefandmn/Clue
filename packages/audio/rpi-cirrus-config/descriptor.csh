@@ -3,7 +3,7 @@ PKG_VERSION="0.0.2"
 PKG_SHA256="cc11c47f1f2b6d5e72dcdea828ba57e0dcaf74161f675a4a9f395054f5d82d31"
 PKG_URL="https://github.com/HiassofT/rpi-cirrus-config/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="alsa-utils"
-PKG_LONGDESC="Config scripts for the Wolfson/Cirrus Logic audio card"
+PKG_DESCRIPTION="Config scripts for the Wolfson/Cirrus Logic audio card"
 PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {

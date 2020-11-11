@@ -3,7 +3,7 @@ PKG_VERSION="2.4.99"
 PKG_SHA256="4dbf539c7ed25dbb2055090b77ab87508fc46be39a9379d15fed4b5517e1da5e"
 PKG_URL="http://dri.freedesktop.org/libdrm/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain libpciaccess"
-PKG_LONGDESC="The userspace interface library to kernel DRM services."
+PKG_DESCRIPTION="The userspace interface library to kernel DRM services."
 PKG_TOOLCHAIN="meson"
 
 get_graphicdrivers

@@ -3,7 +3,7 @@ PKG_VERSION="12.2"
 PKG_SHA256="809668ffc296043779c984f53461c2b3987a45b7a25eb2f0a1d11d9f23ba4055"
 PKG_URL="http://www.freedesktop.org/software/pulseaudio/releases/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain alsa-lib dbus libcap libsndfile libtool openssl soxr systemd glib:host"
-PKG_LONGDESC="PulseAudio is a sound system for POSIX OSes, meaning that it is a proxy for your sound applications."
+PKG_DESCRIPTION="PulseAudio is a sound system for POSIX OSes, meaning that it is a proxy for your sound applications."
 
 if [ "$BLUETOOTH_SUPPORT" = "yes" ]; then
 	PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET sbc"

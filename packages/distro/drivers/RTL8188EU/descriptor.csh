@@ -4,7 +4,7 @@ PKG_SHA256="c8f225ff85cdc49e4a043773234e42de38aac0d2c9322829dac21c2ba72fed87"
 PKG_URL="https://github.com/lwfinger/rtl8188eu/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain linux"
 PKG_NEED_UNPACK="$LINUX_DEPENDS"
-PKG_LONGDESC="Realtek RTL81xxEU Linux 3.x driver"
+PKG_DESCRIPTION="Realtek RTL81xxEU Linux 3.x driver"
 PKG_IS_KERNEL_PKG="yes"
 
 pre_make_target() {

@@ -5,16 +5,23 @@ PKG_URL="https://github.com/stefandmn/$PKG_NAME/releases/download/$PKG_VERSION/$
 PKG_DEPENDS_TARGET="toolchain kodi"
 PKG_SECTION="skin"
 PKG_SHORTDESC="Clue SKin for Kodi"
-PKG_LONGDESC="Clue SKin for Kodi"
+PKG_DESCRIPTION="Clue SKin for Kodi"
 PKG_TOOLCHAIN="manual"
 
 
 makeinstall_target() {
 	# deploy resources
-	mkdir -p $INSTALL/usr/share/kodi/addons/$PKG_ADDON_ID
-	cp -PR $PKG_BUILD/* $INSTALL/usr/share/kodi/addons/$PKG_ADDON_ID/
+	mkdir -p $INSTALL/usr/share/kodi/addons/$PKG_NAME
+	cp -PR $PKG_BUILD/* $INSTALL/usr/share/kodi/addons/$PKG_NAME/
 
-	# update addon manifest
-	ADDON_MANIFEST=$INSTALL/usr/share/kodi/system/addon-manifest.xml
-	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "skin.clue" $ADDON_MANIFEST
+	# update kodi manifest
+	MANIFEST=$(get_build_dir kodi)/.install_pkg/usr/share/kodi/system/addon-manifest.xml
+	if [ $(more $MANIFEST | grep "$PKG_NAME" | wc -l) -eq 0 ]; then
+		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "$PKG_NAME" $MANIFEST
+	fi
+
+	# change default skin and device name in the global configuration
+	SETTINGS=$(get_build_dir kodi)/.install_pkg/usr/share/kodi/system/settings/settings.xml
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="skin"]/group[@id="1"]/setting[@id="lookandfeel.skin"]/default' -v "$PKG_NAME" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="general"]/group[@id="1"]/setting[@id="services.devicename"]/default' -v "$DISTRO_NAME" $SETTINGS
 }

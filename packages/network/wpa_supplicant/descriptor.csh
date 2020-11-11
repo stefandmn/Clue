@@ -3,7 +3,7 @@ PKG_VERSION="2.8"
 PKG_SHA256="a689336a12a99151b9de5e25bfccadb88438f4f4438eb8db331cd94346fd3d96"
 PKG_URL="https://w1.fi/releases/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain dbus libnl openssl"
-PKG_LONGDESC="A free software implementation of an IEEE 802.11i supplicant."
+PKG_DESCRIPTION="A free software implementation of an IEEE 802.11i supplicant."
 PKG_TOOLCHAIN="make"
 PKG_BUILD_FLAGS="+lto-parallel"
 

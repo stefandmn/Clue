@@ -4,7 +4,7 @@ PKG_SHA256="dec3cc45601c2c6dab47816523cb5a5731393d34cc75ec0f96a91191d3563fdd"
 PKG_URL="https://github.com/lwfinger/rtl8192du/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain linux"
 PKG_NEED_UNPACK="$LINUX_DEPENDS"
-PKG_LONGDESC="Realtek RTL8192DU Linux 3.x driver"
+PKG_DESCRIPTION="Realtek RTL8192DU Linux 3.x driver"
 PKG_IS_KERNEL_PKG="yes"
 
 pre_make_target() {

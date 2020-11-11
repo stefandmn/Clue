@@ -3,7 +3,7 @@ PKG_VERSION="2017.3.23"
 PKG_SHA256="3e5a021d7b761261836dcb305370af299793eedbded731df3d6943802e1262d5"
 PKG_URL="http://tuxera.com/opensource/$PKG_NAME-$PKG_VERSION.tgz"
 PKG_DEPENDS_TARGET="toolchain fuse libgcrypt"
-PKG_LONGDESC="A NTFS driver with read and write support."
+PKG_DESCRIPTION="A NTFS driver with read and write support."
 PKG_TOOLCHAIN="autotools"
 PKG_BUILD_FLAGS="+lto"
 

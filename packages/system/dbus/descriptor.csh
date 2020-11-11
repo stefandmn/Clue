@@ -3,7 +3,7 @@ PKG_VERSION="1.13.10"
 PKG_SHA256="a11239e504b99adfa9ded0bbdb2f752fd51f1afc768d78a7e5642282622855f2"
 PKG_URL="https://dbus.freedesktop.org/releases/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain expat systemd"
-PKG_LONGDESC="D-Bus is a message bus, used for sending messages between applications."
+PKG_DESCRIPTION="D-Bus is a message bus, used for sending messages between applications."
 PKG_TOOLCHAIN="configure"
 
 PKG_CONFIGURE_OPTS_TARGET="export ac_cv_have_abstract_sockets=yes \

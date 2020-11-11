@@ -3,7 +3,7 @@ PKG_VERSION="7.66.0"
 PKG_SHA256="dbb48088193016d079b97c5c3efde8efa56ada2ebf336e8a97d04eb8e2ed98c1"
 PKG_URL="http://curl.haxx.se/download/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain zlib openssl rtmpdump nghttp2"
-PKG_LONGDESC="Client and library for (HTTP, HTTPS, FTP, ...) transfers."
+PKG_DESCRIPTION="Client and library for (HTTP, HTTPS, FTP, ...) transfers."
 PKG_TOOLCHAIN="configure"
 
 PKG_CONFIGURE_OPTS_TARGET="ac_cv_lib_rtmp_RTMP_Init=yes \

@@ -5,7 +5,7 @@ PKG_SHA256="f222ef602647eecb6853681156d32de4450a2c39f4de93bd5b20235f2e660ed7"
 PKG_URL="http://www.python.org/ftp/python/$PKG_VERSION/${PKG_NAME::-1}-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_HOST="zlib:host bzip2:host sqlite:host"
 PKG_DEPENDS_TARGET="toolchain sqlite expat zlib bzip2 openssl libffi Python2:host ncurses readline"
-PKG_LONGDESC="Python2 is an interpreted object-oriented programming language."
+PKG_DESCRIPTION="Python2 is an interpreted object-oriented programming language."
 
 PKG_TOOLCHAIN="autotools"
 PKG_BUILD_FLAGS="-parallel +lto-parallel"

@@ -5,7 +5,7 @@ PKG_URL="https://github.com/dosfstools/dosfstools/releases/download/v$PKG_VERSIO
 PKG_DEPENDS_HOST="gcc:host"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_DEPENDS_INIT="toolchain dosfstools"
-PKG_LONGDESC="dosfstools contains utilities for making and checking MS-DOS FAT filesystems."
+PKG_DESCRIPTION="dosfstools contains utilities for making and checking MS-DOS FAT filesystems."
 
 PKG_CONFIGURE_OPTS_TARGET="--enable-compat-symlinks"
 PKG_MAKE_OPTS_TARGET="PREFIX=/usr"

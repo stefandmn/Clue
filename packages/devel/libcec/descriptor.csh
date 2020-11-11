@@ -3,7 +3,7 @@ PKG_VERSION="libcec-4.0.4"
 PKG_SHA256="4382a964bf8c511c22c03cdab5ba2d81c241536e6479072a61516966804f400a"
 PKG_URL="https://github.com/Pulse-Eight/libcec/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain systemd p8-platform swig:host"
-PKG_LONGDESC="libCEC is an open-source dual licensed library designed for communicating with the Pulse-Eight USB - CEC Adaptor."
+PKG_DESCRIPTION="libCEC is an open-source dual licensed library designed for communicating with the Pulse-Eight USB - CEC Adaptor."
 
 PKG_CMAKE_OPTS_TARGET="-DBUILD_SHARED_LIBS=1 \
                        -DCMAKE_INSTALL_LIBDIR:STRING=lib \

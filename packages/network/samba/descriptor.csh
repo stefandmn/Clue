@@ -4,7 +4,7 @@ PKG_SHA256="c6d23982b7233ce8bc0c87b8b03585d782ddf3bd7c634c1ffa853d7d397d87f7"
 PKG_URL="https://download.samba.org/pub/samba/stable/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain attr heimdal:host e2fsprogs Python2 zlib readline popt libaio connman"
 PKG_NEED_UNPACK="$(get_pkg_directory heimdal) $(get_pkg_directory e2fsprogs)"
-PKG_LONGDESC="A free SMB / CIFS fileserver and client."
+PKG_DESCRIPTION="A free SMB / CIFS fileserver and client."
 PKG_BUILD_FLAGS="-gold"
 
 configure_package() {

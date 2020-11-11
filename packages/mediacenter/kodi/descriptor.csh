@@ -1,6 +1,6 @@
 PKG_NAME="kodi"
 PKG_DEPENDS_TARGET="toolchain JsonSchemaBuilder:host TexturePacker:host Python2 zlib systemd lzo pcre swig:host libass curl fontconfig fribidi tinyxml libjpeg-turbo freetype libcdio taglib libxml2 libxslt rapidjson sqlite ffmpeg crossguid giflib libdvdnav libhdhomerun libfmt lirc libfstrcmp flatbuffers:host flatbuffers"
-PKG_LONGDESC="A free and open source cross-platform media player."
+PKG_DESCRIPTION="A free and open source cross-platform media player."
 
 PKG_PATCH_DIRS="$KODI_VENDOR"
 
@@ -266,9 +266,6 @@ post_makeinstall_target() {
 	mkdir -p $INSTALL/usr/share/kodi/addons
 	cp -R $PKG_DIR/config/os.clue $INSTALL/usr/share/kodi/addons
 	sed -e "s|@DISTRO_VERSION@|$DISTRO_VERSION|g" -i $INSTALL/usr/share/kodi/addons/os.clue/addon.xml
-	cp -R $PKG_DIR/config/repository.clue $INSTALL/usr/share/kodi/addons
-	sed -e "s|@ADDON_URL@|$ADDON_URL|g" -i $INSTALL/usr/share/kodi/addons/repository.clue/addon.xml
-	sed -e "s|@ADDON_VERSION@|$ADDON_VERSION|g" -i $INSTALL/usr/share/kodi/addons/repository.clue/addon.xml
 
 	mkdir -p $INSTALL/usr/share/kodi/config
 
@@ -297,19 +294,15 @@ post_makeinstall_target() {
 		>$INSTALL/usr/share/kodi/system/settings/appliance.xml
 
 	# update addon manifest
-	ADDON_MANIFEST=$INSTALL/usr/share/kodi/system/addon-manifest.xml
-	xmlstarlet ed -L -d "/addons/addon[text()='service.xbmc.versioncheck']" $ADDON_MANIFEST
-	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "os.clue" $ADDON_MANIFEST
-	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "skin.clue" $ADDON_MANIFEST
-	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "repository.clue" $ADDON_MANIFEST
-	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.libreelec.settings" $ADDON_MANIFEST
-
-	if [ "$DRIVER_ADDONS_SUPPORT" = "yes" ]; then
-		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "script.program.driverselect" $ADDON_MANIFEST
-	fi
+	MANIFEST=$INSTALL/usr/share/kodi/system/addon-manifest.xml
+	xmlstarlet ed -L -d "/addons/addon[text()='service.xbmc.versioncheck']" $MANIFEST
+	xmlstarlet ed -L -d "/addons/addon[text()='peripheral.joystick']" $MANIFEST
+	xmlstarlet ed -L -d "/addons/addon[text()='skin.estouchy']" $MANIFEST
+	xmlstarlet ed -L -d "/addons/addon[text()='skin.estuary']" $MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "os.clue" $MANIFEST
 
 	if [ "$DEVICE" = "Slice" -o "$DEVICE" = "Slice3" ]; then
-		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.slice" $ADDON_MANIFEST
+		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.slice" $MANIFEST
 	fi
 
 	# more binaddons cross compile badness meh

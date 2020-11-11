@@ -3,7 +3,7 @@ PKG_VERSION="1.0.5"
 PKG_SHA256="6a64f2a687f5c4f203a46fa659f43dd43d1f8b845df8d723107e8a7e6158e4ce"
 PKG_URL="https://github.com/fribidi/fribidi/releases/download/v$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="A bidirectional algorithm library."
+PKG_DESCRIPTION="A bidirectional algorithm library."
 PKG_TOOLCHAIN="configure"
 PKG_BUILD_FLAGS="+pic"
 

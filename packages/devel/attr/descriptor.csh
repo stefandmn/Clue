@@ -3,7 +3,7 @@ PKG_VERSION="2.4.47"
 PKG_SHA256="25772f653ac5b2e3ceeb89df50e4688891e21f723c460636548971652af0a859"
 PKG_URL="http://download.savannah.gnu.org/releases-noredirect/attr/$PKG_NAME-$PKG_VERSION.src.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="Extended Attributes Of Filesystem Objects."
+PKG_DESCRIPTION="Extended Attributes Of Filesystem Objects."
 PKG_BUILD_FLAGS="+pic"
 
 PKG_CONFIGURE_OPTS_TARGET="OPTIMIZER= \

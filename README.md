@@ -1,6 +1,6 @@
 # Clue Media Experience
 
-**Clue** is a free and open source environment, developed as fork of `LibreELEC`,
+**Clue** is a free and open source environment, developed as fork of **LibreELEC**,
 to provide you builtin functions like multimedia center, integrated webcam, multiple 
 networking pre-configurations (like Repeater, Router, Hotspot,etc.), etc., everything 
 out of the box, easy to be deployed and to use.
@@ -135,8 +135,7 @@ just to control the build behaviour of the package (use variables in the top-dow
 | PKG_URL     | -       | yes | Address at which the source of the software application can be retrieved |
 | PKG_DEPENDS_BOOTSTRAP<br>PKG_DEPENDS_HOST<br>PKG_DEPENDS_INIT<br>PKG_DEPENDS_TARGET | - | no | A space separated list of name of packages required to build the software application (thos package should be also part of this ***Clue** idstribution - watch out to circular depdencies) |
 | PKG_SECTION | -       | no  | `virtual` if the package only defines dependencies |
-| PKG_SHORTDESC | -     | no<br>yes&nbsp;for&nbsp;addons | Short description of the software package |
-| PKG_LONGDESC | -      | yes | Long description of the package including purpose or function within ***Clue*** or ***Kodi*** |
+| PKG_DESCRIPTION | -      | yes | Description of the package including purpose or function within ***Clue*** or ***Kodi*** |
 
 #### Universal Build Option
 | Variable    | Default | Required | Description |
@@ -173,22 +172,6 @@ just to control the build behaviour of the package (use variables in the top-dow
 |-------------|---------|----------|-------------|
 | PKG_MAKE_OPTS<br>PKG_MAKE_OPTS_BOOTSTRP<br>PKG_MAKE_OPTS_HOST<br>PKG_MAKE_OPTS_INIT<br>PKG_MAKE_OPTS_TARGET | - | no | Options directly passed to make in the build step
 | PKG_MAKEINSTALL_OPTS_HOST<br>PKG_MAKEINSTALL_OPTS_TARGET | - | no | Options directly passed to make in the install step
-
-#### Addons
-Additional options used when the package builds an addon.
-
-| Variable    | Default | Required | Description |
-|-------------|---------|----------|-------------|
-| PKG_IS_ADDON | no     | yes      | Must be set to `yes` <br>or to `embedded` when this addon is part of the image |
-| PKG_ADDON_NAME | -    | yes      | Proper name of the addon that is shown at the repo |
-| PKG_ADDON_TYPE | -    | xbmc.gui.skin, xbmc.service, xbmc.python.library, xbmc.python.script, xbmc.python.module | See distro/resources/addon/ for other possibilities |
-| PKG_ADDON_VERSION | - | no       | The version of the addon, used in addon.xml |
-| PKG_ADDON_PROVIDES | - | no      | [Provides](http://kodi.wiki/view/addon.xml#.3Cprovides.3E_element) in addon-xml |
-| PKG_ADDON_REQUIRES | - | no      | [Requires](http://kodi.wiki/view/addon.xml#.3Crequires.3E) used in addon.xml |
-| PKG_ADDON_DEVICES | RPi,RPi2, RPi4 | no | for available projects or devices, see projects subdirectory (note: Use `RPi` for RPi project, etc.) |
-| PKG_DISCLAIMER | -    | no       | [Disclaimer](https://kodi.wiki/view/Addon.xml#.3Cdisclaimer.3E) in addon-xml |
-| PKG_ADDON_IS_STANDALONE | - | no | Defines if an addon depends on Kodi (on) or is standalone (yes) |
-| PKG_ADDON_BROKEN | -  | no       | Marks an addon as broken for the user |
 
 #### Detailed Information for Options
 
@@ -253,7 +236,7 @@ These functions can overwritten in the `descriptor.csh`. But this raises problem
 system is updated. To reduce the problem, most function was extended by `pre_` and `post_` scripts, 
 to use instead.
 
-When it is nesseary to replace configure, make and makeinstall, please use `PKG_TOOLCHAIN="manual"`.
+When it is necessary to replace configure, make and make install, please use `PKG_TOOLCHAIN="manual"`.
 
 Some of the build steps needs to be run once, like `unpack`. Other steps needs to be run multiple 
 times, to create the toolchain (stage bootstrap & host) or to create the LE image (stage init & target). 
@@ -270,12 +253,11 @@ Full list of overwrittable functions.
 | pre_configure<br>pre_configure_\[stage]<br>configure_\[stage]<br>post_configure_\[stage] | yes | Configure the package for the compile. This is only relevant for toolchain, that supports it (e.g. meson, cmake, configure, manual) |
 | make_\[stage]<br>pre_make_\[stage]<br>post_make_\[stage] | yes | Build of the package |
 | makeinstall_\[stage]<br>pre_makeinstall_\[stage]<br>post_makeinstall_\[stage] | yes | Installation of the files in the correct pathes<br>host: TOOLCHAIN<br>target: SYSROOT and IMAGE<br>bootstrap and init: temporary destination
-| addon                   | -      | Copy all files together for addon creation. This is required for addons |
 
 
 ### Late Binding variable assignment
 
-A package will be loaded only once, by the call to `config/options`. During this process, additional package 
+A package will be loaded only once, by the call to `/options`. During this process, additional package 
 specific variables will be initialised, such as:
 
 * `PKG_BUILD` - path to the build folder
@@ -393,7 +375,7 @@ Issue | Level | Meaning |
     * apply any required changes to your new `descriptor.csh`
 4. Find a place in the dependency tree
     * when it extend an existing package, add it there to the `PKG_DEPENDS_TARGET`/`PKG_DEPENDS_HOST` etc.
-    * take a look into the path `packs/virtual`, there you should find a virtual packages, that match your new package (misc-packages should be the last option)
+    * take a look into the path `packages/virtual`, there you should find a virtual packages, that match your new package (misc-packages should be the last option)
 5. Now you can build your image
     * after the build, inside the `devel-*` folder you should find a directory with your package name and -version, eg. `widget-1.2.3`.
 
@@ -404,7 +386,7 @@ PKG_VERSION="3.0.2"
 PKG_SHA256="f44f436fc35e081db3a56516de9e3bb11ae96838e75d58910be28ddd2bc56d88"
 PKG_URL="https://github.com/MariaDB/mariadb-connector-c/archive/v$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain zlib openssl"
-PKG_LONGDESC="mariadb-connector: library to conntect to mariadb/mysql database server"
+PKG_DESCRIPTION="mariadb-connector: library to conntect to mariadb/mysql database server"
 PKG_BUILD_FLAGS="-gold"
 
 PKG_CMAKE_OPTS_TARGET="-DWITH_EXTERNAL_ZLIB=ON \
@@ -432,7 +414,7 @@ PKG_URL="[download url, e.g. https://github.com/example/libexample/archive/$PKG_
 PKG_DEPENDS_TARGET="[build system dependencies, e.g. toolchain zlib openssl]"
 PKG_SECTION="[location under packages, e.g. database]"
 PKG_SHORTDESC="[short description of the package, e.g. libexample: library to calculate examples]"
-PKG_LONGDESC="[long description of the package, often taken from the package/project website, e.g. libexample: this project is created to calculate examples for x and y, with maximum efficiency and fewer errors]"
+PKG_DESCRIPTION="[long description of the package, often taken from the package/project website, e.g. libexample: this project is created to calculate examples for x and y, with maximum efficiency and fewer errors]"
 # PKG_TOOLCHAIN="auto"
 
 #PKG_CMAKE_OPTS_TARGET="-DWITH_EXAMPLE_PATH=/clue/.example
@@ -444,30 +426,4 @@ PKG_LONGDESC="[long description of the package, often taken from the package/pro
 
 # see https://github.com/LibreELEC/LibreELEC.tv/blob/master/packages/readme.md for more
 # take a look to other packages, for inspiration
-```
-
-
-#### Addon
-```
-PKG_NAME="[package name]"
-PKG_VERSION="[package version identifier or unique githash]"
-PKG_SHA256="[sha256 hash of the source file, downloaded from PKG_URL]"
-PKG_ARCH="any"
-PKG_URL="[download url, e.g. https://github.com/example/libexample/archive/$PKG_VERSION.tar.gz]"
-PKG_DEPENDS_TARGET="[build system dependencies, e.g. toolchain zlib openssl]"
-PKG_SECTION="[location under packages, e.g. database]"
-PKG_SHORTDESC="[short description of the package, e.g. libexample: library to calculate examples]"
-PKG_LONGDESC="[long description of the package, often taken from the package/project website, e.g. libexample: this project is created to calculate examples for x and y, with maximum efficiency and fewer errors]"
-# PKG_TOOLCHAIN="auto"
-
-#PKG_CMAKE_OPTS_TARGET="-DWITH_EXAMPLE_PATH=/clue/.example
-#                      "
-
-#pre_configure_target() {
-#  do something, or drop it
-#}
-
-# see https://github.com/LibreELEC/LibreELEC.tv/blob/master/packages/readme.md for more
-# take a look to other packages, for inspiration
-
 ```

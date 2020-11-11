@@ -3,7 +3,7 @@ PKG_VERSION="4.0.10"
 PKG_SHA256="2c52d11ccaf767457db0c46795d9c7d1a8d8f76f68b0b800a3dfe45786b996e4"
 PKG_URL="http://download.osgeo.org/libtiff/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain libjpeg-turbo zlib"
-PKG_LONGDESC="libtiff is a library for reading and writing TIFF files."
+PKG_DESCRIPTION="libtiff is a library for reading and writing TIFF files."
 PKG_BUILD_FLAGS="+pic"
 PKG_TOOLCHAIN="configure"
 

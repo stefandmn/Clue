@@ -3,7 +3,7 @@ PKG_VERSION="4.19"
 PKG_DEPENDS_HOST="ccache:host"
 PKG_DEPENDS_TARGET="toolchain nss:host nspr:host"
 PKG_DEPENDS_UNPACK="nss"
-PKG_LONGDESC="Netscape Portable Runtime (NSPR) provides a platform-neutral API for system level and libc like functions"
+PKG_DESCRIPTION="Netscape Portable Runtime (NSPR) provides a platform-neutral API for system level and libc like functions"
 PKG_TOOLCHAIN="configure"
 PKG_BUILD_FLAGS="-parallel"
 

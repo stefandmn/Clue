@@ -4,7 +4,7 @@ PKG_SHA256="fccc62928c65192fff6c98847233b28eb7ce05f12d2fea3f6cc90e8b4e5fbe06"
 PKG_URL="http://download.savannah.gnu.org/releases/freetype/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_HOST="gcc:host"
 PKG_DEPENDS_TARGET="toolchain zlib libpng"
-PKG_LONGDESC="The FreeType engine is a free and portable TrueType font rendering engine."
+PKG_DESCRIPTION="The FreeType engine is a free and portable TrueType font rendering engine."
 PKG_TOOLCHAIN="configure"
 
 # package specific configure options

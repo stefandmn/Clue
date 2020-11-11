@@ -3,7 +3,7 @@ PKG_VERSION="688531da4bcf802a814d9cb0c8b6d62e3b8a3327"
 PKG_SHA256="51a33d23127300dffd6ac088f372b83ab862053f5e4dc7130676ebaaa824e626"
 PKG_URL="https://github.com/LibreELEC/$PKG_NAME/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="Firmware for brcm bluetooth chips used on RaspberryPi devices."
+PKG_DESCRIPTION="Firmware for brcm bluetooth chips used on RaspberryPi devices."
 PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {

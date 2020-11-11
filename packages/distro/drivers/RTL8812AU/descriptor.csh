@@ -4,7 +4,7 @@ PKG_SHA256="c5b2fcc6cbf6901e63f75ece49a8ce3219004536cfc585b9815b34d943c9f311"
 PKG_URL="https://github.com/MilhouseVH/RTL8812AU/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain linux"
 PKG_NEED_UNPACK="$LINUX_DEPENDS"
-PKG_LONGDESC="Realtek RTL8812AU Linux 3.x driver"
+PKG_DESCRIPTION="Realtek RTL8812AU Linux 3.x driver"
 PKG_IS_KERNEL_PKG="yes"
 
 pre_make_target() {

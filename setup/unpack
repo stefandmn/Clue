@@ -77,7 +77,7 @@ if [ -d "${SOURCES}/${PKG_NAME}" -o -d "${PKG_DIR}/sources" ] || pkg_call_exists
 
 	if [ -z "${PKG_SOURCE_DIR}" -a -d "${PKG_UNPACK_DIR}/${PKG_NAME}-${PKG_VERSION}"* ]; then
 		mv "${PKG_UNPACK_DIR}/${PKG_NAME}-${PKG_VERSION}"* "${PKG_UNPACK_DIR}/.intermediate"
-	elif [ -z "${PKG_SOURCE_DIR}" -a "${PKG_IS_ADDON}" = "yes" -a -d "${PKG_UNPACK_DIR}/${PKG_NAME}" ]; then
+	elif [ -z "${PKG_SOURCE_DIR}" -a -d "${PKG_UNPACK_DIR}/${PKG_NAME}" ]; then
 		mv "${PKG_UNPACK_DIR}/${PKG_NAME}" "${PKG_UNPACK_DIR}/.intermediate"
 	fi
 

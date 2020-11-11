@@ -3,7 +3,7 @@ PKG_VERSION="1.6"
 PKG_SHA256="d3aef20cec0005c0fa6b4be40079885567473185b1a57b629b030e67942c7115"
 PKG_URL="http://people.redhat.com/~dhowells/keyutils/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="Keyutils is a set of utilities for managing the key retention facility in the kernel."
+PKG_DESCRIPTION="Keyutils is a set of utilities for managing the key retention facility in the kernel."
 PKG_BUILD_FLAGS="+pic"
 
 PKG_MAKE_OPTS_TARGET="NO_ARLIB=0 NO_SOLIB=1 BINDIR=/usr/bin SBINDIR=/usr/sbin LIBDIR=/usr/lib USRLIBDIR=/usr/lib"

@@ -4,7 +4,7 @@ PKG_VERSION="4.0.4-Leia-18.4"
 PKG_SHA256="e11e7594af35f36ab2711252c3d6bb106908f26605498aef4a9be2d7bc001db2"
 PKG_URL="https://github.com/xbmc/FFmpeg/archive/${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_TARGET="toolchain zlib bzip2 openssl speex"
-PKG_LONGDESC="FFmpeg is a complete, cross-platform solution to record, convert and stream audio and video."
+PKG_DESCRIPTION="FFmpeg is a complete, cross-platform solution to record, convert and stream audio and video."
 PKG_BUILD_FLAGS="-gold"
 
 # Dependencies

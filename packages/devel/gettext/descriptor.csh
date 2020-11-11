@@ -3,7 +3,7 @@ PKG_VERSION="0.19.8.1"
 PKG_SHA256="ff942af0e438ced4a8b0ea4b0b6e0d6d657157c5e2364de57baa279c1c125c43"
 PKG_URL="http://ftp.gnu.org/pub/gnu/gettext/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_HOST="ccache:host"
-PKG_LONGDESC="A program internationalization library and tools."
+PKG_DESCRIPTION="A program internationalization library and tools."
 
 configure_package() {
 	PKG_CONFIGURE_SCRIPT="${PKG_BUILD}/gettext-tools/configure"

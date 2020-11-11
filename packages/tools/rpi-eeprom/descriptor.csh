@@ -4,7 +4,7 @@ PKG_SHA256="2f77ef84d34f77208e4caf90aa65bbbaa6234ee58ffe9c23a819d44c25a631b4"
 PKG_ARCH="arm"
 PKG_URL="https://github.com/raspberrypi/rpi-eeprom/archive/${PKG_VERSION}.tar.gz"
 PKG_DEPENDS_TARGET="flashrom"
-PKG_LONGDESC="rpi-eeprom: firmware, config and scripts to update RPi4 SPI bootloader"
+PKG_DESCRIPTION="rpi-eeprom: firmware, config and scripts to update RPi4 SPI bootloader"
 PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {

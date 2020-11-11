@@ -3,7 +3,7 @@ PKG_VERSION="7.7.0"
 PKG_SHA256="f7d414d0914abb0e151a276b4de22cf4977fd6c28bd9ecdd990407b1138a945c"
 PKG_URL="https://github.com/heimdal/heimdal/archive/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_HOST="toolchain e2fsprogs:host Python2:host ncurses:host"
-PKG_LONGDESC="Kerberos 5, PKIX, CMS, GSS-API, SPNEGO, NTLM, Digest-MD5 and, SASL implementation."
+PKG_DESCRIPTION="Kerberos 5, PKIX, CMS, GSS-API, SPNEGO, NTLM, Digest-MD5 and, SASL implementation."
 PKG_TOOLCHAIN="autotools"
 PKG_BUILD_FLAGS="-parallel"
 

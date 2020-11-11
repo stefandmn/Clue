@@ -4,7 +4,7 @@ PKG_SHA256="91e762520003013834ac1adb4a938d53b22a216341c061b0cf05603b290faf6b"
 PKG_URL="https://ftp.pcre.org/pub/pcre/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_HOST="gcc:host"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="A set of functions that implement regular expression pattern matching."
+PKG_DESCRIPTION="A set of functions that implement regular expression pattern matching."
 PKG_TOOLCHAIN="configure"
 PKG_BUILD_FLAGS="+pic"
 

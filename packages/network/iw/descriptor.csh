@@ -3,7 +3,7 @@ PKG_VERSION="5.4"
 PKG_SHA256="a2469f677088d7b1070a7fbb28f3c747041697e8f6ec70783339cb1bc27a395f"
 PKG_URL="https://www.kernel.org/pub/software/network/$PKG_NAME/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain libnl"
-PKG_LONGDESC="A new nl80211 based CLI configuration utility for wireless devices."
+PKG_DESCRIPTION="A new nl80211 based CLI configuration utility for wireless devices."
 # iw fails at runtime with lto enabled
 
 pre_configure_target() {

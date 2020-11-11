@@ -2,7 +2,7 @@ PKG_NAME="entropy"
 PKG_VERSION="0"
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="A simple way to add entropy at boot"
+PKG_DESCRIPTION="A simple way to add entropy at boot"
 PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {

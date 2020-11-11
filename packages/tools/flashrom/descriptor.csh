@@ -3,7 +3,7 @@ PKG_VERSION="1.1"
 PKG_SHA256="aeada9c70c22421217c669356180c0deddd0b60876e63d2224e3260b90c14e19"
 PKG_URL="https://download.flashrom.org/releases/${PKG_NAME}-v${PKG_VERSION}.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain libusb-compat"
-PKG_LONGDESC="flashrom is a utility for identifying, reading, writing, verifying and erasing flash chips. It is designed to flash BIOS/EFI/coreboot/firmware/optionROM images on mainboards, network/graphics/storage controller cards, and various other programmer devices."
+PKG_DESCRIPTION="flashrom is a utility for identifying, reading, writing, verifying and erasing flash chips. It is designed to flash BIOS/EFI/coreboot/firmware/optionROM images on mainboards, network/graphics/storage controller cards, and various other programmer devices."
 
 PKG_MAKE_OPTS_TARGET="PREFIX=/usr \
                       CONFIG_ENABLE_LIBPCI_PROGRAMMERS=no \

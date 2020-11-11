@@ -3,7 +3,7 @@ PKG_VERSION="8.0p1"
 PKG_SHA256="bd943879e69498e8031eb6b7f44d08cdc37d59a7ab689aa0b437320c3481fd68"
 PKG_URL="https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain openssl zlib"
-PKG_LONGDESC="An open re-implementation of the SSH package."
+PKG_DESCRIPTION="An open re-implementation of the SSH package."
 PKG_TOOLCHAIN="autotools"
 PKG_BUILD_FLAGS="+lto"
 

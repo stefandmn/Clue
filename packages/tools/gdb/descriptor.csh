@@ -3,7 +3,7 @@ PKG_VERSION="8.2.1"
 PKG_SHA256="0a6a432907a03c5c8eaad3c3cffd50c00a40c3a5e3c4039440624bae703f2202"
 PKG_URL="http://ftpmirror.gnu.org/gdb/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain zlib ncurses expat"
-PKG_LONGDESC="GNU Project debugger, allows you to see what is going on inside another program while it executes."
+PKG_DESCRIPTION="GNU Project debugger, allows you to see what is going on inside another program while it executes."
 # gdb could fail on runtime if build with LTO support
 
 PKG_CONFIGURE_OPTS_TARGET="bash_cv_have_mbstate_t=set \

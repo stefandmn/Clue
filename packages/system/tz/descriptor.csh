@@ -3,7 +3,7 @@ PKG_VERSION="2019c"
 PKG_SHA256="38b1f7c7a050daa14fb07f6b72cdde1fc895fece40758d4d55736847041ad9e2"
 PKG_URL="https://github.com/eggert/tz/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="Time zone and daylight-saving time data."
+PKG_DESCRIPTION="Time zone and daylight-saving time data."
 
 pre_configure_target() {
 	PKG_MAKE_OPTS_TARGET="CC=$HOST_CC LDFLAGS="

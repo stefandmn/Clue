@@ -4,7 +4,7 @@ PKG_SHA256="dac1792d0118bee6aae6ba7fb93ff1602c6a9bda812fd63916eee1435b9c486a"
 PKG_URL="http://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_HOST="ccache:host"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="A library for getting and setting POSIX.1e capabilities."
+PKG_DESCRIPTION="A library for getting and setting POSIX.1e capabilities."
 
 post_unpack() {
 	mkdir -p $PKG_BUILD/.$HOST_NAME

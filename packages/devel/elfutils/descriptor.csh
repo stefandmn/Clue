@@ -4,7 +4,7 @@ PKG_SHA256="eb5747c371b0af0f71e86215a5ebb88728533c3a104a43d4231963f308cd1023"
 PKG_URL="https://sourceware.org/elfutils/ftp/$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_HOST="make:host zlib:host"
 PKG_DEPENDS_TARGET="toolchain zlib elfutils:host"
-PKG_LONGDESC="A collection of utilities to handle ELF objects."
+PKG_DESCRIPTION="A collection of utilities to handle ELF objects."
 PKG_TOOLCHAIN="autotools"
 PKG_BUILD_FLAGS="+pic"
 

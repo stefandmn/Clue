@@ -4,7 +4,7 @@ PKG_SHA256="1e3a91bc1f9dfce01af26026f856e064eab4c8ee0a8f457b5ae30b40b8b711f2"
 PKG_URL="https://www.openssl.org/source/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_HOST="ccache:host"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security"
+PKG_DESCRIPTION="The Open Source toolkit for Secure Sockets Layer and Transport Layer Security"
 PKG_TOOLCHAIN="configure"
 PKG_BUILD_FLAGS="-parallel"
 

@@ -3,7 +3,7 @@ PKG_VERSION="0.2.4"
 PKG_SHA256="074a9a530dc7c11e0d905aa59bcb0847c009313f02e98d3d798aa9568f414c66"
 PKG_URL="$SOURCEFORGE_SRC/rpcbind/rpcbind/$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain libtirpc systemd"
-PKG_LONGDESC="The rpcbind utility is a server that converts RPC program numbers into universal addresses."
+PKG_DESCRIPTION="The rpcbind utility is a server that converts RPC program numbers into universal addresses."
 
 PKG_CONFIGURE_OPTS_TARGET="ac_cv_header_rpcsvc_mount_h=no \
                            --disable-warmstarts \

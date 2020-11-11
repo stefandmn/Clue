@@ -3,7 +3,7 @@ PKG_VERSION="1.8.5"
 PKG_SHA256="3b4a2a94cb637eff5bdebbcaf46f4d95c4f25206f459809339cdada0eb577ac3"
 PKG_URL="https://www.gnupg.org/ftp/gcrypt/libgcrypt/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain libgpg-error"
-PKG_LONGDESC="A General purpose cryptographic library."
+PKG_DESCRIPTION="A General purpose cryptographic library."
 PKG_TOOLCHAIN="autotools"
 # libgcrypt-1.7.x fails to build with LTO support
 # see for example https://bugs.gentoo.org/show_bug.cgi?id=581114

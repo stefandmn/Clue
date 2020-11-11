@@ -3,7 +3,7 @@ PKG_VERSION="0.49.1"
 PKG_SHA256="e90c8ee46109d3b9d9a12c76c65811d4a7f7e18503f780eb301866e43d9052cb"
 PKG_URL="https://github.com/mesonbuild/meson/releases/download/$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_HOST="Python3:host setuptools:host pathlib:host"
-PKG_LONGDESC="High productivity build system"
+PKG_DESCRIPTION="High productivity build system"
 PKG_TOOLCHAIN="manual"
 
 make_host() {

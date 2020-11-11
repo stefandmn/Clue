@@ -4,7 +4,7 @@ PKG_SHA256="3587caa082981f007c236c2ca15538f772c20309a00b25d979ce12f346c6f68a"
 PKG_ARCH="arm"
 PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
 PKG_DEPENDS_TARGET="toolchain linux bcmstat"
-PKG_LONGDESC="bcm2835-bootloader: Tool to create a bootable kernel for RaspberryPi"
+PKG_DESCRIPTION="bcm2835-bootloader: Tool to create a bootable kernel for RaspberryPi"
 PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {

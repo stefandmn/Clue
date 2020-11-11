@@ -3,7 +3,7 @@ PKG_VERSION="1.1.9"
 PKG_SHA256="488373aef5396682f3a411a6d064ae0ad196b9c96269d0bb912fbdeec94b994b"
 PKG_URL="ftp://ftp.alsa-project.org/pub/lib/alsa-lib-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="ALSA (Advanced Linux Sound Architecture) is the next generation Linux Sound API."
+PKG_DESCRIPTION="ALSA (Advanced Linux Sound Architecture) is the next generation Linux Sound API."
 PKG_TOOLCHAIN="autotools"
 PKG_BUILD_FLAGS="+pic"
 

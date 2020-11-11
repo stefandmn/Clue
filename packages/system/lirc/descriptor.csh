@@ -3,7 +3,7 @@ PKG_VERSION="0.10.1"
 PKG_SHA256="8b753c60df2a7f5dcda2db72c38e448ca300c3b4f6000c1501fcb0bd5df414f2"
 PKG_URL="https://sourceforge.net/projects/lirc/files/LIRC/$PKG_VERSION/$PKG_NAME-$PKG_VERSION.tar.bz2"
 PKG_DEPENDS_TARGET="toolchain libftdi1 libusb-compat libxslt alsa-lib"
-PKG_LONGDESC="LIRC is a package that allows you to decode and send infra-red signals."
+PKG_DESCRIPTION="LIRC is a package that allows you to decode and send infra-red signals."
 PKG_TOOLCHAIN="autotools"
 
 PKG_PYTHON_WANTED=Python2

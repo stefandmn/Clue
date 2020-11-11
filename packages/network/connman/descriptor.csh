@@ -3,7 +3,7 @@ PKG_VERSION="1ee420ace2b8edb0d4025f469aaa3d00d220dc98" # 1.38
 PKG_SHA256="2688c7d1f4b947f4b616157bad9d50234d86d5151a1e1a9e8d51acad2b1481c6"
 PKG_URL="https://git.kernel.org/pub/scm/network/connman/connman.git/snapshot/connman-$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain glib readline dbus iptables wpa_supplicant"
-PKG_LONGDESC="A modular network connection manager."
+PKG_DESCRIPTION="A modular network connection manager."
 PKG_TOOLCHAIN="autotools"
 
 PKG_CONFIGURE_OPTS_TARGET="WPASUPPLICANT=/usr/bin/wpa_supplicant \

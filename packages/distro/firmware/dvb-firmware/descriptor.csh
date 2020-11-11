@@ -3,7 +3,7 @@ PKG_VERSION="1.3.1"
 PKG_SHA256="c800e41f5047c586d3e3184166436f45edb460f71164724250e1e54faf1e0988"
 PKG_URL="https://github.com/LibreELEC/dvb-firmware/archive/$PKG_VERSION.tar.gz"
 PKG_DEPENDS_TARGET="toolchain"
-PKG_LONGDESC="dvb-firmware: firmwares for various DVB drivers"
+PKG_DESCRIPTION="dvb-firmware: firmwares for various DVB drivers"
 PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {

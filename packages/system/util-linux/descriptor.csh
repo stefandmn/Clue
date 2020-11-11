@@ -5,7 +5,7 @@ PKG_URL="http://www.kernel.org/pub/linux/utils/util-linux/v${PKG_VERSION%.*}/$PK
 PKG_DEPENDS_HOST="gcc:host pkg-config:host"
 PKG_DEPENDS_TARGET="toolchain"
 PKG_DEPENDS_INIT="toolchain"
-PKG_LONGDESC="A large variety of low-level system utilities that are necessary for a Linux system to function."
+PKG_DESCRIPTION="A large variety of low-level system utilities that are necessary for a Linux system to function."
 PKG_TOOLCHAIN="autotools"
 PKG_BUILD_FLAGS="+pic:host"
 
