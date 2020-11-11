@@ -1,7 +1,7 @@
 PKG_NAME="repository.clue"
 PKG_VERSION="2.0.2"
 PKG_ARCH="any"
-PKG_URL="https://github.com/stefandmn/$PKG_NAME/releases/download/$PKG_VERSION/$PKG_NAME.zip"
+PKG_URL="${DISTRO_SOURCES}/${PKG_NAME}-${PKG_VERSION}.zip"
 PKG_DEPENDS_TARGET="toolchain kodi"
 PKG_SECTION="repository"
 PKG_DESCRIPTION="Clue Repository for Kodi"

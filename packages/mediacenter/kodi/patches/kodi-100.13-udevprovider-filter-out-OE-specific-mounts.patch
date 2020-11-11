@@ -15,7 +15,7 @@ index daf0d58..31e574f 100644
        continue;
      }
  
-+    // LE: filter out Libreelec specific mounts
++    // LE: filter out Clue specific mounts
 +    if (strstr(mountpoint, "/flash"))
 +    {
 +      udev_device_unref(device);

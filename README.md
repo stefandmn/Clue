@@ -2,7 +2,7 @@
 
 **Clue** is a free and open source environment, developed as fork of LibreELEC project,
 to provide you builtin functions like multimedia center, integrated webcam, multiple 
-networking pre-configurations (like Repeater, Router, Hotspot,etc.), etc., everything 
+networking pre-configurations (like Repeater, Router, Hotspot, etc.), etc., everything 
 out of the box, easy to be deployed and to use over **Kodi** media center.
 
 To install **Clue**  you need to download the installer image from [amsd.go.ro/clue](https://amsd.go.ro/clue),
@@ -425,7 +425,4 @@ PKG_DESCRIPTION="[long description of the package, often taken from the package/
 #pre_configure_target() {
 #  do something, or drop it
 #}
-
-# see https://github.com/LibreELEC/LibreELEC.tv/blob/master/packages/readme.md for more
-# take a look to other packages, for inspiration
 ```

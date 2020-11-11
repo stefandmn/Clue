@@ -52,9 +52,6 @@ KODI_NFS_SUPPORT="yes"
 # build with Samba Client support (mounting SAMBA shares with KODI) (yes / no)
 KODI_SAMBA_SUPPORT="yes"
 
-# Settings package name - blank if not required
-DISTRO_PKG_SETTINGS="LibreELEC-settings"
-
 # LTO (Link Time Optimization) support
 LTO_SUPPORT="yes"
 
@@ -171,15 +168,14 @@ SYSTEM_PART_START=8192
 DISTRO_BOOTLABEL="BOOT"
 DISTRO_DISKLABEL="HOME"
 
-# Distribution Specific source location
-DISTRO_MIRROR="http://sources.libreelec.tv/mirror"
-DISTRO_SRC="http://sources.libreelec.tv/${DISTRO_STATUS}"
+# Distribution specific source locations: mirror and source repos
+DISTRO_MIRROR="https://amsd.go.ro//clue/repos/mirror/"
+DISTRO_SOURCES="https://amsd.go.ro//clue/repos/sources/"
 
-# Sourceforge download site
-SOURCEFORGE_SRC="https://prdownloads.sourceforge.net"
-
-# Configure debug groups (space delimited key=value pairs, with each value comma-delimited) and default group when DEBUG=yes
-# Use ! or - prefix to prevent a dependent package from being built with debug. Add + suffix to build dependencies with debug.
+# Configure debug groups (space delimited key=value pairs, with each value comma-
+# delimited) and default group when DEBUG=yes
+# Use ! or - prefix to prevent a dependent package from being built with debug.
+# Add + suffix to build dependencies with debug.
 DEBUG_GROUPS="kodi+=kodi+,kodi-platform+,p8-platform+,!mesa"
 DEBUG_GROUP_YES="kodi+"
 

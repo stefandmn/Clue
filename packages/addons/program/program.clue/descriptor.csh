@@ -1,7 +1,7 @@
 PKG_NAME="program.clue"
 PKG_VERSION="2.0.5"
 PKG_ARCH="any"
-PKG_URL="https://github.com/stefandmn/$PKG_NAME/releases/download/$PKG_VERSION/$PKG_NAME.zip"
+PKG_URL="${DISTRO_SOURCES}/${PKG_NAME}-${PKG_VERSION}.zip"
 PKG_DEPENDS_TARGET="toolchain Python2 connman pygobject dbus-python"
 PKG_SECTION="program"
 PKG_DESCRIPTION="Clue Setup Program for Kodi"

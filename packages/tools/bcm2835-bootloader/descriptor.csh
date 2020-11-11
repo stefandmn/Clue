@@ -2,7 +2,7 @@ PKG_NAME="bcm2835-bootloader"
 PKG_VERSION="62fc8c01165a80021054a430182b504f7b877c2d"
 PKG_SHA256="3587caa082981f007c236c2ca15538f772c20309a00b25d979ce12f346c6f68a"
 PKG_ARCH="arm"
-PKG_URL="$DISTRO_SRC/$PKG_NAME-$PKG_VERSION.tar.xz"
+PKG_URL="${DISTRO_SOURCES}/${PKG_NAME}-${PKG_VERSION}.tar.xz"
 PKG_DEPENDS_TARGET="toolchain linux bcmstat"
 PKG_DESCRIPTION="bcm2835-bootloader: Tool to create a bootable kernel for RaspberryPi"
 PKG_TOOLCHAIN="manual"
@@ -24,6 +24,6 @@ makeinstall_target() {
 	find_file_path system/update.sh && cp -PRv $FOUND_PATH $INSTALL/usr/share/bootloader
 	find_file_path system/canupdate.sh && cp -PRv $FOUND_PATH $INSTALL/usr/share/bootloader
 
-    find_file_path files/3rdparty/bootloader/distroconfig.txt && cp -PRv ${FOUND_PATH} $INSTALL/usr/share/bootloader
-    find_file_path files/3rdparty/bootloader/config.txt && cp -PRv ${FOUND_PATH} $INSTALL/usr/share/bootloader
+	find_file_path files/3rdparty/bootloader/distroconfig.txt && cp -PRv ${FOUND_PATH} $INSTALL/usr/share/bootloader
+	find_file_path files/3rdparty/bootloader/config.txt && cp -PRv ${FOUND_PATH} $INSTALL/usr/share/bootloader
 }
