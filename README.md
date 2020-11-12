@@ -406,7 +406,9 @@ post_makeinstall_target() {
 
 ### Templates
 The template below can be used when you want to extend the capabilities of **Clue OS**, 
-adding new packages to bring additional functionalities 
+adding new packages to bring additional functionalities. The package file descriptor should 
+have `package.csh` name and should be created into a new folder within the `/packages` directory
+structure having the same name like the package itself.
 ```
 PKG_NAME="[package name]"
 PKG_VERSION="[package version identifier or unique githash]"
