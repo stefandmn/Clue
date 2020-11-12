@@ -24,4 +24,6 @@ makeinstall_target() {
 	SETTINGS=$(get_build_dir kodi)/.install_pkg/usr/share/kodi/system/settings/settings.xml
 	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="skin"]/group[@id="1"]/setting[@id="lookandfeel.skin"]/default' -v "$PKG_NAME" $SETTINGS
 	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="general"]/group[@id="1"]/setting[@id="services.devicename"]/default' -v "$DISTRO_NAME" $SETTINGS
+
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.country"]/default' -v "Central Europe" $SETTINGS
 }

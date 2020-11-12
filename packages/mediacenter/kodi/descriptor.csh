@@ -305,6 +305,9 @@ post_makeinstall_target() {
 		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.slice" $MANIFEST
 	fi
 
+	# update splash image
+	find_file_path "kodi/splash.jpg" && cp -f ${FOUND_PATH} $INSTALL/usr/share/kodi/media/splash.jpg
+
 	# more binaddons cross compile badness meh
 	sed -e "s:INCLUDE_DIR /usr/include/kodi:INCLUDE_DIR $TARGET_SYSROOT/usr/include/kodi:g" \
 		-e "s:CMAKE_MODULE_PATH /usr/lib/kodi /usr/share/kodi/cmake:CMAKE_MODULE_PATH $TARGET_SYSROOT/usr/share/kodi/cmake:g" \
