@@ -5,7 +5,7 @@
 if [ -n "${1}" ]; then
 
 	if [ -z "${PKG_NAME}" ]; then
-		die "$(print_color CLR_ERROR "${1}: no descriptor.csh file found")"
+		die "$(print_color CLR_ERROR "${1}: no package.csh file found")"
 	fi
 
 	if [ -z "${INSTALL}" ]; then

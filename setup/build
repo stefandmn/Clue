@@ -5,7 +5,7 @@
 if [ -n "${1}" ]; then
 
 	if [ -z "${PKG_NAME}" ]; then
-		die "$(print_color CLR_ERROR "${1}: no descriptor.csh file found")"
+		die "$(print_color CLR_ERROR "${1}: no package.csh file found")"
 	fi
 
 	if [ -n "${PKG_ARCH}" ]; then
@@ -184,7 +184,7 @@ if [ -n "${1}" ]; then
 		elif [ -f "${PKG_BUILD}/Makefile" ]; then
 			PKG_TOOLCHAIN="make"
 		else
-			die "Not possible to detect toolchain automatically. Add PKG_TOOLCHAIN= to descriptor.csh"
+			die "Not possible to detect toolchain automatically. Add PKG_TOOLCHAIN= to package.csh"
 		fi
 		_auto_toolchain=" (auto-detect)"
 	fi

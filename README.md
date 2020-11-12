@@ -121,11 +121,11 @@ Also, __Makefile__ gives you details how to configure your environment in order 
 and to optimize your resources. Just to identify all these details try a simple ```make help``` command.
 
 Development process for ***Clue*** project means to update existing packages or to add new 
-packages. In base cases you need to understand the `descriptor.csh` file that provides a set of 
+packages. In base cases you need to understand the `package.csh` file that provides a set of 
 variables and functions for integrated building and deployment process.
 
 ### Variables
-Package descriptor file (`descriptor.csh`) contains a list of variables (mandatory and optional), 
+Package descriptor file (`package.csh`) contains a list of variables (mandatory and optional), 
 just to control the build behaviour of the package (use variables in the top-down order listed below).
 
 | Variable    | Default | Required | Description |
@@ -211,7 +211,7 @@ When none of these was found, the build abort and you have to set the toolchain 
 Build flags implement often used build options. Normally these are activated be default, but single 
 applications/packages has problems to compile/run with these.
 
-Set the variable `PKG_BUILD_FLAGS` in the `descriptor.csh` to enable/disable the single flags. 
+Set the variable `PKG_BUILD_FLAGS` in the `package.csh` to enable/disable the single flags. 
 It is a space separated list. The flags can enabled with a `+` prefix, and disabled with a `-`.
 
 | Flag     | Default  | Affected stage | Description |
@@ -234,7 +234,7 @@ PKG_BUILD_FLAGS="-parallel"
 
 ### Functions
 All build steps in the Clue build system, a done by shell function.
-These functions can overwritten in the `descriptor.csh`. But this raises problems, when the build 
+These functions can overwritten in the `package.csh`. But this raises problems, when the build 
 system is updated. To reduce the problem, most function was extended by `pre_` and `post_` scripts, 
 to use instead.
 
@@ -370,11 +370,11 @@ Issue | Level | Meaning |
     * ...
 2. Find a place in the packages tree
     * look into the package tree structure, which is generally self explaind.
-    * do not place it in an existing package (directory that includes a `descriptor.csh`)
+    * do not place it in an existing package (directory that includes a `package.csh`)
     * when you found a place, create a directory with the name of your package (use same value for `PKG_NAME`!!)
-3. Create an initial `descriptor.csh`
-    * you can find a template within this documentation. Copy the template into the new directory and call it `descriptor.csh`
-    * apply any required changes to your new `descriptor.csh`
+3. Create an initial `package.csh`
+    * you can find a template within this documentation. Copy the template into the new directory and call it `package.csh`
+    * apply any required changes to your new `package.csh`
 4. Find a place in the dependency tree
     * when it extend an existing package, add it there to the `PKG_DEPENDS_TARGET`/`PKG_DEPENDS_HOST` etc.
     * take a look into the path `packages/virtual`, there you should find a virtual packages, that match your new package (misc-packages should be the last option)

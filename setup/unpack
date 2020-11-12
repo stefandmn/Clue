@@ -7,7 +7,7 @@ if [ -z "${1}" ]; then
 fi
 
 if [ -z "${PKG_NAME}" ]; then
-	die "$(print_color CLR_ERROR "${1}: no descriptor.csh file found")"
+	die "$(print_color CLR_ERROR "${1}: no package.csh file found")"
 fi
 PARENT_PKG="${2:-${PKG_NAME}}"
 

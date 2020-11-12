@@ -3,7 +3,7 @@
 . ${ROOT}/devices/options "${1}"
 
 if [ -z "${1}" ]; then
-	for i in $(find "${PACKAGES}/" -type f -name "descriptor.csh"); do
+	for i in $(find "${PACKAGES}/" -type f -name "package.csh"); do
 		GET_PKG=$(grep "^PKG_NAME=" "${i}" | sed -e "s,\",,g" -e "s,PKG_NAME=,,")
 		"${CONFIG}"/get "${GET_PKG}"
 	done
@@ -41,7 +41,7 @@ _get_repo_clean() {
 }
 
 # Handler for git
-# Usage (in descriptor.csh):
+# Usage (in package.csh):
 # PKG_URL (mandatory) must point to a git repository (git://... or https://example.com/repo.git)
 # PKG_VERSION (mandatory) must point to a commit SHA, e.g. a1b2c3d
 # PKG_GIT_SHA (optional) full hash of git commit
