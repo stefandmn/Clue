@@ -405,8 +405,8 @@ post_makeinstall_target() {
 
 
 ### Templates
-
-#### Package
+The template below can be used when you want to extend the capabilities of **Clue OS**, 
+adding new packages to bring additional functionalities 
 ```
 PKG_NAME="[package name]"
 PKG_VERSION="[package version identifier or unique githash]"
