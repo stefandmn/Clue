@@ -25,10 +25,6 @@ if [ "$PKG_BUILD_PERF" != "no" ] && grep -q ^CONFIG_PERF_EVENTS= $PKG_KERNEL_CFG
 	PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET binutils elfutils libunwind zlib openssl"
 fi
 
-if [[ "$KERNEL_TARGET" == uImage* ]]; then
-	PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET u-boot-tools:host"
-fi
-
 post_patch() {
 	cp $PKG_KERNEL_CFG_FILE $PKG_BUILD/.config
 
@@ -146,49 +142,10 @@ make_target() {
 	pkg_lock_status "ACTIVE" "linux:target" "build"
 	echo "**** INIT ****"
 
-	# arm64 target does not support creating uImage.
-	# Build Image first, then wrap it using u-boot's mkimage.
-	if [[ "$TARGET_KERNEL_ARCH" == "arm64" && "$KERNEL_TARGET" == uImage* ]]; then
-		if [ -z "$KERNEL_UIMAGE_LOADADDR" -o -z "$KERNEL_UIMAGE_ENTRYADDR" ]; then
-			die "ERROR: KERNEL_UIMAGE_LOADADDR and KERNEL_UIMAGE_ENTRYADDR have to be set to build uImage - aborting"
-		fi
-		KERNEL_UIMAGE_TARGET="$KERNEL_TARGET"
-		KERNEL_TARGET="${KERNEL_TARGET/uImage/Image}"
-	fi
-
 	# the modules target is required to get a proper Module.symvers
 	# file with symbols from built-in and external modules.
 	# Without that it'll contain only the symbols from the kernel
 	kernel_make $KERNEL_TARGET $KERNEL_MAKE_EXTRACMD modules
-
-	if [ -n "$KERNEL_UIMAGE_TARGET" ]; then
-		# determine compression used for kernel image
-		KERNEL_UIMAGE_COMP=${KERNEL_UIMAGE_TARGET:7}
-		KERNEL_UIMAGE_COMP=${KERNEL_UIMAGE_COMP:-none}
-
-		# calculate new load address to make kernel Image unpack to memory area after compressed image
-		if [ "$KERNEL_UIMAGE_COMP" != "none" ]; then
-			COMPRESSED_SIZE=$(stat -t "arch/$TARGET_KERNEL_ARCH/boot/$KERNEL_TARGET" | awk '{print $2}')
-			# align to 1 MiB
-			COMPRESSED_SIZE=$(((($COMPRESSED_SIZE - 1 >> 20) + 1) << 20))
-			PKG_KERNEL_UIMAGE_LOADADDR=$(printf '%X' "$(($KERNEL_UIMAGE_LOADADDR + $COMPRESSED_SIZE))")
-			PKG_KERNEL_UIMAGE_ENTRYADDR=$(printf '%X' "$(($KERNEL_UIMAGE_ENTRYADDR + $COMPRESSED_SIZE))")
-		else
-			PKG_KERNEL_UIMAGE_LOADADDR=${KERNEL_UIMAGE_LOADADDR}
-			PKG_KERNEL_UIMAGE_ENTRYADDR=${KERNEL_UIMAGE_ENTRYADDR}
-		fi
-
-		mkimage -A $TARGET_KERNEL_ARCH \
-			-O linux \
-			-T kernel \
-			-C $KERNEL_UIMAGE_COMP \
-			-a $PKG_KERNEL_UIMAGE_LOADADDR \
-			-e $PKG_KERNEL_UIMAGE_ENTRYADDR \
-			-d arch/$TARGET_KERNEL_ARCH/boot/$KERNEL_TARGET \
-			arch/$TARGET_KERNEL_ARCH/boot/$KERNEL_UIMAGE_TARGET
-
-		KERNEL_TARGET="${KERNEL_UIMAGE_TARGET}"
-	fi
 }
 
 makeinstall_target() {

@@ -197,7 +197,7 @@ if [ -d "${SOURCES}/${PKG_NAME}" -o -d "${PKG_DIR}/sources" ] || pkg_call_exists
 	fi
 fi
 
-if [ "${PKG_SECTION}" != "virtual" ]; then
+if [ "${PKG_SECTION}" != "abstract" ]; then
 	mkdir -p "${PKG_BUILD}"
 	echo "INFO_PKG_NAME=\"${PKG_NAME}\"" >"${PKG_BUILD}/.clue-package"
 

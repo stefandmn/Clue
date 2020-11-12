@@ -61,8 +61,8 @@ if [ -n "${1}" ]; then
 		${CONFIG}/build "${p}" "${PARENT_PKG}"
 	done
 
-	# virtual packages are not built as they only contain dependencies, so dont go further here
-	if [ "${PKG_SECTION}" = "virtual" ]; then
+	# abstract packages are not built as they only contain dependencies, so dont go further here
+	if [ "${PKG_SECTION}" = "abstract" ]; then
 		PKG_DEEPHASH=$(calculate_stamp)
 		for i in PKG_NAME PKG_DEEPHASH BUILD_WITH_DEBUG; do
 			echo "STAMP_${i}=\"${!i}\"" >>${STAMP}

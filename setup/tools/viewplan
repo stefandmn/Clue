@@ -21,6 +21,6 @@ set -o pipefail
 
 cat ${_CACHE_PACKAGE_GLOBAL} ${_CACHE_PACKAGE_LOCAL} |
 	${PARALLEL_BIN} --plain --no-notice --max-args 30 --halt now,fail=1 json_worker |
-	${CONFIG}/tools/planner.py --no-reorder --show-needs --build ${@:-image initramfs} ||
+	${CONFIG}/tools/planner.py --no-reorder --show-needs --build ${@:-system initramfs} ||
 	die "FAILURE: Unable to generate plan"
 echo

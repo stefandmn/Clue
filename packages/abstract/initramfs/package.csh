@@ -1,8 +1,8 @@
 PKG_NAME="initramfs"
 PKG_VERSION=""
 PKG_URL=""
-PKG_DEPENDS_TARGET="toolchain libc:init busybox:init linux:init plymouth-lite:init util-linux:init e2fsprogs:init dosfstools:init fakeroot:host terminus-font:init"
-PKG_SECTION="virtual"
+PKG_DEPENDS_TARGET="toolchain glibc:init arm-mem:init busybox:init linux:init plymouth-lite:init util-linux:init e2fsprogs:init dosfstools:init fakeroot:host terminus-font:init"
+PKG_SECTION="abstract"
 PKG_DESCRIPTION="Metapackage for installing initramfs"
 
 if [ "$ISCSI_SUPPORT" = yes ]; then

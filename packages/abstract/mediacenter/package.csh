@@ -2,7 +2,7 @@ PKG_NAME="mediacenter"
 PKG_VERSION=""
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain kodi repository.clue skin.clue"
-PKG_SECTION="virtual"
+PKG_SECTION="abstract"
 PKG_DESCRIPTION="Metapackage to install kodi and related packages"
 
 # python-based tool for kodi management

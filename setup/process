@@ -73,7 +73,7 @@ done
 
 # Build image contents
 echo ">> Building system packages.."
-start_multithread_build image || die "Parallel build failure - see log for details. Time of failure: $(date)"
+start_multithread_build system || die "Parallel build failure - see log for details. Time of failure: $(date)"
 
 echo -e "<< Successful build, finalizing OS structure and components..\n"
 
@@ -200,8 +200,8 @@ rm -rf ${FAKEROOT_SCRIPT}
 echo -e ">> Setting up permissions..\n"
 chmod 0644 ${TARGETS}/${IMAGE_NAME}.system
 
-# Make OS release and/or OS image
-if [ "${1}" = "release" -o "${1}" = "image" ]; then
+# Make release and OS image
+if [ "${1}" = "release" ]; then
 	echo -e "\n> Making OS release.."
 	RELEASE_DIR="${TARGETS}/${IMAGE_NAME}"
 
@@ -263,151 +263,148 @@ if [ "${1}" = "release" -o "${1}" = "image" ]; then
 		sha256sum ${IMAGE_NAME}.tar >${IMAGE_NAME}.tar.sha256
 	)
 
-	# Create image files if requested
-	if [[ ("${1}" == "image") ]]; then
-		echo -e "\n> Making OS image.."
+	echo -e "\n> Making OS image.."
+	UUID_SYSTEM="$(date '+%d%m')-$(date '+%M%S')"
+	UUID_STORAGE="$(uuidgen)"
 
-		UUID_SYSTEM="$(date '+%d%m')-$(date '+%M%S')"
-		UUID_STORAGE="$(uuidgen)"
+	# set temp variables
+	LE_TMP=/tmp/.clueimg
+	SAVE_ERROR="${LE_TMP}/save_error"
+	rm -rf ${LE_TMP}
+	mkdir -p ${LE_TMP}
 
-		# set temp variables
-		LE_TMP=/tmp/.clueimg
-		SAVE_ERROR="${LE_TMP}/save_error"
-		rm -rf ${LE_TMP}
-		mkdir -p ${LE_TMP}
+	if [ -z "${SYSTEM_SIZE}" -o -z "${SYSTEM_PART_START}" ]; then
+		die "SYSTEM_SIZE and SYSTEM_PART_START must be configured!"
+	fi
 
-		if [ -z "${SYSTEM_SIZE}" -o -z "${SYSTEM_PART_START}" ]; then
-			die "SYSTEM_SIZE and SYSTEM_PART_START must be configured!"
-		fi
+	DISK_LABEL=msdos
+	STORAGE_SIZE=32 # STORAGE_SIZE must be >= 32 !
+	DISK_START_PADDING=$(((${SYSTEM_PART_START} + 2048 - 1) / 2048))
+	DISK_GPT_PADDING=1
+	DISK_SIZE=$((${DISK_START_PADDING} + ${SYSTEM_SIZE} + ${STORAGE_SIZE} + ${DISK_GPT_PADDING}))
+	DISK_BASENAME="${TARGETS}/${IMAGE_NAME}"
+	DISK="${DISK_BASENAME}.img"
 
-		DISK_LABEL=msdos
-		STORAGE_SIZE=32 # STORAGE_SIZE must be >= 32 !
-		DISK_START_PADDING=$(((${SYSTEM_PART_START} + 2048 - 1) / 2048))
-		DISK_GPT_PADDING=1
-		DISK_SIZE=$((${DISK_START_PADDING} + ${SYSTEM_SIZE} + ${STORAGE_SIZE} + ${DISK_GPT_PADDING}))
-		DISK_BASENAME="${TARGETS}/${IMAGE_NAME}"
-		DISK="${DISK_BASENAME}.img"
+	trap cleanup SIGINT
 
-		trap cleanup SIGINT
+	# create an image
+	echo -e "\tCreating file $(basename ${DISK})..."
+	dd if=/dev/zero of="${DISK}" bs=1M count="${DISK_SIZE}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
 
-		# create an image
-		echo -e "\tCreating file $(basename ${DISK})..."
-		dd if=/dev/zero of="${DISK}" bs=1M count="${DISK_SIZE}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+	# write a disklabel
+	echo -e "\tCreating ${DISK_LABEL} partition table.."
+	parted -s "${DISK}" mklabel ${DISK_LABEL}
+	sync
 
-		# write a disklabel
-		echo -e "\tCreating ${DISK_LABEL} partition table.."
-		parted -s "${DISK}" mklabel ${DISK_LABEL}
-		sync
+	# create part1
+	echo -e "\tCreating part1.."
+	SYSTEM_PART_END=$((${SYSTEM_PART_START} + (${SYSTEM_SIZE} * 1024 * 1024 / 512) - 1))
+	parted -s "${DISK}" -a min unit s mkpart primary fat32 ${SYSTEM_PART_START} ${SYSTEM_PART_END}
+	parted -s "${DISK}" set 1 boot on
+	sync
 
-		# create part1
-		echo -e "\tCreating part1.."
-		SYSTEM_PART_END=$((${SYSTEM_PART_START} + (${SYSTEM_SIZE} * 1024 * 1024 / 512) - 1))
-		parted -s "${DISK}" -a min unit s mkpart primary fat32 ${SYSTEM_PART_START} ${SYSTEM_PART_END}
-		parted -s "${DISK}" set 1 boot on
-		sync
+	# create part2
+	echo -e "\tCreating part2.."
+	STORAGE_PART_START=$((${SYSTEM_PART_END} + 1))
+	STORAGE_PART_END=$((${STORAGE_PART_START} + (${STORAGE_SIZE} * 1024 * 1024 / 512) - 1))
+	parted -s "${DISK}" -a min unit s mkpart primary ext4 ${STORAGE_PART_START} ${STORAGE_PART_END}
+	sync
 
-		# create part2
-		echo -e "\tCreating part2.."
-		STORAGE_PART_START=$((${SYSTEM_PART_END} + 1))
-		STORAGE_PART_END=$((${STORAGE_PART_START} + (${STORAGE_SIZE} * 1024 * 1024 / 512) - 1))
-		parted -s "${DISK}" -a min unit s mkpart primary ext4 ${STORAGE_PART_START} ${STORAGE_PART_END}
-		sync
+	# create filesystem on part1
+	echo -e "\tCreating filesystem on part1.."
+	OFFSET=$((${SYSTEM_PART_START} * 512))
+	HEADS=4
+	TRACKS=32
+	SECTORS=$((${SYSTEM_SIZE} * 1024 * 1024 / 512 / ${HEADS} / ${TRACKS}))
 
-		# create filesystem on part1
-		echo -e "\tCreating filesystem on part1.."
-		OFFSET=$((${SYSTEM_PART_START} * 512))
-		HEADS=4
-		TRACKS=32
-		SECTORS=$((${SYSTEM_SIZE} * 1024 * 1024 / 512 / ${HEADS} / ${TRACKS}))
+	mformat -i ${DISK}@@${OFFSET} -h ${HEADS} -t ${TRACKS} -s ${SECTORS} -v "${DISTRO_BOOTLABEL}" -N "${UUID_SYSTEM//-/}" ::
+	sync
 
-		mformat -i ${DISK}@@${OFFSET} -h ${HEADS} -t ${TRACKS} -s ${SECTORS} -v "${DISTRO_BOOTLABEL}" -N "${UUID_SYSTEM//-/}" ::
-		sync
-
-		# create bootloader configuration
-		echo -e "\tCreating bootloader configuration.."
-		cat <<EOF >"${LE_TMP}/cmdline.txt"
+	# create bootloader configuration
+	echo -e "\tCreating bootloader configuration.."
+	cat <<EOF >"${LE_TMP}/cmdline.txt"
 boot=UUID=${UUID_SYSTEM} disk=UUID=${UUID_STORAGE} quiet ${EXTRA_CMDLINE}
 EOF
 
-		mcopy -i ${DISK}@@${OFFSET} "${LE_TMP}/cmdline.txt" ::
+	mcopy -i ${DISK}@@${OFFSET} "${LE_TMP}/cmdline.txt" ::
 
-		# copy files
-		echo -e "\tCopying files to part1.."
-		mcopy -i ${DISK}@@${OFFSET} "${TARGETS}/${IMAGE_NAME}.kernel" "::/${KERNEL_NAME}"
-		mcopy -i ${DISK}@@${OFFSET} "${TARGETS}/${IMAGE_NAME}.system" ::/SYSTEM
-		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/target/KERNEL.md5" "::/${KERNEL_NAME}.md5"
-		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/target/SYSTEM.md5" ::/SYSTEM.md5
+	# copy files
+	echo -e "\tCopying files to part1.."
+	mcopy -i ${DISK}@@${OFFSET} "${TARGETS}/${IMAGE_NAME}.kernel" "::/${KERNEL_NAME}"
+	mcopy -i ${DISK}@@${OFFSET} "${TARGETS}/${IMAGE_NAME}.system" ::/SYSTEM
+	mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/target/KERNEL.md5" "::/${KERNEL_NAME}.md5"
+	mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/target/SYSTEM.md5" ::/SYSTEM.md5
 
-		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/bootcode.bin" ::
-		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/fixup.dat" ::
-		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/start.elf" ::
-		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/config.txt" ::
-		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/distroconfig.txt" ::
+	mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/bootcode.bin" ::
+	mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/fixup.dat" ::
+	mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/start.elf" ::
+	mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/config.txt" ::
+	mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/distroconfig.txt" ::
 
-		if [ -f "${RELEASE_DIR}/3rdparty/bootloader/dt-blob.bin" ]; then
-			mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/dt-blob.bin" ::
-		fi
-
-		for dtb in "${RELEASE_DIR}/3rdparty/bootloader/"*.dtb; do
-			if [ -f "${dtb}" ]; then
-				mcopy -i ${DISK}@@${OFFSET} "${dtb}" ::/$(basename "${dtb}")
-			fi
-		done
-
-		if [ -d "${RELEASE_DIR}/3rdparty/bootloader/overlays" ]; then
-			mcopy -i ${DISK}@@${OFFSET} -s "${RELEASE_DIR}/3rdparty/bootloader/overlays" ::
-		fi
-
-		# extract part2 from image to format and copy files
-		echo -e "\tExtracting part2 from image.."
-		STORAGE_PART_COUNT=$((${STORAGE_PART_END} - ${STORAGE_PART_START} + 1))
-		sync
-		dd if="${DISK}" of="${LE_TMP}/part2.ext4" bs=512 skip="${STORAGE_PART_START}" count="${STORAGE_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
-
-		# create filesystem on part2
-		echo -e "\tCreating filesystem on part2.."
-		mke2fs -F -q -t ext4 -m 0 "${LE_TMP}/part2.ext4"
-		tune2fs -L "${DISTRO_DISKLABEL}" -U ${UUID_STORAGE} "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
-		e2fsck -n "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
-		sync
-
-		# add resize mark
-		mkdir "${LE_TMP}/part2.fs"
-		touch "${LE_TMP}/part2.fs/.please_resize_me"
-		echo -e "\tPopulating filesystem on part2.."
-		populatefs -U -d "${LE_TMP}/part2.fs" "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
-		sync
-		e2fsck -n "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
-
-		# merge part2 back to disk image
-		echo -e "\tMerging part2 back to image.."
-		dd if="${LE_TMP}/part2.ext4" of="${DISK}" bs=512 seek="${STORAGE_PART_START}" conv=fsync,notrunc >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
-
-		# extract part1 from image to run fsck
-		echo -e "\tExtracting part1 from image.."
-		SYSTEM_PART_COUNT=$((${SYSTEM_PART_END} - ${SYSTEM_PART_START} + 1))
-		sync
-		dd if="${DISK}" of="${LE_TMP}/part1.fat" bs=512 skip="${SYSTEM_PART_START}" count="${SYSTEM_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
-		echo -e "\tChecking filesystem on part1.."
-		fsck.fat -n "${LE_TMP}/part1.fat" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
-
-		# gzip
-		echo -e "\tCompressing.."
-		pigz --best --force "${DISK}"
-
-		# set owner
-		if [ -n "${SUDO_USER}" ]; then
-			chown "${SUDO_USER}:" "${DISK}.gz"
-		fi
-
-		# create sha256 checksum of image
-		cd "${TARGETS}"
-		sha256sum $(basename "${DISK}").gz >$(basename "${DISK}").gz.sha256
-
-		# cleanup
-		echo -e "\tCleaning up.."
-		rm -rf "${LE_TMP}"
+	if [ -f "${RELEASE_DIR}/3rdparty/bootloader/dt-blob.bin" ]; then
+		mcopy -i ${DISK}@@${OFFSET} "${RELEASE_DIR}/3rdparty/bootloader/dt-blob.bin" ::
 	fi
+
+	for dtb in "${RELEASE_DIR}/3rdparty/bootloader/"*.dtb; do
+		if [ -f "${dtb}" ]; then
+			mcopy -i ${DISK}@@${OFFSET} "${dtb}" ::/$(basename "${dtb}")
+		fi
+	done
+
+	if [ -d "${RELEASE_DIR}/3rdparty/bootloader/overlays" ]; then
+		mcopy -i ${DISK}@@${OFFSET} -s "${RELEASE_DIR}/3rdparty/bootloader/overlays" ::
+	fi
+
+	# extract part2 from image to format and copy files
+	echo -e "\tExtracting part2 from image.."
+	STORAGE_PART_COUNT=$((${STORAGE_PART_END} - ${STORAGE_PART_START} + 1))
+	sync
+	dd if="${DISK}" of="${LE_TMP}/part2.ext4" bs=512 skip="${STORAGE_PART_START}" count="${STORAGE_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+
+	# create filesystem on part2
+	echo -e "\tCreating filesystem on part2.."
+	mke2fs -F -q -t ext4 -m 0 "${LE_TMP}/part2.ext4"
+	tune2fs -L "${DISTRO_DISKLABEL}" -U ${UUID_STORAGE} "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+	e2fsck -n "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+	sync
+
+	# add resize mark
+	mkdir "${LE_TMP}/part2.fs"
+	touch "${LE_TMP}/part2.fs/.please_resize_me"
+	echo -e "\tPopulating filesystem on part2.."
+	populatefs -U -d "${LE_TMP}/part2.fs" "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+	sync
+	e2fsck -n "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+
+	# merge part2 back to disk image
+	echo -e "\tMerging part2 back to image.."
+	dd if="${LE_TMP}/part2.ext4" of="${DISK}" bs=512 seek="${STORAGE_PART_START}" conv=fsync,notrunc >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+
+	# extract part1 from image to run fsck
+	echo -e "\tExtracting part1 from image.."
+	SYSTEM_PART_COUNT=$((${SYSTEM_PART_END} - ${SYSTEM_PART_START} + 1))
+	sync
+	dd if="${DISK}" of="${LE_TMP}/part1.fat" bs=512 skip="${SYSTEM_PART_START}" count="${SYSTEM_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+	echo -e "\tChecking filesystem on part1.."
+	fsck.fat -n "${LE_TMP}/part1.fat" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+
+	# gzip
+	echo -e "\tCompressing.."
+	pigz --best --force "${DISK}"
+
+	# set owner
+	if [ -n "${SUDO_USER}" ]; then
+		chown "${SUDO_USER}:" "${DISK}.gz"
+	fi
+
+	# create sha256 checksum of image
+	cd "${TARGETS}"
+	sha256sum $(basename "${DISK}").gz >$(basename "${DISK}").gz.sha256
+
+	# cleanup
+	echo -e "\tCleaning up.."
+	rm -rf "${LE_TMP}"
+
 
 	# Cleanup release dir
 	rm -rf ${RELEASE_DIR}

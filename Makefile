@@ -69,11 +69,6 @@ release:
 	./$(CONFIG)/process release | tee $(OUTPUT_DIR)/process.log
 
 
-# Build OS image
-image:
-	./$(CONFIG)/process image | tee $(OUTPUT_DIR)/process.log
-
-
 # Display the cache statistics for
 cachestats:
 	./$(CONFIG)/tools/cachestats | tee $(OUTPUT_DIR)/cachestats.txt
@@ -107,7 +102,7 @@ monitor:viewbuild
 help:
 	echo -e "\
 \nSYNOPSIS\n\
-       make build | install | clean | cleanall | release | image\n\
+       make build | install | clean | cleanall | release \n\
        make cachestats | viewplan | viewpack | viewbuild\n\
        make help\n\
 \nDESCRIPTION\n\
@@ -128,8 +123,6 @@ help:
     cleanall\n\
                   Clean-up all DEVICE distributions, cache and stamps resources as well\n\
     release\n\
-                  Build the system release for the current DEVICE\n\
-    image\n\
                   Build the system release and create OS image for the current DEVICE\n\
     cachestats\n\
                   Displays cache statistics\n\
@@ -166,10 +159,8 @@ EXAMPLES\n\
        > make build -e package=sed\n\n\
        install 'sed' package (and related dependencies)\n\
        > make install -e package=sed\n\n\
-       make system release\n\
-       > make release\n\n\
        make system release and OS image\n\
-       > make image\n\n\
+       > make release\n\n\
        view the building plan (it is saved in viewplan.txt file from $(OUTPUT_DIR) folder)\n\
        > make viewplan\n\n\
 " | more

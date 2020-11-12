@@ -1,6 +1,0 @@
-PKG_NAME="alsa"
-PKG_VERSION=""
-PKG_URL=""
-PKG_DEPENDS_TARGET="toolchain alsa-lib alsa-utils"
-PKG_SECTION="virtual"
-PKG_DESCRIPTION="Matapackage to install all alsa components."

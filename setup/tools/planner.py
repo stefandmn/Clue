@@ -200,8 +200,7 @@ def get_build_steps(args, nodes, trigger_pkgs, built_pkgs):
 	# However, if we are not building the image then only build the packages
 	# and don't install them as it's likely we will be building discrete add-ons
 	# which are installed outside of the image.
-	#
-	install = True if "image" in args.build else False
+	install = True if "system" in args.build else False
 	for pkgname in [x for x in trigger_pkgs if x]:
 		if pkgname.find(":") == -1:
 			pkgname = "%s:target" % pkgname
@@ -227,7 +226,7 @@ def processPackages(args, packages, build):
 	# Add dummy package to ensure ${CONFIG}/install dependencies are not culled
 	pkg = {
 		"name": ROOT_PKG,
-		"section": "virtual",
+		"section": "abstract",
 		"hierarchy": "global",
 		"bootstrap": "",
 		"init": "",

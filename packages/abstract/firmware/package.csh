@@ -1,6 +1,6 @@
-PKG_NAME="linux-firmware"
+PKG_NAME="firmware"
 PKG_VERSION=""
 PKG_URL=""
 PKG_DEPENDS_TARGET="toolchain $FIRMWARE"
-PKG_SECTION="virtual"
+PKG_SECTION="abstract"
 PKG_DESCRIPTION="Metapackage to install various free firmware drivers"
