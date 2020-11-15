@@ -1,6 +1,6 @@
 # Clue Media Experience
 
---- **Clue v2** distribution is still under construction -- 
+--- _**Clue v2** distribution is still under construction_ --- 
 
 **Clue** is a free and open source environment, developed as fork of LibreELEC project,
 to provide you builtin functions like multimedia center, integrated webcam, multiple 
