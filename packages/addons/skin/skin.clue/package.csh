@@ -1,5 +1,5 @@
 PKG_NAME="skin.clue"
-PKG_VERSION="2.0.4"
+PKG_VERSION="2.0.6"
 PKG_ARCH="any"
 PKG_URL="${DISTRO_ADDONS}/${PKG_NAME}/${PKG_NAME}-${PKG_VERSION}.zip"
 PKG_DEPENDS_TARGET="toolchain kodi"

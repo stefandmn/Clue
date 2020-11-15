@@ -308,6 +308,12 @@ post_makeinstall_target() {
 	# update splash image
 	find_file_path "kodi/splash.jpg" && cp -f ${FOUND_PATH} $INSTALL/usr/share/kodi/media/splash.jpg
 
+	# Change advance setting resources
+	sed -e "s|Verbose logging for the||g" \
+		-e "s|Verbose logging for||g" \
+		-e "s|Verbose logging of ||g" \
+		-i $INSTALL/usr/share/kodi/addons/resource.language.en_gb/resources/strings.po
+
 	# more binaddons cross compile badness meh
 	sed -e "s:INCLUDE_DIR /usr/include/kodi:INCLUDE_DIR $TARGET_SYSROOT/usr/include/kodi:g" \
 		-e "s:CMAKE_MODULE_PATH /usr/lib/kodi /usr/share/kodi/cmake:CMAKE_MODULE_PATH $TARGET_SYSROOT/usr/share/kodi/cmake:g" \
