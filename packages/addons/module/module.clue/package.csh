@@ -1,10 +1,10 @@
-PKG_NAME="repository.clue"
+PKG_NAME="module.clue"
 PKG_VERSION="2.0.1"
 PKG_ARCH="any"
 PKG_URL="${DISTRO_ADDONS}/${PKG_NAME}/${PKG_NAME}-${PKG_VERSION}.zip"
-PKG_DEPENDS_TARGET="toolchain kodi"
-PKG_SECTION="repository"
-PKG_DESCRIPTION="Clue Repository for Kodi"
+PKG_DEPENDS_TARGET="toolchain kodi urllib3 certifi"
+PKG_SECTION="module"
+PKG_DESCRIPTION="Clue Module for Kodi"
 PKG_TOOLCHAIN="manual"
 
 

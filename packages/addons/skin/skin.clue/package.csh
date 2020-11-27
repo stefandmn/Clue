@@ -1,5 +1,5 @@
 PKG_NAME="skin.clue"
-PKG_VERSION="2.0.6"
+PKG_VERSION="2.0.1"
 PKG_ARCH="any"
 PKG_URL="${DISTRO_ADDONS}/${PKG_NAME}/${PKG_NAME}-${PKG_VERSION}.zip"
 PKG_DEPENDS_TARGET="toolchain kodi"
@@ -23,6 +23,14 @@ makeinstall_target() {
 	SETTINGS=$(get_build_dir kodi)/.install_pkg/usr/share/kodi/system/settings/settings.xml
 	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="skin"]/group[@id="1"]/setting[@id="lookandfeel.skin"]/default' -v "$PKG_NAME" $SETTINGS
 	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="general"]/group[@id="1"]/setting[@id="services.devicename"]/default' -v "$DISTRO_NAME" $SETTINGS
-
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="screensaver"]/group[@id="1"]/setting[@id="screensaver.mode"]/default' -v "" $SETTINGS
+	# regional settings
 	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.country"]/default' -v "Central Europe" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.timezone"]/default' -v "Europe/Bucharest" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.timezonecountry"]/default' -v "Romania" $SETTINGS
+	# services/upnp activated
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="upnp"]/group[@id="1"]/setting[@id="services.upnp"]/default' -v "true" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="upnp"]/group[@id="1"]/setting[@id="services.upnpserver"]/default' -v "true" $SETTINGS
+	# services/airplay activated
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="airplay"]/group[@id="1"]/setting[@id="services.airplay"]/default' -v "true" $SETTINGS
 }

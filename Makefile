@@ -14,6 +14,8 @@ endif
 
 ifeq ($(OUTPUT),)
 	export OUTPUT_DIR=$(ROOT)/../Clue-out
+else
+	export OUTPUT_DIR=$(OUTPUT)
 endif
 
 
@@ -36,10 +38,14 @@ install:
 ifneq ($(package),)
 	./$(CONFIG)/install $(package) $(parent) | tee $(OUTPUT_DIR)/install.log
 else
+ifneq ($(packages),)
+	rm -rf $(OUTPUT_DIR)/install.log
+	for pack in $(packages) ; do ./$(CONFIG)/install $$pack | tee -a $(OUTPUT_DIR)/install.log ; done
+else
 	@printf "\n* Please specify 'package' parameter, and optional 'parent' parameter!\n\n"
 	exit 1
 endif
-
+endif
 
 # Clean-up package resources like source code and all build pack (in case @package
 # parameter is specified) or clean-up the entire build distribution (including stamps)
@@ -48,15 +54,13 @@ clean:
 ifneq ($(package),)
 	./$(CONFIG)/clean $(package) $(parent) | tee $(OUTPUT_DIR)/clean.log
 else
+ifneq ($(packages),)
+	rm -rf $(OUTPUT_DIR)/clean.log
+	for pack in $(packages) ; do ./$(CONFIG)/clean $$pack | tee -a $(OUTPUT_DIR)/clean.log ; done
+else
 	rm -rf $(OUTPUT_DIR)/*-${DEVICE}.* $(OUTPUT_DIR)/.stamps
 endif
-
-
-# Setup and push the new versioning label in the GitHUB
-version:
-	git add .
-	git commit -m "Distro update $(DISTRO_VER)"
-	git push
+endif
 
 
 # Clean-up all build distributions, cache and stamps
@@ -80,6 +84,7 @@ viewplan:
 
 plan:viewplan
 
+
 # Display specified package attributes and also the dependencies' list
 #	@package - package name with optional target [:<host|target|init|bootstrap>]
 viewpack:
@@ -96,6 +101,38 @@ viewbuild:
 	./$(CONFIG)/tools/viewbuild
 
 monitor:viewbuild
+
+
+# Commit and push updated files into versioning system (GitHUB). The 'message' input
+# parameter is required.
+gitrev:
+ifneq ($(message),)
+	git add .
+	git commit -m "$(message)"
+	git push
+else
+	@printf "\n* Please specify 'message' parameter!\n\n"
+	exit 1
+endif
+
+
+# Create and push a new versioning tag equals with the addon release. The uploaded can be
+# done later - manually or through a separate task and thus the tag is transformed into a
+# addon release
+gitrel:
+	git tag "$(DISTRO_VER)"
+	git push origin --tags
+
+# Combine git commit and git release tasks into a single one, the only exception is that
+# the commit doesn't require a message, if the message exist it will be used, if not a
+# standard commit message will be composed using the addon version number
+git:
+ifeq ($(message),)
+	$(MAKE) gitrev -e message="Release $(DISTRO_VER)"
+else
+	$(MAKE) gitrev
+endif
+	$(MAKE) gitrel
 
 
 # Display the help text
@@ -116,9 +153,9 @@ help:
     build [-e package=<pack>]\n\
                   build one particular package (and all related dependencies) or \n\
                   the entire DEVICE distribution\n\
-    install -e package=<pack>\n\
+    install -e package=<pack> | packages=<list of packs separated by space>]\n\
                   install one particular package and related dependencies\n\
-    clean [-e package=<pack>]\n\
+    clean [-e package=<pack> | packages=<list of packs separated by space>]\n\
                   cleanup one particular package or the entire DEVICE distribution\n\
     cleanall\n\
                   Clean-up all DEVICE distributions, cache and stamps resources as well\n\
