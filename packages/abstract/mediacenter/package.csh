@@ -15,7 +15,3 @@ PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET Pillow simplejson pycryptodome"
 PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET xmlstarlet"
 
 get_graphicdrivers
-
-post_install() {
-	${CONFIG}/install kodi
-}

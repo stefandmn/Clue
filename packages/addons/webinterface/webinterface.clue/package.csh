@@ -28,6 +28,7 @@ makeinstall_target() {
 
 	# remove default webinterface addon
 	rm -rf $(get_build_dir kodi)/.install_pkg/usr/share/kodi/addons/webinterface.default
+	rm -rf ${BUILDER}/image/system/usr/share/kodi/addons/webinterface.default
 
 	# remoe default addon registration from manifest
 	xmlstarlet ed -L -d "/addons/addon[text()='webinterface.default']" $MANIFEST
