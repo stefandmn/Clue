@@ -103,7 +103,18 @@ viewbuild:
 monitor:viewbuild
 
 
-# Commit and push updated files into versioning system (GitHUB). The 'message' input
+# Commit and push updated files into SVN versioning system. The 'message' input
+# parameter is required.
+svnrev:
+ifneq ($(message),)
+	svn ci -m "$(message)"
+else
+	@printf "\n* Please specify 'message' parameter!\n\n"
+	exit 1
+endif
+
+
+# Commit and push updated files into GitHUB versioning system. The 'message' input
 # parameter is required.
 gitrev:
 ifneq ($(message),)
@@ -123,17 +134,6 @@ gitrel:
 	git tag "$(DISTRO_VER)"
 	git push origin --tags
 
-# Combine git commit and git release tasks into a single one, the only exception is that
-# the commit doesn't require a message, if the message exist it will be used, if not a
-# standard commit message will be composed using the addon version number
-git:
-ifeq ($(message),)
-	$(MAKE) gitrev -e message="Release $(DISTRO_VER)"
-else
-	$(MAKE) gitrev
-endif
-	$(MAKE) gitrel
-
 
 # Display the help text
 help:
@@ -141,6 +141,7 @@ help:
 \nSYNOPSIS\n\
        make build | install | clean | cleanall | release \n\
        make cachestats | viewplan | viewpack | viewbuild\n\
+       make svnrev | gitrev | gitrel\n\
        make help\n\
 \nDESCRIPTION\n\
     Executes one of the make tasks defined through this Makefile flow, according \n\
@@ -169,6 +170,13 @@ help:
                   Shows the package descriptor and properties\n\
     viewbuild | monitor\n\
                   Display the real time build process for the current DEVICE\n\
+    svnrev\n\
+                  Commit the new release changes into SVN versioning repository\n\
+    gitrev\n\
+                  Commit the new release changes into GitHUB versioning repository\n\
+    gitrel\n\
+                  Create a new release tag into GitHub versioning repository using current\n\
+                  addon version (defined in the addon descriptor - addon.xml file)\n\
     help\n\
                   Shows this text\n\
 \n\
