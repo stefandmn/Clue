@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="os.clue" version="@DISTRO_VERSION@" provider-name="AMSD">
+<addon id="os.clue" version="@DISTRO_VERSION@" provider-name="@DISTRO_PROVIDER@">
 	<requires>
 		<import addon="xbmc.addon" version="12.0"/>
 	</requires>

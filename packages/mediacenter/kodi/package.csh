@@ -242,6 +242,7 @@ post_makeinstall_target() {
 	rm -rf $INSTALL/usr/share/kodi/addons/skin.estuary
 	rm -rf $INSTALL/usr/share/kodi/addons/service.xbmc.versioncheck
 	rm -rf $INSTALL/usr/share/kodi/addons/visualization.vortex
+	rm -rf $INSTALL/usr/share/kodi/addons/webinterface.default
 	rm -rf $INSTALL/usr/share/xsessions
 
 	mkdir -p $INSTALL/usr/lib/kodi
@@ -266,6 +267,7 @@ post_makeinstall_target() {
 	mkdir -p $INSTALL/usr/share/kodi/addons
 	cp -R $PKG_DIR/config/os.clue $INSTALL/usr/share/kodi/addons
 	sed -e "s|@DISTRO_VERSION@|$DISTRO_VERSION|g" -i $INSTALL/usr/share/kodi/addons/os.clue/addon.xml
+	sed -e "s|@DISTRO_PROVIDER@|$DISTRO_PROVIDER|g" -i $INSTALL/usr/share/kodi/addons/os.clue/addon.xml
 
 	mkdir -p $INSTALL/usr/share/kodi/config
 
@@ -295,15 +297,49 @@ post_makeinstall_target() {
 
 	# update addon manifest
 	MANIFEST=$INSTALL/usr/share/kodi/system/addon-manifest.xml
+	# drop default and unused addons
 	xmlstarlet ed -L -d "/addons/addon[text()='service.xbmc.versioncheck']" $MANIFEST
 	xmlstarlet ed -L -d "/addons/addon[text()='peripheral.joystick']" $MANIFEST
 	xmlstarlet ed -L -d "/addons/addon[text()='skin.estouchy']" $MANIFEST
 	xmlstarlet ed -L -d "/addons/addon[text()='skin.estuary']" $MANIFEST
+	xmlstarlet ed -L -d "/addons/addon[text()='webinterface.default']" $MANIFEST
+	# add Clue addons
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "os.clue" $MANIFEST
-
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "repository.clue" $MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "skin.clue" $MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "module.clue" $MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "weather.clue" $MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "webinterface.clue" $MANIFEST
+	# add device dependent services
 	if [ "$DEVICE" = "Slice" -o "$DEVICE" = "Slice3" ]; then
 		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.slice" $MANIFEST
 	fi
+
+	# update global configuration
+	SETTINGS=$INSTALL/usr/share/kodi/system/settings/settings.xml
+	# setup default skin
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="skin"]/group[@id="1"]/setting[@id="lookandfeel.skin"]/default' -v "$PKG_NAME" $SETTINGS
+	# set device name
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="general"]/group[@id="1"]/setting[@id="services.devicename"]/default' -v "$DISTRO_NAME" $SETTINGS
+	# set None screensaver
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="screensaver"]/group[@id="1"]/setting[@id="screensaver.mode"]/default' -v "" $SETTINGS
+	# regional settings
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.country"]/default' -v "Central Europe" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.timezone"]/default' -v "Europe/Bucharest" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.timezonecountry"]/default' -v "Romania" $SETTINGS
+	# active and setup services/upnp
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="upnp"]/group[@id="1"]/setting[@id="services.upnp"]/default' -v "true" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="upnp"]/group[@id="1"]/setting[@id="services.upnpserver"]/default' -v "true" $SETTINGS
+	# activate services/airplay
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="airplay"]/group[@id="1"]/setting[@id="services.airplay"]/default' -v "true" $SETTINGS
+	# setup weather addon
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="weather"]/group[@id="1"]/setting[@id="weather.addon"]/default' -v "weather.clue" $SETTINGS
+	# setup webinterface addon
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="control"]/group[@id="1"]/setting[@id="services.webskin"]/default' -v "webinterface.clue" $SETTINGS
+	# activate and set services/control
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="control"]/group[@id="1"]/setting[@id="services.webserver"]/default' -v "true" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="control"]/group[@id="1"]/setting[@id="services.webserverport"]/default' -v "80" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="control"]/group[@id="1"]/setting[@id="services.webserverusername"]/default' -v "" $SETTINGS
 
 	# update splash image
 	find_file_path "kodi/splash.jpg" && cp -f ${FOUND_PATH} $INSTALL/usr/share/kodi/media/splash.jpg

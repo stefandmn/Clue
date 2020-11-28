@@ -5,7 +5,6 @@ PKG_URL="${DISTRO_SOURCES}/${PKG_NAME}-${PKG_VERSION}.zip"
 PKG_DEPENDS_TARGET="toolchain Python2 connman pygobject dbus-python"
 PKG_SECTION="program"
 PKG_DESCRIPTION="Clue Setup Program for Kodi"
-PKG_TOOLCHAIN="manual"
 
 PKG_MAKE_OPTS_TARGET="DISTRO_NAME=$DISTRO_NAME ROOT_PASSWORD=$ROOT_PASSWORD"
 

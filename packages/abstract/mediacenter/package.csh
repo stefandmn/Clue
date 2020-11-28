@@ -9,7 +9,7 @@ PKG_DESCRIPTION="Metapackage to install kodi and related packages and addons"
 PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET texturecache.py"
 
 # some python stuff needed for various addons
-PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET Pillow simplejson pycryptodome"
+PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET Pillow simplejson pycryptodome urllib3"
 
 # other packages
 PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET xmlstarlet"

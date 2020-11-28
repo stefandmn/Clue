@@ -12,10 +12,4 @@ makeinstall_target() {
 	# deploy resources
 	mkdir -p $INSTALL/usr/share/kodi/addons/$PKG_NAME
 	cp -PR $PKG_BUILD/* $INSTALL/usr/share/kodi/addons/$PKG_NAME/
-
-	# update kodi manifest
-	MANIFEST=$(get_build_dir kodi)/.install_pkg/usr/share/kodi/system/addon-manifest.xml
-	if [ $(more $MANIFEST | grep "$PKG_NAME" | wc -l) -eq 0 ]; then
-		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "$PKG_NAME" $MANIFEST
-	fi
 }
