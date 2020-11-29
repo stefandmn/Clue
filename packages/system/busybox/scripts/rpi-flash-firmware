@@ -16,7 +16,7 @@ if [ -f "${FLAG_FILE}" ]; then
 		echo "Aborting Flash update process - please proceed with a manual update."
 		echo
 
-		StartProgress countdown "Rebooting in 15s... " 15 "NOW"
+		StartProgress countdown "Rebooting in 5s... " 5 "NOW"
 		reboot -f &>/dev/null
 	fi
 
