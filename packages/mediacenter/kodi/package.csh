@@ -318,15 +318,13 @@ post_makeinstall_target() {
 	# update global configuration
 	SETTINGS=$INSTALL/usr/share/kodi/system/settings/settings.xml
 	# setup default skin
-	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="skin"]/group[@id="1"]/setting[@id="lookandfeel.skin"]/default' -v "$PKG_NAME" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="skin"]/group[@id="1"]/setting[@id="lookandfeel.skin"]/default' -v "skin.clue" $SETTINGS
 	# set device name
 	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="general"]/group[@id="1"]/setting[@id="services.devicename"]/default' -v "$DISTRO_NAME" $SETTINGS
 	# set None screensaver
 	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="screensaver"]/group[@id="1"]/setting[@id="screensaver.mode"]/default' -v "" $SETTINGS
 	# regional settings
 	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.country"]/default' -v "Central Europe" $SETTINGS
-	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.timezone"]/default' -v "Europe/Bucharest" $SETTINGS
-	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.timezonecountry"]/default' -v "Romania" $SETTINGS
 	# active and setup services/upnp
 	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="upnp"]/group[@id="1"]/setting[@id="services.upnp"]/default' -v "true" $SETTINGS
 	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="upnp"]/group[@id="1"]/setting[@id="services.upnpserver"]/default' -v "true" $SETTINGS
