@@ -1,7 +1,7 @@
 PKG_NAME="network"
 PKG_VERSION=""
 PKG_URL=""
-PKG_DEPENDS_TARGET="toolchain connman netbase ethtool openssh rsync iw"
+PKG_DEPENDS_TARGET="toolchain connman netbase ethtool openssh rsync iw mirror"
 PKG_SECTION="abstract"
 PKG_DESCRIPTION="Metapackage to install network support packages"
 
