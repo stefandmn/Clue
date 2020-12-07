@@ -1,10 +1,10 @@
 PKG_NAME="program.clue"
-PKG_VERSION="2.0.5"
+PKG_VERSION="2.0.1"
 PKG_ARCH="any"
-PKG_URL="${DISTRO_SOURCES}/${PKG_NAME}-${PKG_VERSION}.zip"
+PKG_URL="${DISTRO_ADDONS}/${PKG_NAME}/${PKG_NAME}-${PKG_VERSION}.zip"
 PKG_DEPENDS_TARGET="toolchain Python2 connman pygobject dbus-python"
 PKG_SECTION="program"
-PKG_DESCRIPTION="Clue Setup Program for Kodi"
+PKG_DESCRIPTION="Clue System Setup for Kodi"
 
 PKG_MAKE_OPTS_TARGET="DISTRO_NAME=$DISTRO_NAME ROOT_PASSWORD=$ROOT_PASSWORD"
 
@@ -14,12 +14,6 @@ makeinstall_target() {
 	# deploy resources
 	mkdir -p $INSTALL/usr/share/kodi/addons/$PKG_NAME
 	cp -PR $PKG_BUILD/* $INSTALL/usr/share/kodi/addons/$PKG_NAME/
-
-	# update kodi manifest
-	MANIFEST=$(get_build_dir kodi)/.install_pkg/usr/share/kodi/system/addon-manifest.xml
-	if [ $(more $MANIFEST | grep "$PKG_NAME" | wc -l) -eq 0 ]; then
-		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "$PKG_NAME" $MANIFEST
-	fi
 }
 
 post_makeinstall_target() {

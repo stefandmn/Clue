@@ -6,7 +6,7 @@ if [ -n "${1}" ]; then
 	build_msg "CLR_CLEAN" "CLEAN" "${1}" "indent"
 
 	# Removing source
-	if [ -d "${i}" -a -f "${i}/.clue-unpack" ]; then
+	if [ -d "${SOURCES}/${1}" ]; then
 		build_msg "CLR_WARNING" "*" "$(print_color "CLR_WARNING_DIM" "Removing ${SOURCES}/${1} ...")"
 		rm -rf "${SOURCES}/${1}"
 	fi
@@ -29,5 +29,13 @@ if [ -n "${1}" ]; then
 		fi
 	done
 
-	rm -f "${BUILDER_STAMPS}/${1}/build_"*
+	if [ -d "${BUILDER_STAMPS}/${1}" ]; then
+		build_msg "CLR_WARNING" "*" "$(print_color "CLR_WARNING_DIM" "Removing ${BUILDER_STAMPS}/${1} ...")"
+		rm -rf "${BUILDER_STAMPS}/${1}"
+	fi
+
+	if [ -d "${INSTALL_STAMPS}/${1}" ]; then
+		build_msg "CLR_WARNING" "*" "$(print_color "CLR_WARNING_DIM" "Removing ${INSTALL_STAMPS}/${1} ...")"
+		rm -rf "${INSTALL_STAMPS}/${1}"
+	fi
 fi

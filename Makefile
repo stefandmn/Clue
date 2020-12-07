@@ -24,10 +24,15 @@ endif
 #	@parent parent of the specified package
 #	- in case no one of these parameters is specified then the process build is called
 build:
-ifeq ($(package),)
-	./$(CONFIG)/process | tee $(OUTPUT_DIR)/process.log
-else
+ifneq ($(package),)
 	./$(CONFIG)/build $(package) $(parent) | tee $(OUTPUT_DIR)/build.log
+else
+ifneq ($(packages),)
+	rm -rf $(OUTPUT_DIR)/build.log
+	for pack in $(packages) ; do ./$(CONFIG)/build $$pack | tee -a $(OUTPUT_DIR)/install.log ; done
+else
+	./$(CONFIG)/process | tee $(OUTPUT_DIR)/process.log
+endif
 endif
 
 
@@ -52,7 +57,11 @@ endif
 #	@package - package name with optional target [:<host|target|init|bootstrap>]
 clean:
 ifneq ($(package),)
+ifneq ($(parent),)
 	./$(CONFIG)/clean $(package) $(parent) | tee $(OUTPUT_DIR)/clean.log
+else
+	./$(CONFIG)/clean $(package) | tee $(OUTPUT_DIR)/clean.log
+endif
 else
 ifneq ($(packages),)
 	rm -rf $(OUTPUT_DIR)/clean.log
@@ -171,7 +180,9 @@ help:
     viewbuild | monitor\n\
                   Display the real time build process for the current DEVICE\n\
     svnrev\n\
-                  Commit the new release changes into SVN versioning repository\n\
+                  Commit the new release changes into SVN versioning repository.\n\
+                  Attention, adding or removal to the project level have to be done\n\
+                  directly from IDE\n\
     gitrev\n\
                   Commit the new release changes into GitHUB versioning repository\n\
     gitrel\n\

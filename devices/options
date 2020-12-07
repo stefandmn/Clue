@@ -1888,8 +1888,13 @@ show_config() {
 	config_message="$config_message\n\n"
 	echo -e "$config_message"
 
-	read -n 1 -p "Press any key to continue.."
+	read -n 1 -p "Press any key to continue..  " key
 	echo
+
+	if [ "$key" = 'n' ] || [ "$key" = 'q' ] || [ "$key" = 's' ]; then
+		echo -e "\n\t> operation stopped by the user!\n"
+		exit 1
+	fi
 }
 
 # Check configuration

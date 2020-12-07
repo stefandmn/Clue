@@ -89,6 +89,7 @@ if [ -n "${1}" ]; then
 	else
 		unset INSTALL
 	fi
+
 	# remove previous install files
 	if [ -n "${INSTALL}" -a -d "${INSTALL}" ]; then
 		rm -rf "${INSTALL}"
