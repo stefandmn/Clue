@@ -19,7 +19,7 @@ makeinstall_init() {
 	mkdir -p $INSTALL/usr/bin
 	cp ply-image $INSTALL/usr/bin
 
-	mkdir -p $INSTALL/splash
-	find_file_path splash/splash.conf && cp ${FOUND_PATH} $INSTALL/splash
-	find_file_path "splash/splash*.png" && cp ${FOUND_PATH} $INSTALL/splash
+	mkdir -p $INSTALL/usr/share/plymouth
+	find_file_path splash/splash.conf && cp ${FOUND_PATH} $INSTALL/usr/share/plymouth
+	find_file_path "splash/splash*.png" && cp ${FOUND_PATH} $INSTALL/usr/share/plymouth
 }

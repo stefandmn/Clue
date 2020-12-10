@@ -41,15 +41,15 @@ show_reset_msg() {
 	echo ""
 }
 
-if [ -f /clue/.cache/reset_oe ]; then
+if [ -f /home/.cache/reset_oe ]; then
 	# hard reset
-	rm -f /clue/.cache/reset_oe
+	rm -f /home/.cache/reset_oe
 	get_target
 	if [ ! -z $target ]; then
 		show_reset_msg
 
 		StartProgress spinner "Performing hard reset... "
-		umount /clue
+		umount /home
 		mke2fs -t ext4 -m 0 $target &>/dev/null
 		if [ ! -z $label ]; then
 			tune2fs -U random -L $label $target &>/dev/null
@@ -62,15 +62,15 @@ if [ -f /clue/.cache/reset_oe ]; then
 		echo
 		StartProgress countdown "Rebooting in 5s... " 5 "NOW"
 	fi
-elif [ -f /clue/.cache/reset_xbmc ]; then
+elif [ -f /home/.cache/reset_xbmc ]; then
 	# soft reset
-	rm -f /clue/.cache/reset_xbmc
+	rm -f /home/.cache/reset_xbmc
 	get_target
 	if [ ! -z $target ]; then
 		show_reset_msg
 
 		StartProgress spinner "Performing soft reset... "
-		rm -rf /clue/.??* &>/dev/null
+		rm -rf /home/.??* &>/dev/null
 		StopProgress "done!"
 
 		echo

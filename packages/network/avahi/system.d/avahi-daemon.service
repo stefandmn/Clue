@@ -2,7 +2,7 @@
 Description=Avahi Daemon
 After=network.target avahi-defaults.service
 Requires=avahi-defaults.service
-ConditionPathExists=/clue/.cache/services/avahi.conf
+ConditionPathExists=/home/.cache/services/avahi.conf
 
 [Service]
 Restart=on-failure

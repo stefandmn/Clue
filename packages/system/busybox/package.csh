@@ -113,8 +113,6 @@ makeinstall_host() {
 makeinstall_target() {
 	mkdir -p $INSTALL/usr/bin
 	cp $PKG_DIR/scripts/createlog $INSTALL/usr/bin/
-	cp $PKG_DIR/scripts/dtfile $INSTALL/usr/bin
-	cp $PKG_DIR/scripts/dtname $INSTALL/usr/bin
 	cp $PKG_DIR/scripts/lsb_release $INSTALL/usr/bin/
 	cp $PKG_DIR/scripts/pastebinit $INSTALL/usr/bin/
 	cp $PKG_DIR/scripts/welcome $INSTALL/usr/bin/
@@ -127,7 +125,7 @@ makeinstall_target() {
 		-i $INSTALL/usr/lib/clue/fs-resize
 
 	if listcontains "${FIRMWARE}" "rpi-eeprom"; then
-		cp $PKG_DIR/scripts/rpi-flash-firmware $INSTALL/usr/lib/clue
+		cp $PKG_DIR/scripts/boot-firmware $INSTALL/usr/lib/clue
 	fi
 
 	mkdir -p $INSTALL/etc
@@ -140,7 +138,7 @@ makeinstall_target() {
 	touch $INSTALL/etc/fstab
 
 	# /etc/machine-id, needed by systemd and dbus
-	ln -sf /clue/.cache/systemd-machine-id $INSTALL/etc/machine-id
+	ln -sf /home/.cache/systemd-machine-id $INSTALL/etc/machine-id
 
 	# /etc/mtab is needed by udisks etc...
 	ln -sf /proc/self/mounts $INSTALL/etc/mtab
@@ -162,7 +160,7 @@ post_install() {
 	echo "chmod 4755 $INSTALL/usr/bin/busybox" >>$FAKEROOT_SCRIPT
 	echo "chmod 000 $INSTALL/usr/cache/shadow" >>$FAKEROOT_SCRIPT
 
-	add_user root "$ROOT_PWD" 0 0 "Root User" "/clue" "/bin/sh"
+	add_user root "$ROOT_PWD" 0 0 "Root User" "/home" "/bin/sh"
 	add_group root 0
 	add_group users 100
 
@@ -173,7 +171,7 @@ post_install() {
 	enable_service welcome.service
 	enable_service var.mount
 	enable_service fs-resize.service
-	listcontains "${FIRMWARE}" "rpi-eeprom" && enable_service rpi-flash-firmware.service
+	listcontains "${FIRMWARE}" "rpi-eeprom" && enable_service boot-firmware.service
 
 	# cron support
 	if [ "$CRON_SUPPORT" = "yes" ]; then

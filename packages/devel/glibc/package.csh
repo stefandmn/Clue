@@ -30,7 +30,7 @@ PKG_CONFIGURE_OPTS_TARGET="BASH_SHELL=/bin/sh \
                            --disable-timezone-tools"
 
 # busybox:init needs it
-# testcase: boot with /clue as nfs-share (set cmdline.txt -> "ip=dhcp boot=UUID=2407-5145 disk=NFS=[nfs-share] quiet")
+# testcase: boot with /home as nfs-share (set cmdline.txt -> "ip=dhcp boot=UUID=2407-5145 disk=NFS=[nfs-share] quiet")
 PKG_CONFIGURE_OPTS_TARGET+=" --enable-obsolete-rpc"
 
 if build_with_debug; then

@@ -9,8 +9,8 @@ CONTEXT="$1"
 ADDON_ID="$2"
 ADDON_PATH="$3"
 
-if [ ! -d /clue/.config/system.d ]; then
-	mkdir -p /clue/.config/system.d
+if [ ! -d /home/.config/system.d ]; then
+	mkdir -p /home/.config/system.d
 fi
 
 SERVICE_FILE="${ADDON_PATH}/system.d/${ADDON_ID}.service"
@@ -48,8 +48,8 @@ if [ -f "${SERVICE_FILE}" ]; then
 	esac
 fi
 
-if [ ! -d /clue/.cache/kernel-overlays ]; then
-	mkdir -p /clue/.cache/kernel-overlays
+if [ ! -d /home/.cache/kernel-overlays ]; then
+	mkdir -p /home/.cache/kernel-overlays
 fi
 
 # kernel-overlay addons built into the image have their
@@ -71,7 +71,7 @@ create_overlay_conf() {
 }
 
 if [ -d "${OVERLAY_PATH}" ]; then
-	OVERLAY_CONF="/clue/.cache/kernel-overlays/50-${ADDON_ID}.conf"
+	OVERLAY_CONF="/home/.cache/kernel-overlays/50-${ADDON_ID}.conf"
 
 	case "${CONTEXT}" in
 		enable | post-update)

@@ -12,10 +12,10 @@ def add_entropy(fd, data):
 	fcntl.ioctl(fd, RNDADDENTROPY, add)
 
 
-if not os.path.isfile("/clue/.cache/random.data"):
-	os.system("dd if=/dev/urandom of=/clue/.cache/random.data count=4 >/dev/null")
+if not os.path.isfile("/home/.cache/random.data"):
+	os.system("dd if=/dev/urandom of=/home/.cache/random.data count=4 >/dev/null")
 
-cache = os.open("/clue/.cache/random.data", os.O_RDONLY)
+cache = os.open("/home/.cache/random.data", os.O_RDONLY)
 
 rnd = os.open("/dev/random", os.O_RDWR)
 

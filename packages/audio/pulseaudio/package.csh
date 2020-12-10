@@ -94,7 +94,7 @@ post_makeinstall_target() {
 	mkdir -p $INSTALL/usr/config
 	cp -PR $PKG_DIR/config/pulse-daemon.conf.d $INSTALL/usr/config
 
-	ln -sf /clue/.config/pulse-daemon.conf.d $INSTALL/etc/pulse/daemon.conf.d
+	ln -sf /home/.config/pulse-daemon.conf.d $INSTALL/etc/pulse/daemon.conf.d
 }
 
 post_install() {

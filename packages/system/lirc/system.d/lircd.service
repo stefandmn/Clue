@@ -1,7 +1,7 @@
 [Unit]
 Documentation=http://lirc.org/html/configure.html
 Description=Flexible IR remote input/output application support
-ConditionPathExists=/clue/.config/lircd.conf
+ConditionPathExists=/home/.config/lircd.conf
 After=network.target
 
 [Service]

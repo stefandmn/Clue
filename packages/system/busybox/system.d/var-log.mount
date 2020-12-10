@@ -1,14 +1,14 @@
 [Unit]
 Description=Persistent Log Storage
-RequiresMountsFor=/var /clue
+RequiresMountsFor=/var /home
 Requires=storage-log.service
 After=storage-log.service
 ConditionKernelCommandLine=!installer
 ConditionKernelCommandLine=|debugging
-ConditionPathExists=|/clue/.cache/debug.clue
+ConditionPathExists=|/home/.cache/debug.clue
 
 [Mount]
-What=/clue/.cache/log
+What=/home/.cache/log
 Where=/var/log
 Options=bind
 LazyUnmount=yes

@@ -16,12 +16,12 @@ index 03935ee..bfd5c02 100644
          if (MANAGER_IS_SYSTEM(UNIT(t)->manager)) {
  
 -                r = unit_require_mounts_for(UNIT(t), "/var/lib/systemd/timers", UNIT_DEPENDENCY_FILE);
-+                r = unit_require_mounts_for(UNIT(t), "/clue/.cache/systemd/timers", UNIT_DEPENDENCY_FILE);
++                r = unit_require_mounts_for(UNIT(t), "/home/.cache/systemd/timers", UNIT_DEPENDENCY_FILE);
                  if (r < 0)
                          return r;
  
 -                t->stamp_path = strappend("/var/lib/systemd/timers/stamp-", UNIT(t)->id);
-+                t->stamp_path = strappend("/clue/.cache/systemd/timers/stamp-", UNIT(t)->id);
++                t->stamp_path = strappend("/home/.cache/systemd/timers/stamp-", UNIT(t)->id);
          } else {
                  const char *e;
  

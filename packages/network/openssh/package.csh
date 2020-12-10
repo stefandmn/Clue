@@ -23,7 +23,7 @@ PKG_CONFIGURE_OPTS_TARGET="ac_cv_header_rpc_types_h=no \
                            --disable-pututline \
                            --disable-pututxline \
                            --disable-etc-default-login \
-                           --with-keydir=/clue/.cache/ssh \
+                           --with-keydir=/home/.cache/ssh \
                            --without-pam"
 
 pre_configure_target() {

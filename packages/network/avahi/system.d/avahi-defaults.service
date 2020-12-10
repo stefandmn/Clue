@@ -2,10 +2,10 @@
 Description=Avahi defaults
 After=local-fs.target
 
-ConditionPathExists=!/clue/.cache/services/avahi.conf
-ConditionPathExists=!/clue/.cache/services/avahi.disabled
+ConditionPathExists=!/home/.cache/services/avahi.conf
+ConditionPathExists=!/home/.cache/services/avahi.disabled
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c 'cp /usr/share/services/avahi.conf /clue/.cache/services/'
+ExecStart=/bin/sh -c 'cp /usr/share/services/avahi.conf /home/.cache/services/'
 RemainAfterExit=yes

@@ -37,7 +37,7 @@ index 07fd5bf..639ee5c 100644
 +  struct stat fileStat;
 +  int statRet;
 +
-+  addonDirPath = "/clue/.kodi/addons/" + addon->ID() + "/bin/";
++  addonDirPath = "/home/.kodi/addons/" + addon->ID() + "/bin/";
 +  if ((addonsDir = opendir(addonDirPath.c_str())) != NULL)
 +  {
 +    while ((fileDirent = readdir(addonsDir)) != NULL)

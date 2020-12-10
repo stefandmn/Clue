@@ -1,2 +1,2 @@
 #!/bin/sh
-dd if=/dev/urandom of=/clue/.cache/random.data count=4
+dd if=/dev/urandom of=/home/.cache/random.data count=4

@@ -25,7 +25,7 @@ Before=kodi.service
 What=//192.168.0.31/Music
 
 # Where we want mount this share
-Where=/clue/music2
+Where=/home/music2
 
 # Any options you usually use with the "-o" parameter in the mount command
 Options=username=myusername,password=mypassword
@@ -44,7 +44,7 @@ WantedBy=multi-user.target
 # this file must be renamed to <mountpoint>.mount where <mountpoint>, is the FULL path
 # where the share will be mounted but slashes "/" MUST BE REPLACED with dashes "-" with .mount
 # as extension.
-# This means, if we want mount to "/clue/music2" (see above "Where=/clue/music2")
+# This means, if we want mount to "/home/music2" (see above "Where=/home/music2")
 # then this file must be renamed to 'storage-music2.mount' and can be enabled via ssh with the
 # command 'systemctl enable storage-music2.mount'
 

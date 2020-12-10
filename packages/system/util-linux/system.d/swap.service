@@ -11,7 +11,7 @@ ConditionKernelCommandLine=!noswap
 ConditionKernelCommandLine=!installer
 
 [Service]
-Environment=HOME=/clue
+Environment=HOME=/home
 Type=oneshot
 ExecStartPre=/usr/lib/clue/mount-swap create
 ExecStart=/usr/lib/clue/mount-swap mount

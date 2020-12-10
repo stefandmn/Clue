@@ -1531,7 +1531,7 @@ add_user() {
 
 	mkdir -p ${INSTALL}/usr/cache
 	touch ${INSTALL}/usr/cache/shadow
-	ln -sf /clue/.cache/shadow ${INSTALL}/etc/shadow 2>/dev/null || true
+	ln -sf /home/.cache/shadow ${INSTALL}/etc/shadow 2>/dev/null || true
 
 	PASSWORD="$2"
 	if [ "$PASSWORD" = "x" ]; then

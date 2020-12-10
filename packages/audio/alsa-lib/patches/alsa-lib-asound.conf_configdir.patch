@@ -8,7 +8,7 @@ index bb00ff40..cba5b6f2 100644
  			"/etc/asound.conf"
 -			"~/.asoundrc"
 +			"/run/asound.conf"
-+			"/clue/.config/asound.conf"
++			"/home/.config/asound.conf"
  		]
  		errors false
  	}

@@ -5,7 +5,7 @@ IPTABLES6="/usr/sbin/ip6tables"
 IPTABLES_CMDS="$IPTABLES4 $IPTABLES6"
 PUBLIC_RULES="/etc/iptables/public.v"
 HOME_RULES="/etc/iptables/home.v"
-CUSTOM_RULES="/clue/.config/iptables/rules.v"
+CUSTOM_RULES="/home/.config/iptables/rules.v"
 SYSTEMCTL="/usr/bin/systemctl"
 CONNMANCTL="/usr/bin/connmanctl"
 

@@ -10,7 +10,7 @@ for arg in $(cat /proc/cmdline); do
 	esac
 done
 
-if [ -e /clue/.cache/debug.clue ]; then
+if [ -e /home/.cache/debug.clue ]; then
 	export DEBUG=yes
 fi
 

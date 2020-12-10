@@ -1,12 +1,12 @@
 To create your own set of Netfilters you can save your rules in:
 
-/clue/.config/iptables/rules.v4 for ipv4
-/clue/.config/iptables/rules.v6 for ipv6
+/home/.config/iptables/rules.v4 for ipv4
+/home/.config/iptables/rules.v6 for ipv6
 
 To modify tables, edit with nano then save with:
 
-iptables-save >/clue/.config/iptables/rules.v4
-ip6tables-save >/clue/.config/iptables/rules.v6
+iptables-save >/home/.config/iptables/rules.v4
+ip6tables-save >/home/.config/iptables/rules.v6
 
 To disable iptables use the following command:
 

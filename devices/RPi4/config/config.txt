@@ -26,9 +26,12 @@ hdmi_ignore_cec_init=0
 # Enable/disable boot splash screen
 disable_splash=1
 
-################################################################################
-# End of default configuration
-################################################################################
+# Uncomment to force a specific console size. By default it will be display's size minus overscan.
+#framebuffer_width=1280
+#framebuffer_height=720
+
+# Activate Pi camera (only if is attached to the device)
+# start_x=1
 
 ################################################################################
 # Include distribution specific config file if it exists.

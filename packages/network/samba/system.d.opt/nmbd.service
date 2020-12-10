@@ -2,7 +2,7 @@
 Description=Samba NMB Daemon
 Wants=network-online.target samba-config.service
 After=network-online.target samba-config.service
-ConditionPathExists=!/clue/.cache/services/samba.disabled
+ConditionPathExists=!/home/.cache/services/samba.disabled
 ConditionPathExists=/run/samba/smb.conf
 
 [Service]

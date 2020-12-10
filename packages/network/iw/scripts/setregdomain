@@ -1,7 +1,7 @@
 #!/bin/sh
 
 REGDOMAIN=
-REGDOMAIN_CONF="/clue/.cache/regdomain.conf"
+REGDOMAIN_CONF="/home/.cache/regdomain.conf"
 [ -r "$REGDOMAIN_CONF" ] && . "$REGDOMAIN_CONF"
 [ -z "$REGDOMAIN" ] && exit 0
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SMB_USERCONF="/clue/.config/samba.conf"
+SMB_USERCONF="/home/.config/samba.conf"
 SMB_DEFCONF="/etc/samba/smb.conf"
 SMB_CONF="/run/samba/smb.conf"
 
@@ -31,7 +31,7 @@ else
 fi
 
 # Generate smb.conf, unless disabled
-if [ ! -f /clue/.cache/services/samba.disabled ]; then
+if [ ! -f /home/.cache/services/samba.disabled ]; then
 	/usr/lib/samba/smbd-config
 fi
 

@@ -29,7 +29,7 @@ PKG_CONFIGURE_OPTS_TARGET="--disable-dependency-tracking \
                            --enable-sixaxis \
                            --with-gnu-ld \
                            $BLUEZ_CONFIG \
-                           storagedir=/clue/.cache/bluetooth"
+                           storagedir=/home/.cache/bluetooth"
 
 pre_configure_target() {
 	# bluez fails to build in subdirs

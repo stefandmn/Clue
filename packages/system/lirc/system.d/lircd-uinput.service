@@ -1,7 +1,7 @@
 [Unit]
 Documentation=http://lirc.org/html/configure.html
 Description=Forward LIRC button presses as uinput events
-ConditionPathExists=/clue/.config/lircd.conf
+ConditionPathExists=/home/.config/lircd.conf
 After=lircd.service
 
 [Service]

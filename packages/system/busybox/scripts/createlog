@@ -56,7 +56,7 @@ rm -rf $BASEDIR/$LOGDIR
 mkdir -p $BASEDIR/$LOGDIR
 
 # kodi.log
-KODI_LOG_DIR=/clue/.kodi/temp
+KODI_LOG_DIR=/home/.kodi/temp
 
 LOGFILE="01_KODI.log"
 for i in kodi.log kodi.old.log; do
@@ -82,26 +82,26 @@ LOGFILE="02_System.log"
 getlog_cmd dmesg
 getlog_cmd lsmod
 getlog_cmd ps xa
-for i in /clue/.config/hwdb.d/*.hwdb \
-	/clue/.config/modprobe.d/*.conf \
-	/clue/.config/modules-load.d/*.conf \
-	/clue/.config/sleep.d/*.power \
-	/clue/.config/sysctl.d/*.conf \
-	/clue/.config/udev.rules.d/.rules; do
+for i in /home/.config/hwdb.d/*.hwdb \
+	/home/.config/modprobe.d/*.conf \
+	/home/.config/modules-load.d/*.conf \
+	/home/.config/sleep.d/*.power \
+	/home/.config/sysctl.d/*.conf \
+	/home/.config/udev.rules.d/.rules; do
 	if [ -f "$i" ]; then
 		getlog_cmd cat $i
 	fi
 done
-if [ -f "/clue/.config/autostart.sh" ]; then
-	getlog_cmd cat /clue/.config/autostart.sh
+if [ -f "/home/.config/autostart.sh" ]; then
+	getlog_cmd cat /home/.config/autostart.sh
 fi
-if [ -f "/clue/.config/shutdown.sh" ]; then
-	getlog_cmd cat /clue/.config/shutdown.sh
+if [ -f "/home/.config/shutdown.sh" ]; then
+	getlog_cmd cat /home/.config/shutdown.sh
 fi
-getlog_cmd ls -laR /clue/.config/system.d
-# note: we dont add .mount units here as they may contan
+getlog_cmd ls -laR /home/.config/system.d
+# note: we dont add .mount units here as they may contain
 # login credentials
-for i in /clue/.config/system.d/*.service; do
+for i in /home/.config/system.d/*.service; do
 	if [ -f "$i" -a ! -L "$i" ]; then
 		getlog_cmd cat $i
 	fi
@@ -160,16 +160,16 @@ getlog_cmd journalctl --no-pager -b -1
 
 # addons
 LOGFILE="11_Addons.log"
-for i in /clue/.kodi/userdata/addon_data/*/*.log \
-	/clue/.kodi/userdata/addon_data/*/log/*; do
+for i in /home/.kodi/userdata/addon_data/*/*.log \
+	/home/.kodi/userdata/addon_data/*/log/*; do
 	if [ -f "$i" ]; then
 		getlog_cmd cat $i
 	fi
 done
 
 # pack logfiles
-mkdir -p /clue/logfiles
-zip -jq /clue/logfiles/log-$DATE.zip $BASEDIR/$LOGDIR/*
+mkdir -p /home/logfiles
+zip -jq /home/logfiles/log-$DATE.zip $BASEDIR/$LOGDIR/*
 
 # remove logdir
 rm -rf $BASEDIR/$LOGDIR

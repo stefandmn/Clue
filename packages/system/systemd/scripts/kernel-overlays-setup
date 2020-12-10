@@ -1,11 +1,11 @@
 #!/bin/sh
 
 SYSTEM_OVERLAYS_DIR=/usr/lib/kernel-overlays
-OVERLAY_CONFIG_DIR=/clue/.cache/kernel-overlays
+OVERLAY_CONFIG_DIR=/home/.cache/kernel-overlays
 KVER=$(uname -r)
 MODULES_DIR="/var/lib/modules/${KVER}"
 FIRMWARE_DIR="/var/lib/firmware"
-USER_FIRMWARE_DIR="/clue/.config/firmware"
+USER_FIRMWARE_DIR="/home/.config/firmware"
 
 mkdir -p "${MODULES_DIR}"
 mkdir -p "${FIRMWARE_DIR}"

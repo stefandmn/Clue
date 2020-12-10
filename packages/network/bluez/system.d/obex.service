@@ -3,11 +3,11 @@ Description=Bluetooth service
 Requires=bluetooth.target bluetooth.service
 After=bluetooth.service
 
-ConditionPathExists=/clue/.cache/services/obexd.conf
-ConditionPathExists=/clue/.cache/services/bluez.conf
+ConditionPathExists=/home/.cache/services/obexd.conf
+ConditionPathExists=/home/.cache/services/bluez.conf
 
 [Service]
-EnvironmentFile=/clue/.cache/services/obexd.conf
+EnvironmentFile=/home/.cache/services/obexd.conf
 EnvironmentFile=-/run/clue/debug/obexd.conf
 ExecStartPre=/bin/sh -c 'mkdir -p $OBEXD_ROOT'
 ExecStart=/usr/lib/bluetooth/obexd -r $OBEXD_ROOT $OBEXD_DEBUG

@@ -1,11 +1,11 @@
 [Unit]
 Description=OpenSSH server daemon
 ConditionKernelCommandLine=|ssh
-ConditionPathExists=|/clue/.cache/services/sshd.conf
+ConditionPathExists=|/home/.cache/services/sshd.conf
 
 [Service]
 Restart=on-failure
-EnvironmentFile=-/clue/.cache/services/sshd.conf
+EnvironmentFile=-/home/.cache/services/sshd.conf
 ExecStartPre=/usr/bin/ssh-keygen -A
 ExecStart=/usr/sbin/sshd -D $SSH_ARGS
 ExecReload=/bin/kill -HUP $MAINPID

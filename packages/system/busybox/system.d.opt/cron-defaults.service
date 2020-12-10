@@ -2,10 +2,10 @@
 Description=Cron defaults
 After=local-fs.target
 
-ConditionPathExists=!/clue/.cache/services/crond.conf
-ConditionPathExists=!/clue/.cache/services/crond.disabled
+ConditionPathExists=!/home/.cache/services/crond.conf
+ConditionPathExists=!/home/.cache/services/crond.disabled
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c 'cp /usr/share/services/crond.conf /clue/.cache/services/'
+ExecStart=/bin/sh -c 'cp /usr/share/services/crond.conf /home/.cache/services/'
 RemainAfterExit=yes

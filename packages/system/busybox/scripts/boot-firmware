@@ -1,6 +1,6 @@
 #!/bin/sh
 
-FLAG_FILE="/clue/.rpi_flash_firmware"
+FLAG_FILE="/home/.boot_firmware"
 
 . /usr/lib/clue/functions
 
@@ -10,8 +10,8 @@ if [ -f "${FLAG_FILE}" ]; then
 	. ${FLAG_FILE}
 	rm -f "${FLAG_FILE}"
 
-	if ! mount -o remount,rw /flash 2>/dev/null; then
-		echo "ERROR: Unable to mount /flash as a read/write file system."
+	if ! mount -o remount,rw /boot 2>/dev/null; then
+		echo "ERROR: Unable to mount /boot as a read/write file system."
 		echo
 		echo "Aborting Flash update process - please proceed with a manual update."
 		echo
@@ -21,7 +21,7 @@ if [ -f "${FLAG_FILE}" ]; then
 	fi
 
 	sync
-	mount -o remount,ro /flash
+	mount -o remount,ro /boot
 fi
 
 reboot -f &>/dev/null

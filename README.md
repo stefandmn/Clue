@@ -422,7 +422,7 @@ PKG_SECTION="[location under packages, e.g. database]"
 PKG_DESCRIPTION="[long description of the package, often taken from the package/project website, e.g. libexample: this project is created to calculate examples for x and y, with maximum efficiency and fewer errors]"
 # PKG_TOOLCHAIN="auto"
 
-#PKG_CMAKE_OPTS_TARGET="-DWITH_EXAMPLE_PATH=/clue/.example
+#PKG_CMAKE_OPTS_TARGET="-DWITH_EXAMPLE_PATH=/home/.example
 #                      "
 
 #pre_configure_target() {

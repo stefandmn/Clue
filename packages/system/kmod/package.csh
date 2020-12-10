@@ -43,7 +43,7 @@ post_makeinstall_target() {
 	ln -sf /usr/bin/kmod $INSTALL/usr/sbin/depmod
 
 	mkdir -p $INSTALL/etc
-	ln -sf /clue/.config/modprobe.d $INSTALL/etc/modprobe.d
+	ln -sf /home/.config/modprobe.d $INSTALL/etc/modprobe.d
 
 	# add user modprobe.d dir
 	mkdir -p $INSTALL/usr/config/modprobe.d

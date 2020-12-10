@@ -27,7 +27,7 @@ PKG_CONFIGURE_OPTS_TARGET="--without-ada \
                            --disable-rpath \
                            --disable-database \
                            --with-fallbacks=linux,screen,xterm,xterm-color \
-                           --with-termpath=/clue/.config/termcap \
+                           --with-termpath=/home/.config/termcap \
                            --disable-big-core \
                            --enable-termcap \
                            --enable-getcap \

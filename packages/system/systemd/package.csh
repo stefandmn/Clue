@@ -225,20 +225,20 @@ post_makeinstall_target() {
 	cp -PR $PKG_DIR/config/* $INSTALL/usr/config
 
 	safe_remove $INSTALL/etc/modules-load.d
-	ln -sf /clue/.config/modules-load.d $INSTALL/etc/modules-load.d
+	ln -sf /home/.config/modules-load.d $INSTALL/etc/modules-load.d
 	safe_remove $INSTALL/etc/systemd/logind.conf.d
-	ln -sf /clue/.config/logind.conf.d $INSTALL/etc/systemd/logind.conf.d
+	ln -sf /home/.config/logind.conf.d $INSTALL/etc/systemd/logind.conf.d
 	safe_remove $INSTALL/etc/systemd/sleep.conf.d
-	ln -sf /clue/.config/sleep.conf.d $INSTALL/etc/systemd/sleep.conf.d
-	ln -sf /clue/.config/timesyncd.conf.d $INSTALL/etc/systemd/timesyncd.conf.d
+	ln -sf /home/.config/sleep.conf.d $INSTALL/etc/systemd/sleep.conf.d
+	ln -sf /home/.config/timesyncd.conf.d $INSTALL/etc/systemd/timesyncd.conf.d
 	safe_remove $INSTALL/etc/sysctl.d
-	ln -sf /clue/.config/sysctl.d $INSTALL/etc/sysctl.d
+	ln -sf /home/.config/sysctl.d $INSTALL/etc/sysctl.d
 	safe_remove $INSTALL/etc/tmpfiles.d
-	ln -sf /clue/.config/tmpfiles.d $INSTALL/etc/tmpfiles.d
+	ln -sf /home/.config/tmpfiles.d $INSTALL/etc/tmpfiles.d
 	safe_remove $INSTALL/etc/udev/hwdb.d
-	ln -sf /clue/.config/hwdb.d $INSTALL/etc/udev/hwdb.d
+	ln -sf /home/.config/hwdb.d $INSTALL/etc/udev/hwdb.d
 	safe_remove $INSTALL/etc/udev/rules.d
-	ln -sf /clue/.config/udev.rules.d $INSTALL/etc/udev/rules.d
+	ln -sf /home/.config/udev.rules.d $INSTALL/etc/udev/rules.d
 }
 
 post_install() {

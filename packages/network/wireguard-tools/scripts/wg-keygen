@@ -3,20 +3,20 @@
 if [ -x /usr/bin/wg ]; then
 
 	umask 077
-	mkdir -p /clue/.cache/wireguard
+	mkdir -p /home/.cache/wireguard
 
-	if [ ! -f /clue/.cache/wireguard/privatekey ]; then
-		wg genkey >/clue/.cache/wireguard/privatekey
+	if [ ! -f /home/.cache/wireguard/privatekey ]; then
+		wg genkey >/home/.cache/wireguard/privatekey
 	fi
-	if [ ! -f /clue/.cache/wireguard/publickey ]; then
-		wg pubkey </clue/.cache/wireguard/privatekey >/clue/.cache/wireguard/publickey
+	if [ ! -f /home/.cache/wireguard/publickey ]; then
+		wg pubkey </home/.cache/wireguard/privatekey >/home/.cache/wireguard/publickey
 	fi
-	if [ ! -f /clue/.cache/wireguard/preshared ]; then
-		wg genpsk >/clue/.cache/wireguard/preshared
+	if [ ! -f /home/.cache/wireguard/preshared ]; then
+		wg genpsk >/home/.cache/wireguard/preshared
 	fi
 
 fi
 
-echo "WireGuard keys have been saved to /clue/.cache/wireguard/"
+echo "WireGuard keys have been saved to /home/.cache/wireguard/"
 
 exit 0

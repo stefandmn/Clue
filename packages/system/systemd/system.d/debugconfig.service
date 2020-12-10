@@ -3,7 +3,7 @@ Description=Setup debug config
 DefaultDependencies=no
 After=systemd-tmpfiles-setup.service
 ConditionKernelCommandLine=|debugging
-ConditionPathExists=|/clue/.cache/debug.clue
+ConditionPathExists=|/home/.cache/debug.clue
 
 [Service]
 Type=oneshot

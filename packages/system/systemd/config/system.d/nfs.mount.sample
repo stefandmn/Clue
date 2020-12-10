@@ -25,7 +25,7 @@ Before=kodi.service
 What=192.168.0.31:/movies
 
 # Where we want mount this share
-Where=/clue/movies2
+Where=/home/movies2
 
 # Any options you usually use with the "-o" parameter in the mount command
 Options=
@@ -44,7 +44,7 @@ WantedBy=multi-user.target
 # this file must be renamed to <mountpoint>.mount where <mountpoint>, is the FULL path
 # where the share will be mounted but slashes "/" MUST BE REPLACED with dashes "-" with .mount
 # as extension.
-# This means, if we want mount to "/clue/movies2" (see above "Where=/clue/movies2")
+# This means, if we want mount to "/home/movies2" (see above "Where=/home/movies2")
 # then this file must be renamed to 'storage-movies2.mount' and can be enabled via ssh with the
 # command 'systemctl enable storage-movies2.mount'
 

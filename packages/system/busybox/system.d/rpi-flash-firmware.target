@@ -1,5 +1,5 @@
 [Unit]
 Description=RPi Flash Firmware target
-Requires=rpi-flash-firmware.service
-After=rpi-flash-firmware.service
+Requires=boot-firmware.service
+After=boot-firmware.service
 AllowIsolate=yes

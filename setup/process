@@ -67,7 +67,7 @@ mkdir -p ${INSTALL}
 
 # Create base layout of Clue read-only file system
 echo ">> Creating base layout of read-only file system.."
-for directory in etc dev proc run sys tmp usr var flash clue; do
+for directory in etc dev proc run sys tmp usr var boot home; do
 	mkdir -p ${INSTALL}/${directory}
 done
 

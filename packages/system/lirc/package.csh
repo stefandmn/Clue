@@ -34,7 +34,7 @@ post_makeinstall_target() {
 
 	mkdir -p $INSTALL/etc/lirc
 	cp -r $PKG_DIR/config/lirc_options.conf $INSTALL/etc/lirc
-	ln -s /clue/.config/lircd.conf $INSTALL/etc/lirc/lircd.conf
+	ln -s /home/.config/lircd.conf $INSTALL/etc/lirc/lircd.conf
 
 	mkdir -p $INSTALL/usr/lib/clue
 	cp $PKG_DIR/scripts/lircd_helper $INSTALL/usr/lib/clue

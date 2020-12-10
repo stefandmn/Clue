@@ -3,12 +3,12 @@
 		<default pathversion="1"></default>
 		<source>
 			<name>Videos</name>
-			<path pathversion="1">/clue/videos/</path>
+			<path pathversion="1">/home/videos/</path>
 			<allowsharing>true</allowsharing>
 		</source>
 		<source>
 			<name>TV Shows</name>
-			<path pathversion="1">/clue/tvshows/</path>
+			<path pathversion="1">/home/tvshows/</path>
 			<allowsharing>true</allowsharing>
 		</source>
 	</video>
@@ -16,7 +16,7 @@
 		<default pathversion="1"></default>
 		<source>
 			<name>Music</name>
-			<path pathversion="1">/clue/music/</path>
+			<path pathversion="1">/home/music/</path>
 			<allowsharing>true</allowsharing>
 		</source>
 	</music>
@@ -24,7 +24,7 @@
 		<default pathversion="1"></default>
 		<source>
 			<name>Pictures</name>
-			<path pathversion="1">/clue/pictures/</path>
+			<path pathversion="1">/home/pictures/</path>
 			<allowsharing>true</allowsharing>
 		</source>
 	</pictures>

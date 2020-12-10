@@ -8,8 +8,8 @@ Wants=network-online.target
 Environment=__GL_YIELD=USLEEP
 Environment=DISPLAY=:0.0
 Environment=SDL_MOUSE_RELATIVE=0
-Environment=HOME=/clue
-Environment=KODI_TEMP=/clue/.kodi/temp
+Environment=HOME=/home
+Environment=KODI_TEMP=/home/.kodi/temp
 Environment=KODI_HOME=/usr/share/kodi/
 EnvironmentFile=-/run/clue/kodi.conf
 EnvironmentFile=-/run/clue/debug/kodi.conf

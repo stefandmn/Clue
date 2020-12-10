@@ -1,4 +1,4 @@
 # Use direct path to firmware as update script doesn't dereference sym links.
 FIRMWARE_ROOT="/usr/lib/kernel-overlays/base/lib/firmware/raspberrypi/bootloader"
-FIRMWARE_BACKUP_DIR="/clue/.config/rpifw-backup"
-BOOTFS=${BOOTFS:-/flash}
+FIRMWARE_BACKUP_DIR="/homr/.config/rpifw-backup"
+BOOTFS=${BOOTFS:-/boot}

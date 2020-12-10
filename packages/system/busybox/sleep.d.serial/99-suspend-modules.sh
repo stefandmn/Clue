@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -f /clue/.config/suspend-modules.conf ]; then
-	. /clue/.config/suspend-modules.conf
+if [ -f /home/.config/suspend-modules.conf ]; then
+	. /home/.config/suspend-modules.conf
 	custom_modules="${SUSPEND_MODULES}"
 	SUSPEND_MODULES=""
 fi

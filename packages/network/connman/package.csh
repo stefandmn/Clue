@@ -46,8 +46,8 @@ else
 	PKG_CONGIGURE_OPTS_TARGET+=" --disable-wireguard"
 fi
 
-PKG_MAKE_OPTS_TARGET="storagedir=/clue/.cache/connman \
-                      vpn_storagedir=/clue/.config/wireguard \
+PKG_MAKE_OPTS_TARGET="storagedir=/home/.cache/connman \
+                      vpn_storagedir=/home/.config/wireguard \
                       statedir=/run/connman"
 
 post_makeinstall_target() {

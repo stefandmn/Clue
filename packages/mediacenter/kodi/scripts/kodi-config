@@ -4,7 +4,7 @@ KODI_ROOT=$HOME/.kodi
 
 BOOT_STATE="$(cat $HOME/.config/boot.status 2>/dev/null)"
 
-# May not exist if testing a clean /clue/.kodi without rebooting
+# May not exist if testing a clean /home/.kodi without rebooting
 mkdir -p $KODI_ROOT/userdata
 
 # hack: make addon-bins executable
@@ -39,6 +39,6 @@ else #arm
 	echo "MALLOC_MMAP_THRESHOLD_=8192" >>/run/clue/kodi.conf
 fi
 
-if [ -f /clue/.config/kodi.conf ]; then
-	cat /clue/.config/kodi.conf >>/run/clue/kodi.conf
+if [ -f /home/.config/kodi.conf ]; then
+	cat /home/.config/kodi.conf >>/run/clue/kodi.conf
 fi

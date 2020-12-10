@@ -44,7 +44,7 @@ single_stacktrace() {
 	find "$1" -name 'core.*kodi.bin.*' | while read core; do
 		echo "=====>  Core file: "$core"" >>$FILE
 		echo "        =========================================" >>$FILE
-		if [ -f /clue/.config/debug.enhanced ]; then
+		if [ -f /home/.config/debug.enhanced ]; then
 			gdb /usr/lib/kodi/kodi.bin --core="$core" --batch -ex "thread apply all bt full" -ex "info registers" -ex "set print asm-demangle on" -ex "disassemble" 2>/dev/null >>$FILE
 		else
 			gdb /usr/lib/kodi/kodi.bin --core="$core" --batch -ex "thread apply all bt" 2>/dev/null >>$FILE
@@ -77,8 +77,8 @@ activate_safe_mode() {
 	if [ "${BOOT_STATE:-OK}" = "OK" ]; then
 		# generate logfiles zip for the failed kodi
 		/usr/bin/createlog
-		lastlog=$(ls -1 /clue/logfiles/*.zip | tail -n 1)
-		mv $lastlog /clue/logfiles/log-$(date -u +%Y-%m-%d-%H.%M.%S)-FAILED.zip
+		lastlog=$(ls -1 /home/logfiles/*.zip | tail -n 1)
+		mv $lastlog /home/logfiles/log-$(date -u +%Y-%m-%d-%H.%M.%S)-FAILED.zip
 
 		echo "SAFE" >$BOOT_STATUS
 	fi
@@ -108,7 +108,7 @@ print_crash_report() {
 	echo >>$FILE
 	echo "############### STACK TRACE #################" >>$FILE
 	if command_exists gdb; then
-		single_stacktrace /clue/.cache/cores
+		single_stacktrace /home/.cache/cores
 	else
 		echo "gdb not installed, can't get stack trace." >>$FILE
 	fi
@@ -133,7 +133,7 @@ if command_exists gdb; then
 fi
 
 # clean up any stale cores. just in case
-find /clue/.cache/cores -type f -delete
+find /home/.cache/cores -type f -delete
 
 # clean zero-byte database files that prevent migration/startup
 for file in $KODI_ROOT/userdata/Database/*.db; do

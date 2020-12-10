@@ -7,7 +7,7 @@
 
 hidecursor
 
-BACKUP_FILE=$(ls -1 /clue/.restore/??????????????.tar 2>/dev/null | tail -1)
+BACKUP_FILE=$(ls -1 /home/.restore/??????????????.tar 2>/dev/null | tail -1)
 
 if [ -f "$BACKUP_FILE" ]; then
 	echo "System Setup - RESTORE"
@@ -27,9 +27,9 @@ if [ -f "$BACKUP_FILE" ]; then
 		echo
 
 		StartProgress spinner "Restoring... "
-		rm -rf /clue/.kodi &>/dev/null
-		rm -rf /clue/.cache &>/dev/null
-		rm -rf /clue/.config &>/dev/null
+		rm -rf /home/.kodi &>/dev/null
+		rm -rf /home/.cache &>/dev/null
+		rm -rf /home/.config &>/dev/null
 		tar xf $BACKUP_FILE -C / &>/dev/null
 		rm -f $BACKUP_FILE &>/dev/null
 		sync

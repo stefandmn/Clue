@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z "$BOOT_ROOT" ] && BOOT_ROOT="/flash"
+[ -z "$BOOT_ROOT" ] && BOOT_ROOT="/boot"
 [ -z "$SYSTEM_ROOT" ] && SYSTEM_ROOT=""
 
 # mount $BOOT_ROOT r/w

@@ -1,22 +1,22 @@
 #!/bin/sh
 
-if [ -e /clue/.please_resize_me ]; then
+if [ -e /home/.please_resize_me ]; then
 	. /usr/lib/clue/functions
 
 	hidecursor
 
 	# this sh** was never intended to be used
-	# on already installed and runing system
-	if [ -d /clue/.kodi -o -d /clue/.config -o -d /clue/.cache ]; then
-		rm -f /clue/.please_resize_me
+	# on already installed and running system
+	if [ -d /home/.kodi -o -d /home/.config -o -d /home/.cache ]; then
+		rm -f /home/.please_resize_me
 		sync
 		echo "Resizing is not permitted - the system has already been initialised."
 		StartProgress countdown "Rebooting in 5s... " 5 "NOW"
 		reboot -f
 	fi
 
-	# get the disk. /clue on 2nd partition
-	PART=$(grep "/clue " /proc/mounts | cut -d" " -f1 | grep '2$')
+	# get the disk. /home on 2nd partition
+	PART=$(grep "/home " /proc/mounts | cut -d" " -f1 | grep '2$')
 
 	# get disk: /dev/sdx2 -> /dev/sdx, /dev/mmcblkxp2 -> /dev/mmcblkx
 	case $PART in
@@ -28,7 +28,7 @@ if [ -e /clue/.please_resize_me ]; then
 			;;
 	esac
 
-	rm -f /clue/.please_resize_me
+	rm -f /home/.please_resize_me
 	sync
 
 	# just in case

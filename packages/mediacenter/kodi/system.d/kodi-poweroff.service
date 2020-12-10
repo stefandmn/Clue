@@ -6,8 +6,8 @@ DefaultDependencies=no
 
 [Service]
 Type=oneshot
-Environment=HOME=/clue
-ExecStart=-/bin/sh -c ". /etc/profile; exec /bin/sh /clue/.config/shutdown.sh poweroff"
+Environment=HOME=/home
+ExecStart=-/bin/sh -c ". /etc/profile; exec /bin/sh /home/.config/shutdown.sh poweroff"
 RemainAfterExit=yes
 
 [Install]

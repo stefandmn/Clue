@@ -36,10 +36,10 @@ source /etc/os-release
 SYSTEM_ARCH="${CLUE_ARCH#*.}"
 
 # If running in SAFE mode, send FAILED logs
-if [ "$(cat "/clue/.config/boot.status" 2>/dev/null)" = "SAFE" ]; then
-	KODI_ROOT="/clue/.kodi.FAILED/temp"
+if [ "$(cat "/home/.config/boot.status" 2>/dev/null)" = "SAFE" ]; then
+	KODI_ROOT="/home/.kodi.FAILED/temp"
 else
-	KODI_ROOT="/clue/.kodi/temp"
+	KODI_ROOT="/home/.kodi/temp"
 fi
 
 if [ "$(basename $0)" = "pastekodi" ]; then
@@ -64,15 +64,9 @@ fi
 		echo "${bootloader_version}" | cat_data "Bootloader version"
 	fi
 
-	cat_file "/flash/config.txt"             # RPi
-	cat_file "/flash/distroconfig.txt"       # RPi
-	cat_file "/flash/cmdline.txt"            # RPi
-
-	cat_file "/flash/syslinux.cfg"           # x86 BIOS
-	cat_file "/flash/EFI/BOOT/syslinux.cfg"  # x86 EFI
-	cat_file "/flash/extlinux.conf"          # x86 legacy
-
-	cat_file "/flash/extlinux/extlinux.conf" # u-boot
+	cat_file "/boot/config.txt"             # RPi
+	cat_file "/boot/distroconfig.txt"       # RPi
+	cat_file "/boot/cmdline.txt"            # RPi
 
 	cat_file "${KODI_ROOT}/.smb/smb.conf"
 	cat_file "${KODI_ROOT}/.smb/user.conf"

@@ -2,6 +2,6 @@
 
 cp /etc/ssl/cacert.pem.system /run/clue/cacert.pem
 
-[ -f /clue/.config/cacert.pem ] && cat /clue/.config/cacert.pem >>/run/clue/cacert.pem
+[ -f /home/.config/cacert.pem ] && cat /home/.config/cacert.pem >>/run/clue/cacert.pem
 
 exit 0

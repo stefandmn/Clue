@@ -3,8 +3,8 @@
 . /etc/swap.conf
 . /etc/profile
 
-if [ -f /clue/.config/swap.conf ]; then
-	. /clue/.config/swap.conf
+if [ -f /home/.config/swap.conf ]; then
+	. /home/.config/swap.conf
 fi
 
 if [ -e /dev/.storage_netboot ]; then

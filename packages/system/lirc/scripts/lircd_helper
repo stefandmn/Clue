@@ -1,7 +1,7 @@
 #!/bin/sh
 
-if [ -e "/clue/.config/lirc_options.conf" ]; then
-	LIRCD_OPTIONS="-O /clue/.config/lirc_options.conf"
+if [ -e "/home/.config/lirc_options.conf" ]; then
+	LIRCD_OPTIONS="-O /home/.config/lirc_options.conf"
 fi
 
-exec /usr/sbin/lircd $LIRCD_OPTIONS "$@" /clue/.config/lircd.conf
+exec /usr/sbin/lircd $LIRCD_OPTIONS "$@" /home/.config/lircd.conf
