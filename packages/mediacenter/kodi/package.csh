@@ -308,8 +308,11 @@ post_makeinstall_target() {
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "repository.clue" $MANIFEST
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "skin.clue" $MANIFEST
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "module.clue" $MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.clue" $MANIFEST
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "weather.clue" $MANIFEST
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "webinterface.clue" $MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "program.slideshow" $MANIFEST
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "program.search" $MANIFEST
 	# add device dependent services
 	if [ "$DEVICE" = "Slice" -o "$DEVICE" = "Slice3" ]; then
 		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.slice" $MANIFEST
@@ -322,7 +325,7 @@ post_makeinstall_target() {
 	# set device name
 	xmlstarlet ed --inplace -u '//settings/section[@id="services"]/category[@id="general"]/group[@id="1"]/setting[@id="services.devicename"]/default' -v "$DISTRO_NAME" $SETTINGS
 	# set None screensaver
-	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="screensaver"]/group[@id="1"]/setting[@id="screensaver.mode"]/default' -v "" $SETTINGS
+	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="screensaver"]/group[@id="1"]/setting[@id="screensaver.mode"]/default' -v "None" $SETTINGS
 	# regional settings
 	xmlstarlet ed --inplace -u '//settings/section[@id="interface"]/category[@id="regional"]/group[@id="2"]/setting[@id="locale.country"]/default' -v "Central Europe" $SETTINGS
 	# active and setup services/upnp

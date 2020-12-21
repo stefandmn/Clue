@@ -1,7 +1,7 @@
 PKG_NAME="mediacenter"
 PKG_VERSION=""
 PKG_URL=""
-PKG_DEPENDS_TARGET="toolchain kodi repository.clue skin.clue module.clue service.clue weather.clue webinterface.clue program.slideshow"
+PKG_DEPENDS_TARGET="toolchain kodi repository.clue skin.clue module.clue service.clue weather.clue webinterface.clue program.slideshow  program.search"
 PKG_SECTION="abstract"
 PKG_DESCRIPTION="Metapackage to install kodi and related packages and addons"
 
@@ -9,7 +9,7 @@ PKG_DESCRIPTION="Metapackage to install kodi and related packages and addons"
 PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET texturecache.py"
 
 # some python stuff needed for various addons
-PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET Pillow simplejson pycryptodome requests"
+PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET Pillow pycryptodome urllib3 certifi chardet idna PySocks pyOpenSSL cryptography"
 
 # other packages
 PKG_DEPENDS_TARGET="$PKG_DEPENDS_TARGET xmlstarlet"
