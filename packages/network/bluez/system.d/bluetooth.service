@@ -2,7 +2,6 @@
 Description=Bluetooth service
 After=syslog.target bluetooth-defaults.service
 Requires=bluetooth-defaults.service
-
 ConditionPathExists=/home/.cache/services/bluez.conf
 
 [Service]

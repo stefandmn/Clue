@@ -1,12 +1,12 @@
 [Unit]
 Description=Clue Mirror
-ConditionPathExists=/etc/mirror.conf
 After=network-online.target
+Requires=mirror-defaults.service
+ConditionPathExists=/home/.cache/services/mirror.conf
 
 [Service]
 Type=simple
-ExecStartPre=/sbin/modprobe evdev
-ExecStart=/usr/bin/mirror
+ExecStart=/usr/bin/mirror --config-file=/home/.cache/services/mirror.conf
 KillMode=process
 
 [Install]

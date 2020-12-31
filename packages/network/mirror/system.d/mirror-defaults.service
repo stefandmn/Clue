@@ -1,0 +1,10 @@
+[Unit]
+Description=Mirror defaults
+After=local-fs.target
+ConditionPathExists=!/home/.cache/services/mirror.conf
+ConditionPathExists=!/home/.cache/services/mirror.disabled
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'cp /usr/share/services/mirror.conf /home/.cache/services/'
+RemainAfterExit=yes

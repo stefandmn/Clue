@@ -1,7 +1,6 @@
 [Unit]
 Description=Avahi defaults
 After=local-fs.target
-
 ConditionPathExists=!/home/.cache/services/avahi.conf
 ConditionPathExists=!/home/.cache/services/avahi.disabled
 

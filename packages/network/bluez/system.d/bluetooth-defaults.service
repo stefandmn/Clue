@@ -1,7 +1,6 @@
 [Unit]
 Description=Bluetooth defaults
 After=local-fs.target
-
 ConditionPathExists=!/home/.cache/services/bluez.conf
 ConditionPathExists=!/home/.cache/services/bluez.disabled
 
