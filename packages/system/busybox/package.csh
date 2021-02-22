@@ -121,6 +121,8 @@ makeinstall_target() {
 	mkdir -p $INSTALL/usr/lib/clue
 	cp $PKG_DIR/scripts/functions $INSTALL/usr/lib/clue
 	cp $PKG_DIR/scripts/fs-resize $INSTALL/usr/lib/clue
+	cp $PKG_DIR/scripts/backup-restore $INSTALL/usr/lib/clue
+	cp $PKG_DIR/scripts/factory-reset $INSTALL/usr/lib/clue
 	sed -e "s/@DISTRO_NAME@/$DISTRO_NAME/g" \
 		-i $INSTALL/usr/lib/clue/fs-resize
 
@@ -171,6 +173,8 @@ post_install() {
 	enable_service welcome.service
 	enable_service var.mount
 	enable_service fs-resize.service
+	enable_service backup-restore.service
+	enable_service factory-reset.service
 	listcontains "${FIRMWARE}" "rpi-eeprom" && enable_service boot-firmware.service
 
 	# cron support

@@ -144,14 +144,25 @@ gitrel:
 	git push origin --tags
 
 
+# Commit and push changes in both versioning systems (SVN and GIT)
+revision:
+ifneq ($(message),)
+	$(MAKE) svnrev
+	$(MAKE) gitrev
+else
+	@printf "\n* Please specify 'message' parameter!\n\n"
+	exit 1
+endif
+
+
 # Display the help text
 help:
 	echo -e "\
 \nSYNOPSIS\n\
-       make build | install | clean | cleanall | release \n\
-       make cachestats | viewplan | viewpack | viewbuild\n\
-       make svnrev | gitrev | gitrel\n\
-       make help\n\
+       make build | clean | cleanall | release | install \n\
+       make cachestats | viewplan | viewpack | viewbuild \n\
+       make svnrev | gitrev | gitrel | revision \n\
+       make help \n\
 \nDESCRIPTION\n\
     Executes one of the make tasks defined through this Makefile flow, according \n\
     to the specified DEVICE variable. In case is not defined/exported to the OS \n\
@@ -163,14 +174,14 @@ help:
     build [-e package=<pack>]\n\
                   build one particular package (and all related dependencies) or \n\
                   the entire DEVICE distribution\n\
-    install -e package=<pack> | packages=<list of packs separated by space>]\n\
-                  install one particular package and related dependencies\n\
     clean [-e package=<pack> | packages=<list of packs separated by space>]\n\
                   cleanup one particular package or the entire DEVICE distribution\n\
     cleanall\n\
                   Clean-up all DEVICE distributions, cache and stamps resources as well\n\
     release\n\
                   Build the system release and create OS image for the current DEVICE\n\
+    install -e package=<pack> | packages=<list of packs separated by space>]\n\
+                  install one particular package and related dependencies\n\
     cachestats\n\
                   Displays cache statistics\n\
     viewplan | plan\n\
@@ -188,6 +199,8 @@ help:
     gitrel\n\
                   Create a new release tag into GitHub versioning repository using current\n\
                   addon version (defined in the addon descriptor - addon.xml file)\n\
+    revision\n\
+                  Commit and push project changes in both versioning systems (SVN and GIT)\n\
     help\n\
                   Shows this text\n\
 \n\

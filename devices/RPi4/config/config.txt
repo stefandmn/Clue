@@ -27,11 +27,19 @@ hdmi_ignore_cec_init=0
 disable_splash=1
 
 # Uncomment to force a specific console size. By default it will be display's size minus overscan.
-#framebuffer_width=1280
-#framebuffer_height=720
+# framebuffer_width=1280
+# framebuffer_height=720
 
 # Activate Pi camera (only if is attached to the device)
 # start_x=1
+
+################################################################################
+# License keys to enable GPU hardware decoding for various codecs
+# to obtain keys visit the shop at http://www.raspberrypi.com
+################################################################################
+
+# decode_MPG2=0x00000000
+# decode_WVC1=0x00000000
 
 ################################################################################
 # Include distribution specific config file if it exists.

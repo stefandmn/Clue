@@ -1,7 +1,7 @@
 PKG_NAME="mediacenter"
 PKG_VERSION=""
 PKG_URL=""
-PKG_DEPENDS_TARGET="toolchain kodi repository.clue skin.clue module.clue service.clue weather.clue webinterface.clue program.slideshow  program.search"
+PKG_DEPENDS_TARGET="toolchain kodi repository.clue skin.clue module.clue service.clue weather.clue webinterface.clue program.slideshow program.search program.recovery"
 PKG_SECTION="abstract"
 PKG_DESCRIPTION="Metapackage to install kodi and related packages and addons"
 

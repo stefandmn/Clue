@@ -1143,7 +1143,7 @@ BACKUP_FILE=$(ls -1 /sysroot/home/.restore/??????????????.tar 2>/dev/null | head
 
 if [ -f /sysroot/home/.please_resize_me ]; then
 	INIT_UNIT="--unit=fs-resize.target"
-elif [ -f /sysroot/home/.cache/reset_oe -o -f /sysroot/home/.cache/reset_xbmc ]; then
+elif [ -f /sysroot/home/.cache/reset_clue -o -f /sysroot/home/.cache/reset_kodi ]; then
 	INIT_UNIT="--unit=factory-reset.target"
 elif [ -f "$BACKUP_FILE" ]; then
 	INIT_UNIT="--unit=backup-restore.target"

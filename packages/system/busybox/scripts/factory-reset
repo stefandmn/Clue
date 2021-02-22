@@ -41,9 +41,9 @@ show_reset_msg() {
 	echo ""
 }
 
-if [ -f /home/.cache/reset_oe ]; then
+if [ -f /home/.cache/reset_clue ]; then
 	# hard reset
-	rm -f /home/.cache/reset_oe
+	rm -f /home/.cache/reset_clue
 	get_target
 	if [ ! -z $target ]; then
 		show_reset_msg
@@ -62,9 +62,9 @@ if [ -f /home/.cache/reset_oe ]; then
 		echo
 		StartProgress countdown "Rebooting in 5s... " 5 "NOW"
 	fi
-elif [ -f /home/.cache/reset_xbmc ]; then
+elif [ -f /home/.cache/reset_kodi ]; then
 	# soft reset
-	rm -f /home/.cache/reset_xbmc
+	rm -f /home/.cache/reset_kodi
 	get_target
 	if [ ! -z $target ]; then
 		show_reset_msg
