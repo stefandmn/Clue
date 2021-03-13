@@ -18,6 +18,15 @@ else
 	export OUTPUT_DIR=$(OUTPUT)
 endif
 
+ifeq ($(PUBLISH),)
+	export PUBLISH=~/AMSD/Web/clue/repos/releases
+endif
+
+
+# Build OS release
+#test:
+#	./$(CONFIG)/process test
+
 
 # Build particular package or the entire system
 #	@package - package name with optional target [:<host|target|init|bootstrap>]
@@ -77,9 +86,17 @@ cleanall:
 	rm -rf $(OUTPUT_DIR)/* $(OUTPUT_DIR)/.stamp $(OUTPUT_DIR)/.ccache
 
 
-# Build OS release
+# Build CLue OS release
 release:
 	./$(CONFIG)/process release | tee $(OUTPUT_DIR)/process.log
+
+
+# Build and publish Clue OS release
+publish:
+	$(MAKE) release
+	echo -e "\n\n Variables: device=$(DEVICE)"
+	#cp -f $(OUTPUT)/targets/$(NAME).zip $(PUBLISH)/$(NAME)/$(NAME)-$(DISTRO_VER).zip
+	#python $(PUBLISH)/xmlgen.py
 
 
 # Display the cache statistics for
@@ -152,6 +169,26 @@ ifneq ($(message),)
 else
 	@printf "\n* Please specify 'message' parameter!\n\n"
 	exit 1
+endif
+
+
+# Publish the last build in the releases repository
+publish:
+ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
+	$(MAKE) revision -e message="Submit new release"
+	$(MAKE) gitrel
+endif
+ifeq ($(shell [[ -f $(TARGETS)/$(IMAGE_NAME).img.gz ]] && echo -n yes),yes)
+ifneq ($(PUBLISH),)
+	# define location and copy meta files
+	mkdir -p $(PUBLISH)/$(DEVICE)
+	cp -f $(TARGETS)/$(IMAGE_NAME).img.gz  $(PUBLISH)/$(IMAGE_NAME).img.gz
+	python $(PUBLISH)/jsongen.py
+else
+	echo "Repository location is not specified in PUBLISH variable. Set it up and try again!"
+endif
+else
+	echo "Release file doesn't exist, try to run 'release' target first!"
 endif
 
 

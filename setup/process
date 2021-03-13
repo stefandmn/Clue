@@ -12,7 +12,9 @@ ${CONFIG}/tools/checkdeps || exit 1
 setup_toolchain target
 
 # Display distribution configuration
-show_config
+check_config
+set_build
+#show_config
 echo -e "\n\n> Process started.."
 
 # Collect versioning details
@@ -70,6 +72,12 @@ echo ">> Creating base layout of read-only file system.."
 for directory in etc dev proc run sys tmp usr var boot home; do
 	mkdir -p ${INSTALL}/${directory}
 done
+
+python ${CONFIG}/tools/jsongen.py --device="${DEVICE}" --distroname="${DISTRO_NAME}" --distrostatus="${DISTRO_STATUS}" \
+						--distroversion="${DISTRO_VERSION}"  --distroprovider="${DISTRO_PROVIDER}"  \
+						--distrodescription="${DISTRO_LONGNAME}" --distrocode="${DISTRO_CODE}" \
+						--path="${DISTRO_RELEASES}" --image="${IMAGE_NAME}"
+exit 0
 
 # Build image contents
 echo ">> Building system packages.."

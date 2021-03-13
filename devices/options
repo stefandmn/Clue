@@ -12,8 +12,10 @@ DISTRO_LONGNAME="Clue Media Experience"
 # Set status, use "devel" for development version and stable for any stable version
 DISTRO_STATUS="${STATUS:-devel}"
 
-# DISTRO_VERSION: Distribution Version
-DISTRO_VERSION="2.0"
+# DISTRO_VERSION: Distribution Version with minor and major revisions
+DISTRO_BUILD=45
+DISTRO_RELEASE=2.0
+DISTRO_VERSION="${DISTRO_RELEASE}.${DISTRO_BUILD}"
 
 # DISTRO_PROVIDER: Distribution Provider
 DISTRO_PROVIDER="AMSD"
@@ -24,7 +26,7 @@ KODI_EXTRA_FONTS="yes"
 # build and install with BluRay support (yes / no)
 KODI_BLURAY_SUPPORT="yes"
 
-# build and install with KODI webfrontend (yes / no)
+# build and install with KODI web frontend (yes / no)
 KODI_WEBSERVER_SUPPORT="yes"
 
 # build and install with DVDCSS support
@@ -134,7 +136,7 @@ CEC_FRAMEWORK_SUPPORT="no"
 # build and install iSCSI support - iscsistart (yes / no)
 ISCSI_SUPPORT="yes"
 
-# Support for partitioning and formating disks in initramfs (yes / no)
+# Support for partitioning and formatting disks in initramfs (yes / no)
 # This adds support for parted and mkfs.ext3/4 to initramfs for OEM usage
 INITRAMFS_PARTED_SUPPORT="no"
 
@@ -164,9 +166,10 @@ DISTRO_BOOTLABEL="BOOT"
 DISTRO_DISKLABEL="HOME"
 
 # Distribution specific source locations: mirror and source repos
-DISTRO_ADDONS="https://amsd.go.ro//clue/repos/addons"
-DISTRO_MIRROR="https://amsd.go.ro//clue/repos/mirror"
-DISTRO_SOURCES="https://amsd.go.ro//clue/repos/sources"
+DISTRO_ADDONS="https://amsd.go.ro/clue/repos/addons"
+DISTRO_MIRROR="https://amsd.go.ro/clue/repos/mirror"
+DISTRO_SOURCES="https://amsd.go.ro/clue/repos/sources"
+DISTRO_RELEASES="https://amsd.go.ro/clue/repos/releases"
 
 # Configure debug groups (space delimited key=value pairs, with each value comma-
 # delimited) and default group when DEBUG=yes
@@ -275,7 +278,7 @@ if [[ ${PWD} =~ [[:space:]] ]]; then
 fi
 
 ########################################################################################
-## Include references (set of gerenal functions and same options to be overwritten)
+## Include references (set of general functions and same options to be overwritten)
 ##
 
 # Read global persistent options from $HOME if available
@@ -476,7 +479,7 @@ CXXFLAGS_OPTIM_PIC="-fPIC -DPIC"
 LDFLAGS_OPTIM_PIC="-fPIC"
 
 # hardening support
-# TODO: basiclly copied from debian 9, should adjust for LE
+# TODO: basically copied from debian 9, should adjust for Clue
 CFLAGS_OPTIM_HARDENING="-fstack-protector-strong -Wformat -Werror=format-security -fPIE"
 CXXFLAGS_OPTIM_HARDENING="-fstack-protector-strong -Wformat -Werror=format-security -fPIE"
 CPPFLAGS_OPTIM_HARDENING="-D_FORTIFY_SOURCE=2"
@@ -537,7 +540,8 @@ unset PYTHONSTARTUP
 unset PYTHONPATH
 
 # die (message, code) abort with optional message and code
-die() {
+die()
+{
 	if [ -n "$1" ]; then
 		echo -e "$1" >&2
 	fi
@@ -545,7 +549,8 @@ die() {
 }
 
 # return 0 if $2 in space-separated list $1, otherwise return 1
-listcontains() {
+listcontains()
+{
 	if [ -n "$1" -a -n "$2" ]; then
 		[[ ${1} =~ (^|[[:space:]])${2}($|[[:space:]]) ]] && return 0 || return 1
 	else
@@ -555,7 +560,8 @@ listcontains() {
 
 # remove item(s) from list.
 # looping makes it greedy (eg. listremoveitem "abc def ghi" "(abc|def)" removes both "abc" and "def").
-listremoveitem() {
+listremoveitem()
+{
 	local data="${1}" odata tmp_array
 	if [ -n "$1" -a -n "$2" ]; then
 		while [ : ]; do
@@ -569,7 +575,8 @@ listremoveitem() {
 	echo "${tmp_array[@]}"
 }
 
-print_color() {
+print_color()
+{
 	local clr_name="$1" clr_text="$2" clr_actual
 	local black red green yellow blue magenta cyan white endcolor
 	local boldblack boldred boldgreen boldyellow boldblue boldmagenta boldcyan boldwhite
@@ -644,7 +651,8 @@ print_color() {
 
 # print build progress messages
 # param1: message color, p2: label, p3: text, p4: indent (optional)
-build_msg() {
+build_msg()
+{
 	local spaces
 
 	[ -n "${BUILD_INDENT}" ] && spaces="$(printf "%${BUILD_INDENT}c" " ")" || spaces=""
@@ -665,7 +673,8 @@ build_msg() {
 
 # prints a warning if the file slated for removal doesn't exist
 # this allows us to continue instead of bailing out with just "rm"
-safe_remove() {
+safe_remove()
+{
 	local path="$1"
 
 	[ -z "${path}" ] && return 0
@@ -684,7 +693,8 @@ safe_remove() {
 # $1: flag-name, $2: default (yes/no), $3: ingenious check (none,only-disable,only-enable)
 # set variable PKG_[FLAG]_[HOST/TARGET]_ENABLED=(yes/no)
 # return 0 if flag is enabled, otherwise 1
-flag_enabled() {
+flag_enabled()
+{
 	# make flag name upper case and replace hyphen with underscore, to use as variable name
 	local flag_name=${1^^}
 	[[ $flag_name =~ : ]] || flag_name+="_TARGET"
@@ -709,7 +719,8 @@ flag_enabled() {
 	fi
 }
 
-setup_pkg_config_target() {
+setup_pkg_config_target()
+{
 	export PKG_CONFIG="$TOOLCHAIN/bin/pkg-config"
 	export PKG_CONFIG_PATH=""
 	export PKG_CONFIG_LIBDIR="$TARGET_SYSROOT/usr/lib/pkgconfig:$TARGET_SYSROOT/usr/share/pkgconfig"
@@ -718,7 +729,8 @@ setup_pkg_config_target() {
 	export PKG_CONFIG_ALLOW_SYSTEM_LIBS=1
 }
 
-setup_pkg_config_host() {
+setup_pkg_config_host()
+{
 	export PKG_CONFIG="$TOOLCHAIN/bin/pkg-config"
 	export PKG_CONFIG_PATH=""
 	export PKG_CONFIG_LIBDIR="$TOOLCHAIN/lib/pkgconfig:$TOOLCHAIN/share/pkgconfig"
@@ -727,7 +739,8 @@ setup_pkg_config_host() {
 	unset PKG_CONFIG_ALLOW_SYSTEM_LIBS
 }
 
-setup_toolchain() {
+setup_toolchain()
+{
 	if [ "$LTO_SUPPORT" = "yes" ]; then
 		if flag_enabled "lto-parallel" "no"; then
 			TARGET_CFLAGS+=" $FLAGS_OPTIM_LTO_PARALLEL $FLAGS_OPTIM_LTO_NO_FAT"
@@ -888,7 +901,8 @@ setup_toolchain() {
 	esac
 }
 
-create_meson_conf() {
+create_meson_conf()
+{
 	local endian root properties
 	case "$1" in
 		target | init)
@@ -927,7 +941,8 @@ EOF
 }
 
 # unset all PKG_* vars apart from those exported by setup_toolchain, then set default values
-reset_pkg_vars() {
+reset_pkg_vars()
+{
 	local vars var
 
 	for var in ${!PKG_*}; do
@@ -949,7 +964,8 @@ reset_pkg_vars() {
 	PKG_PYTHON_VERSION="python2.7"
 }
 
-set_debug_depends() {
+set_debug_depends()
+{
 	local pkg dep_pkg map tmp_array mpkg bpkg kvpair
 
 	_DEBUG_DEPENDS_LIST=""
@@ -1000,7 +1016,8 @@ set_debug_depends() {
 
 # Return 0 if building with debug is enabled for the current package (or all packages).
 # Examples: DEBUG=yes  DEBUG=all  DEBUG='all,!linux'  DEBUG=kodi  DEBUG=kodi,samba
-build_with_debug() {
+build_with_debug()
+{
 	if [ "${DEBUG:-no}" != "no" -a -n "${PKG_NAME}" -a -n "${_DEBUG_DEPENDS_LIST+x}" ]; then
 		# Return 1 if this package is not to be built with debug
 		listcontains "${_DEBUG_PACKAGE_LIST}" "[!-]${PKG_NAME}[+]?" && return 1
@@ -1022,7 +1039,8 @@ build_with_debug() {
 }
 
 # strip
-debug_strip() {
+debug_strip()
+{
 	if [ -z "${BUILD_WITH_DEBUG}" ]; then
 		die "ERROR: debug_strip() must not be called without configuring BUILD_WITH_DEBUG"
 	fi
@@ -1032,7 +1050,9 @@ debug_strip() {
 	fi
 }
 
-init_package_cache() {
+
+init_package_cache()
+{
 	local _ANCHOR="@?+?@"
 	local temp_global temp_local
 
@@ -1072,7 +1092,21 @@ init_package_cache() {
 	fi
 }
 
-check_path() {
+
+set_build()
+{
+	local NEWBUILD="0"
+	local CURBUILD=$(more ${ROOT}/devices/options | grep -i "^DISTRO_BUILD=" | cut -f2 -d"=")
+	CURBUILD=$(echo "${CURBUILD}" | sed -e 's/^[ \t]*//')
+	echo "current build = $CURBUILD"
+	NEWBUILD=$(python -c "print int($CURBUILD) + 1")
+	echo "new build  = $NEWBUILD"
+	sed -i "s|^DISTRO_BUILD=${CURBUILD}|DISTRO_BUILD=${NEWBUILD}|g" ${ROOT}/devices/options
+}
+
+
+check_path()
+{
 	local dashes="===========================" path_err_msg
 	if [ "${PWD##/usr}" != "${PWD}" ]; then
 		path_err_msg="\n $double_dashes"
@@ -1085,7 +1119,8 @@ check_path() {
 	fi
 }
 
-check_device() {
+check_device()
+{
 	local dashes="===========================" device_err_msg
 	if [ \( -z "${DEVICE}" -a -d "${ROOT}/devices" \) -o \
 		\( -n "${DEVICE}" -a ! -d "${ROOT}/devices/${DEVICE}" \) ]; then
@@ -1101,7 +1136,8 @@ check_device() {
 	fi
 }
 
-check_arch() {
+check_arch()
+{
 	local dashes="===========================" arch_err_msg linux_config_dir
 	if [ -d "${ROOT}/devices/${DEVICE}/linux" ]; then
 		linux_config_dir="${ROOT}/devices/${DEVICE}/linux"
@@ -1125,13 +1161,15 @@ check_arch() {
 	fi
 }
 
-check_config() {
+check_config()
+{
 	check_path
 	check_device
 	check_arch
 }
 
-do_autoreconf() {
+do_autoreconf()
+{
 	export ACLOCAL_DIR=$TARGET_SYSROOT/usr/share/aclocal
 
 	if [ -e "$TOOLCHAIN/bin/autoconf" ]; then
@@ -1180,7 +1218,8 @@ do_autoreconf() {
 ### PACKAGE HELPERS ###
 # get variable ($2) for package ($1).
 # avoid infinite recursion if required package is already loaded.
-get_pkg_variable() {
+get_pkg_variable()
+{
 	if [ -n "$1" -a -n "$2" ]; then
 		if [ "$1" != "$PKG_NAME" ]; then
 			source_package "${1}"
@@ -1190,18 +1229,21 @@ get_pkg_variable() {
 }
 
 # get package's build dir
-get_build_dir() {
+get_build_dir()
+{
 	local _PKG_NAME="${1%:*}" _PKG_VERSION="$(get_pkg_version "$1")"
 	if [ -n "$_PKG_NAME" -a -n "$_PKG_VERSION" ]; then
 		echo ${BUILDER_PACKS}/${_PKG_NAME}-${_PKG_VERSION}
 	fi
 }
 
-get_pkg_version() {
+get_pkg_version()
+{
 	get_pkg_variable "$1" PKG_VERSION
 }
 
-get_pkg_directory() {
+get_pkg_directory()
+{
 	local _PKG_ROOT_NAME=${1%:*} _ALL_DIRS _FOUND=0 _ANCHOR="@?+?@" _PKG_DIR _DIR
 
 	# Check for any available local package in preference to a global package
@@ -1236,7 +1278,8 @@ get_pkg_directory() {
 	echo "$_PKG_DIR"
 }
 
-calculate_stamp() {
+calculate_stamp()
+{
 	local stamp data
 
 	stamp="$PKG_DIR ${ROOT}/basis/patches/$PKG_NAME"
@@ -1249,13 +1292,15 @@ calculate_stamp() {
 	echo "${data}" | sort | sha256sum | cut -d" " -f1
 }
 
-target_has_feature() {
+target_has_feature()
+{
 	listcontains "$TARGET_FEATURES" "$1"
 }
 
 # find path for matching file or directory, searching standard directory hierarchy, using optional default
 # if a path is located it will be set in FOUND_PATH and exit code will be 0.
-find_path() {
+find_path()
+{
 	local test_func="$1" search="$2" default="$3"
 	local dir match wildcard=0 ftype
 
@@ -1300,17 +1345,20 @@ find_path() {
 	fi
 }
 
-find_file_path() {
+find_file_path()
+{
 	find_path -f "$1" "$2"
 }
 
-find_dir_path() {
+find_dir_path()
+{
 	find_path -d "$1" "$2"
 }
 
 # p1: name of function to test for
 # return 0 if function exists, 1 if not
-pkg_call_exists() {
+pkg_call_exists()
+{
 	[ "$(type -t ${1})" = "function" ] && return 0 || return 1
 }
 
@@ -1322,7 +1370,8 @@ pkg_call() {
 	${1}
 }
 
-unset_functions() {
+unset_functions()
+{
 	local target
 
 	unset -f configure_package
@@ -1343,7 +1392,8 @@ unset_functions() {
 }
 
 # p1: name of package to be sourced
-source_package() {
+source_package()
+{
 	local opwd="${PWD}"
 
 	# Don't use BUILD_WITH_DEBUG in "global" package.csh - instead, call the function
@@ -1429,15 +1479,18 @@ source_package() {
 }
 
 ### KERNEL HELPERS ###
-kernel_path() {
+kernel_path()
+{
 	get_build_dir linux
 }
 
-kernel_version() {
+kernel_version()
+{
 	get_pkg_version linux
 }
 
-kernel_config_path() {
+kernel_config_path()
+{
 	local cfg pkg_linux_dir pkg_linux_version config_name
 
 	pkg_linux_version="$(get_pkg_version linux)"
@@ -1461,7 +1514,8 @@ kernel_config_path() {
 	die "ERROR: Unable to locate kernel config for ${LINUX} - looking for ${config_name}"
 }
 
-kernel_make() {
+kernel_make()
+{
 	(
 		setup_pkg_config_host
 
@@ -1478,7 +1532,8 @@ kernel_make() {
 }
 
 # get kernel module dir
-get_module_dir() {
+get_module_dir()
+{
 	if [ -n "${_CACHED_KERNEL_MODULE_DIR}" ]; then
 		echo "${_CACHED_KERNEL_MODULE_DIR}"
 	else
@@ -1487,23 +1542,27 @@ get_module_dir() {
 }
 
 # get base path to kernel modules and firmware
-get_kernel_overlay_dir() {
+get_kernel_overlay_dir()
+{
 	echo "usr/lib/kernel-overlays/${1:-base}"
 }
 
 # get full path to kernel module dir
 # optional parameter specifies overlay level (default is base)
-get_full_module_dir() {
+get_full_module_dir()
+{
 	echo "$(get_kernel_overlay_dir $1)/lib/modules/$(get_module_dir)"
 }
 
 # get full path to firmware dir
 # optional parameter specifies overlay level (default is base)
-get_full_firmware_dir() {
+get_full_firmware_dir()
+{
 	echo "$(get_kernel_overlay_dir $1)/lib/firmware"
 }
 
-fix_module_depends() {
+fix_module_depends()
+{
 	# modify .modinfo section in kernel module to depends on other required modules
 	local MODULE="$1"
 	local DEPENDS="$2"
@@ -1521,7 +1580,8 @@ fix_module_depends() {
 }
 
 ### TARGET CONFIGURATION HELPERS ###
-add_user() {
+add_user()
+{
 	# Usage: add_user "username" "password" "userid" "groupid" "description" "home" "shell"
 	mkdir -p ${INSTALL}/etc
 	touch ${INSTALL}/etc/passwd
@@ -1542,7 +1602,8 @@ add_user() {
 	fi
 }
 
-add_group() {
+add_group()
+{
 	# Usage: add_group "groupname" "groupid" ("members")
 	mkdir -p ${INSTALL}/etc
 	touch ${INSTALL}/etc/group
@@ -1552,7 +1613,8 @@ add_group() {
 }
 
 # Usage: enable_service <unit> [target]
-enable_service() {
+enable_service()
+{
 	local unit="$1"
 	local unit_dir="/usr/lib/systemd/system"
 	local target="$2"
@@ -1582,7 +1644,8 @@ enable_service() {
 #
 # If a package is already locked and the owner is ourselves
 # then assume we already have the required lock.
-pkg_lock() {
+pkg_lock()
+{
 	[ "${MTWITHLOCKS}" != "yes" ] && return 0
 
 	local pkg="$1" task="$2" parent_pkg="$3"
@@ -1623,7 +1686,8 @@ EOF
 }
 
 # Log additional information for a locked package.
-pkg_lock_status() {
+pkg_lock_status()
+{
 	[ "${MTWITHLOCKS}" != "yes" ] && return 0
 
 	local status="$1" pkg="$2" task="$3" msg="$4"
@@ -1656,7 +1720,8 @@ pkg_lock_status() {
 	return 0
 }
 
-monitor() {
+monitor()
+{
 	[ "${MTWITHLOCKS}" != "yes" ] && return 0
 
 	local status="$1" pkg="$2" task="$3" msg="$4"
@@ -1704,7 +1769,8 @@ monitor() {
 
 # Thread concurrency helpers to avoid concurrency issues with some code,
 # eg. when Python installs directly into $TOOLCHAIN.
-acquire_exclusive_lock() {
+acquire_exclusive_lock()
+{
 	[ "${MTWITHLOCKS}" != "yes" ] && return 0
 
 	local pkg="$1" task="$2" lockfile="${3:-global}"
@@ -1729,7 +1795,8 @@ acquire_exclusive_lock() {
 	echo "${this_job} ${PARALLEL_SEQ} ${task} ${pkg}" >"${BUILDER_THREADS}/locks/.mutex.${lockfile}.owner"
 }
 
-release_exclusive_lock() {
+release_exclusive_lock()
+{
 	[ "${MTWITHLOCKS}" != "yes" ] && return 0
 
 	local pkg="$1" task="$2" lockfile="${3:-global}"
@@ -1741,7 +1808,8 @@ release_exclusive_lock() {
 }
 
 # Execute single command using mutex
-exec_thread_safe() {
+exec_thread_safe()
+{
 	local result
 	acquire_exclusive_lock "${PKG_NAME:exec}" "execcmd"
 	$@
@@ -1750,7 +1818,8 @@ exec_thread_safe() {
 	return ${result}
 }
 
-get_graphicdrivers() {
+get_graphicdrivers()
+{
 
 	# set defaults
 	GALLIUM_DRIVERS=""
@@ -1774,7 +1843,8 @@ get_graphicdrivers() {
 	DRI_DRIVERS="$(echo ${DRI_DRIVERS} | xargs -n1 | sort -u | xargs)"
 }
 
-show_config() {
+show_config()
+{
 	# load graphic configuration
 	get_graphicdrivers
 
@@ -1785,7 +1855,7 @@ show_config() {
 	double_dashes=$(printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' =)
 	simple_dashes=$(printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -)
 	config_message="$config_message\n$double_dashes"
-	config_message="$config_message\n $(tput bold)\e[34m$DISTRO_NAME\e[39m (\e[5m${DISTRO_STATUS}\e[25m) Configuration$(tput sgr0)\n\n"
+	config_message="$config_message\n $(tput bold)\e[34m$DISTRO_NAME\e[39m (\e[5m${DISTRO_VERSION} ${DISTRO_STATUS}\e[25m) Configuration$(tput sgr0)\n\n"
 
 	# Build options
 	config_message="$config_message\n\n Build options:"
@@ -1908,7 +1978,8 @@ source_package "${1}"
 
 # This function is passed a list of package.csh paths to be processed.
 # Each package.csh is sourced with relevant variables output in JSON format.
-json_worker() {
+json_worker()
+{
 	local packages="$@"
 	local pkgpath hierarchy exited
 
@@ -1949,7 +2020,8 @@ export -f json_worker
 # The function will run either "build <package>" or "install <package>".
 # ${slot} is the job slot number, ie. 1-8 when THREADCOUNT=8.
 # ${job} is the sequence within the total number of ${jobs}.
-package_worker() {
+package_worker()
+{
 	local slot=$1 job=$2 jobs=$3 args="$4"
 	local task pkgname result status
 
@@ -1996,7 +2068,8 @@ EOF
 
 export -f package_worker
 
-start_multithread_build() {
+start_multithread_build()
+{
 	local singlethread buildopts="--halt now,fail=1" result=0
 
 	# init thread control folder
