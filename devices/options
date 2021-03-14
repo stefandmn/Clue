@@ -166,10 +166,10 @@ DISTRO_BOOTLABEL="BOOT"
 DISTRO_DISKLABEL="HOME"
 
 # Distribution specific source locations: mirror and source repos
-DISTRO_ADDONS="https://amsd.go.ro/clue/repos/addons"
-DISTRO_MIRROR="https://amsd.go.ro/clue/repos/mirror"
-DISTRO_SOURCES="https://amsd.go.ro/clue/repos/sources"
-DISTRO_RELEASES="https://amsd.go.ro/clue/repos/releases"
+REPO_ADDONS="https://amsd.go.ro/clue/repos/addons"
+REPO_MIRROR="https://amsd.go.ro/clue/repos/mirror"
+REPO_SOURCES="https://amsd.go.ro/clue/repos/sources"
+REPO_RELEASES="https://amsd.go.ro/clue/repos/releases"
 
 # Configure debug groups (space delimited key=value pairs, with each value comma-
 # delimited) and default group when DEBUG=yes
@@ -1103,10 +1103,10 @@ set_vars()
 	set_var "distrobuild" "${DISTRO_BUILD}"
 	set_var "distrorelease" "${DISTRO_RELEASE}"
 	set_var "distroversion" "${DISTRO_VERSION}"
-	set_var "repoaddons" "${DISTRO_ADDONS}"
-	set_var "repomirror" "${DISTRO_MIRROR}"
-	set_var "reposources" "${DISTRO_SOURCES}"
-	set_var "reporeleases" "${DISTRO_RELEASES}"
+	set_var "repoaddons" "${REPO_ADDONS}"
+	set_var "repomirror" "${REPO_MIRROR}"
+	set_var "reposources" "${REPO_SOURCES}"
+	set_var "reporeleases" "${REPO_RELEASES}"
 	set_var "localsources" "${SOURCES}"
 	set_var "localtargets" "${TARGETS}"
 }

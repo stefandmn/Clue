@@ -35,8 +35,8 @@ class Generator:
 		parser.add_argument("-dv", "--distroversion", help="Describes de distribution version")
 		parser.add_argument("-dp", "--distroprovider", help="Describes de distribution provider")
 		parser.add_argument("-dd", "--distrodescription", help="Describes de distribution description")
-		parser.add_argument("-p", "--path", help="Specifies the path (server location) where the release JSON message is saved")
-		parser.add_argument("-i", "--image", help="Identified the image name of the published release")
+		parser.add_argument("-p", "--localtargets", help="Specifies the path (server location) where the release JSON message is saved")
+		parser.add_argument("-i", "--imagename", help="Identified the image name of the published release")
 		self.args = vars(parser.parse_args(sys.argv[1:]))
 		if self.args["properties"] is not None and os.path.isfile(self.args["properties"]):
 			with open(self.args["properties"]) as f:
@@ -47,8 +47,9 @@ class Generator:
 
 
 	def _generate_releases_file(self):
+		filename = "latest.json"
 		basepath = os.path.dirname(os.path.realpath(__file__))
-		releases = os.path.join(basepath, "latest.json")
+		releases = os.path.join(basepath, filename)
 		data = {}
 		if os.path.isfile(releases):
 			with open(releases, "r") as handler:
@@ -68,7 +69,7 @@ class Generator:
 		data["devices"][device]["date"] = str(datetime.datetime.now())
 		data["devices"][device]["url"] = self.args["reporeleases"] + "/" + self.args["device"] + "/" + self.args["imagename"] + ".img.gz"
 		# save file and return result
-		return self._save_file(data=data, file=os.path.join(basepath, "latest.json"))
+		return self._save_file(data=data, file=os.path.join(basepath, filename))
 
 
 	def _save_file(self, data, file):

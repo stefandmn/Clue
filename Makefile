@@ -22,9 +22,9 @@ ifeq ($(PUBLISH),)
 	export PUBLISH=~/AMSD/Web/clue/repos/releases
 endif
 
-DISTRO_VERSION=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion=" | cut -f2 -d"=")
-IMAGE_NAME=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "imagename=" | cut -f2 -d"=")
-TARGETS=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets=" | cut -f2 -d"=")
+DISTRO_VERSION=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"=")
+IMAGE_NAME=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "imagename" | cut -f2 -d"=")
+TARGETS=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"=")
 
 
 # Display release information

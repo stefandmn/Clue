@@ -1,7 +1,7 @@
 PKG_NAME="program.recovery"
 PKG_VERSION="2.0.1"
 PKG_ARCH="any"
-PKG_URL="${DISTRO_ADDONS}/${PKG_NAME}/${PKG_NAME}-${PKG_VERSION}.zip"
+PKG_URL="${REPO_ADDONS}/${PKG_NAME}/${PKG_NAME}-${PKG_VERSION}.zip"
 PKG_DEPENDS_TARGET="toolchain kodi module.clue"
 PKG_SECTION="program"
 PKG_DESCRIPTION="Mediacenter System Backup and Restore"
