@@ -52,7 +52,7 @@ ifneq ($(packages),)
 	rm -rf $(OUTPUT_DIR)/build.log
 	for pack in $(packages) ; do ./$(CONFIG)/build $$pack | tee -a $(OUTPUT_DIR)/build.log ; done
 else
-	$(MAKE) info wait
+	$(MAKE) info -e wait=on
 	./$(CONFIG)/build | tee $(OUTPUT_DIR)/build.log
 endif
 endif
@@ -61,7 +61,7 @@ endif
 # Build Clue OS release image
 image:
 	 $(MAKE) next
-	 $(MAKE) info -e wait
+	 $(MAKE) info -e wait=on
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
 
 
