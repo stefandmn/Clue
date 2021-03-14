@@ -185,7 +185,7 @@ ifneq ($(shell [ -f $(TARGETS)/$(IMAGE_NAME).img.gz ] && echo -n yes),yes)
 	$(MAKE) next
 	$(MAKE) info -e wait=on
 ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
-	$(MAKE) revision -e message="Publish release: $(DISTRO_VERSION)"
+	$(MAKE) revision -e message="Reporting release $(DISTRO_VERSION)"
 	$(MAKE) gitrel
 endif
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
