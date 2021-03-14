@@ -1,0 +1,174 @@
+#!/bin/bash
+
+
+TASK="$1"
+BASE="2.0.1"
+ROOT="$(cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+PACK="skin.clue module.clue service.clue weather.clue program.slideshow program.search program.recovery"
+CDIR=$(pwd)
+
+
+getversion()
+{
+	if [ -f "${1}/src/addon.xml" ]; then
+		local DISTRO_VER=$(xmlstarlet sel -t -v "//addon/@version" ${1}/src/addon.xml)
+		local DISTRO_REL=$(echo "${DISTRO_VER}" | cut -f1 -d".")
+		local DISTRO_MAJ=$(echo "${DISTRO_VER}" | cut -f2 -d".")
+		local DISTRO_MIN=$(echo "${DISTRO_VER}" | cut -f3 -d".")
+		echo "${DISTRO_REL}.${DISTRO_MAJ}.${DISTRO_MIN}"
+	else
+		echo ""
+	fi
+
+}
+
+
+nextversion()
+{
+	local DISTRO_VER=$(getversion "${1}")
+	
+	if [ "${DISTRO_VER}" != "" ]; then
+		local DISTRO_REL=$(echo "${DISTRO_VER}" | cut -f1 -d".")
+		local DISTRO_MAJ=$(echo "${DISTRO_VER}" | cut -f2 -d".")
+		local DISTRO_MIN=$(echo "${DISTRO_VER}" | cut -f3 -d".")
+		local NEXT=$(python -c "print int(${DISTRO_MIN}) + 1")
+		echo "${DISTRO_REL}.${DISTRO_MAJ}.${NEXT}"
+	else
+		echo ""
+	fi
+}
+
+
+prevversion()
+{
+	local DISTRO_VER=$(getversion "${1}")
+	
+	if [ "${DISTRO_VER}" != "" ]; then
+		local DISTRO_REL=$(echo "${DISTRO_VER}" | cut -f1 -d".")
+		local DISTRO_MAJ=$(echo "${DISTRO_VER}" | cut -f2 -d".")
+		local DISTRO_MIN=$(echo "${DISTRO_VER}" | cut -f3 -d".")
+		local PREV=$(python -c "print int(${DISTRO_MIN}) - 1")
+		echo "${DISTRO_REL}.${DISTRO_MAJ}.${PREV}"
+	else
+		echo ""
+	fi
+}
+
+
+setversion()
+{
+	if [ -f ${1}/src/addon.xml -a "${2}" != "" ]; then
+		xmlstarlet edit -L -P -u "//addon/@version" -v "${2}" ${1}/src/addon.xml
+	else
+		echo "Invalid version number (${2}) or descriptor location (${1}/src/addon.xml)"
+		exit 1
+	fi	
+}
+
+
+
+
+if [ "${TASK}" = "publish" ]; then
+	
+	for addon in ${PACK}
+	do
+		echo
+		echo "> Building and publishing [${addon}-${BASE}]"
+		setversion "${ROOT}/${addon}" "${BASE}"
+		VER=$(getversion "${ROOT}/${addon}")
+		if [ "${VER}" != "${BASE}" ]; then
+			echo "Error setting up base version for [${addon}] addon: found version is ${VER}"
+			exit 1
+		fi
+		cd ${ROOT}/${addon}
+		make build
+		make publish
+		if [ "${2}" != "" ]; then
+			make gitrev -e message="${2}"
+		else
+			make gitrev -e message="Global dependency"
+		fi
+	done
+elif  [ "${TASK}" = "clean" ]; then
+	for addon in ${PACK}
+	do
+		echo
+		VER=$(getversion "${ROOT}/${addon}")
+		echo "> Cleaning [${addon}-${VER}]"
+		cd ${ROOT}/${addon}
+		make clean
+	done
+elif  [ "${TASK}" = "build" ]; then
+	for addon in ${PACK}
+	do
+		echo
+		VER=$(getversion "${ROOT}/${addon}")
+		echo "> Building [${addon}-${VER}]"
+		cd ${ROOT}/${addon}
+		make build
+	done
+elif  [ "${TASK}" = "getversion" ]; then
+	for addon in ${PACK}
+	do
+		echo
+		VER=$(getversion "${ROOT}/${addon}")
+		echo "> Get Version of [${addon}-${VER}]"
+	done
+elif  [ "${TASK}" = "nextversion" ]; then
+	for addon in ${PACK}
+	do
+		echo
+		VER=$(nextversion "${ROOT}/${addon}")
+		echo "> Next Versioning of [${addon}-${VER}]"
+		setversion "${ROOT}/${addon}" "${VER}"
+	done
+elif  [ "${TASK}" = "prevversion" ]; then
+	for addon in ${PACK}
+	do
+		echo
+		VER=$(prevversion "${ROOT}/${addon}")
+		echo "> Next Versioning of [${addon}-${VER}]"
+		setversion "${ROOT}/${addon}" "${VER}"
+	done
+elif  [ "${TASK}" = "test" ]; then
+	if [ "${RPIHOST}" = "" -a "${TESTPATH}" = "" ]; then
+		echo "Error deploying resources due to missing of TESTPATH/RPIHOST system variable to indicate the remote system"
+		exit 1
+	else
+		LOCATION="${TESTPATH}"
+		if [ "${LOCATION}" = "" ]; then
+			LOCATION="${RPIHOST}"
+		fi
+	fi
+	for addon in ${PACK}
+	do
+		echo
+		VER=$(getversion "${ROOT}/${addon}")
+		echo "> Deploying [${addon}-${VER}] on ${LOCATION}"
+		cd ${ROOT}/${addon}
+		make test
+	done
+elif  [ "${TASK}" = "deploy" ]; then
+	if [ "${RPIHOST}" = "" ]; then
+		echo "Error deploying resources due to missing of RPIHOST system variable to indicate the remote system"
+		exit 1
+	else
+		LOCATION="${RPIHOST}"
+	fi
+	for addon in ${PACK}
+	do
+		echo
+		VER=$(getversion "${ROOT}/${addon}")
+		echo "> Deploying [${addon}-${VER}] on ${LOCATION}"
+		cd ${ROOT}/${addon}
+		make test
+	done
+else
+	echo "Unknown execution task: ${TASK}"
+	exit 1
+fi
+
+
+cd ${CDIR}
+echo 
+exit 0

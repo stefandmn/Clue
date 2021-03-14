@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Repo latest file generator
+Repo releases file generator
 This utility should be copied on the repository location where the Clue releases are published
 """
 
@@ -14,12 +14,12 @@ import argparse
 
 class Generator:
 	"""
-	Generates a new latest file showing the latest release for each device.
+	Generates a new releases file showing the latest versions for each device.
 	"""
 
 	def __init__(self):
 		self._load()
-		if not self._generate_latest_file():
+		if not self._generate_releases_file():
 			sys.exit(0)
 		# notify user of successfully updating files
 		print ("Finished updating latest releases file!")
@@ -28,23 +28,30 @@ class Generator:
 	def _load(self):
 		parser = argparse.ArgumentParser()
 		parser.add_argument("-d", "--device", help="Specifies the device name", required=True)
-		parser.add_argument("-dn", "--distroname", help="Describes de distribution name", required=True)
-		parser.add_argument("-dc", "--distrocode", help="Describes de distribution code", required=True)
-		parser.add_argument("-ds", "--distrostatus", help="Describes de distribution status", required=True)
-		parser.add_argument("-dv", "--distroversion", help="Describes de distribution version", required=True)
+		parser.add_argument("-f", "--properties", help="Specifies the device name")
+		parser.add_argument("-dn", "--distroname", help="Describes de distribution name")
+		parser.add_argument("-dc", "--distrocode", help="Describes de distribution code")
+		parser.add_argument("-ds", "--distrostatus", help="Describes de distribution status")
+		parser.add_argument("-dv", "--distroversion", help="Describes de distribution version")
 		parser.add_argument("-dp", "--distroprovider", help="Describes de distribution provider")
 		parser.add_argument("-dd", "--distrodescription", help="Describes de distribution description")
-		parser.add_argument("-p", "--path", help="Specifies the path (server location) where the release JSON message is saved", required=True)
-		parser.add_argument("-i", "--image", help="Identified the image name of the published release", required=True)
+		parser.add_argument("-p", "--path", help="Specifies the path (server location) where the release JSON message is saved")
+		parser.add_argument("-i", "--image", help="Identified the image name of the published release")
 		self.args = vars(parser.parse_args(sys.argv[1:]))
+		if self.args["properties"] is not None and os.path.isfile(self.args["properties"]):
+			with open(self.args["properties"]) as f:
+				for line in f:
+					if "=" in line:
+						name, value = line.split("=", 1)
+						self.args[name.strip()] = value.strip()
 
 
-	def _generate_latest_file(self):
+	def _generate_releases_file(self):
 		basepath = os.path.dirname(os.path.realpath(__file__))
-		latest = os.path.join(basepath, "latest")
+		releases = os.path.join(basepath, "latest.json")
 		data = {}
-		if os.path.isfile(latest):
-			with open(latest, "r") as handler:
+		if os.path.isfile(releases):
+			with open(releases, "r") as handler:
 				data = json.load(handler)
 		if ("devices" not in data.keys()) or \
 			("status" in data.keys() and data["status"] != self.args["distrostatus"]) or \
@@ -56,14 +63,12 @@ class Generator:
 		data["version"] = self.args["distroversion"]
 		data["provider"] = self.args["distroprovider"]
 		data["description"] = self.args["distrodescription"]
-		data["devices"][device] = {}
-		#data["devices"][device] = {} if device not in data["devices"].keys() else data["devices"][device]
+		data["devices"][device] = {} if device not in data["devices"].keys() else data["devices"][device]
 		data["devices"][device]["code"] = self.args["distrocode"]
 		data["devices"][device]["date"] = str(datetime.datetime.now())
-		data["devices"][device]["url"] = self.args["path"] + "/" + self.args["device"] + "/" + self.args["image"] + ".img.gz"
+		data["devices"][device]["url"] = self.args["reporeleases"] + "/" + self.args["device"] + "/" + self.args["imagename"] + ".img.gz"
 		# save file and return result
-		print(json.dumps(data))
-		#return self._save_file(data=data, file=os.path.join(basepath, "latest"))
+		return self._save_file(data=data, file=os.path.join(basepath, "latest.json"))
 
 
 	def _save_file(self, data, file):

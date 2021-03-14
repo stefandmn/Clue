@@ -13,7 +13,7 @@ DISTRO_LONGNAME="Clue Media Experience"
 DISTRO_STATUS="${STATUS:-devel}"
 
 # DISTRO_VERSION: Distribution Version with minor and major revisions
-DISTRO_BUILD=45
+DISTRO_BUILD=54
 DISTRO_RELEASE=2.0
 DISTRO_VERSION="${DISTRO_RELEASE}.${DISTRO_BUILD}"
 
@@ -240,7 +240,7 @@ KERNEL_NAME="${KERNEL:-kernel.img}"
 DEBUG_TTY="/dev/console"
 
 # setup TARGET_ARCH
-TARGET_ARCH="arm"
+TARGET_ARCH="${ARCH:-arm}"
 
 # Cache size for ccache: set the maximum size of the files stored in the cache.
 # You can specify a value in gigabytes, megabytes or kilobytes by appending a G, # M or K
@@ -1093,80 +1093,81 @@ init_package_cache()
 }
 
 
+set_vars()
+{
+	rm -rf /tmp/.cluevars
+	set_var "distroname" "${DISTRO_NAME}"
+	set_var "distrodescription" "${DISTRO_LONGNAME}"
+	set_var "distroprovider" "${DISTRO_PROVIDER}"
+	set_var "distrostatus" "${DISTRO_STATUS}"
+	set_var "distrobuild" "${DISTRO_BUILD}"
+	set_var "distrorelease" "${DISTRO_RELEASE}"
+	set_var "distroversion" "${DISTRO_VERSION}"
+	set_var "repoaddons" "${DISTRO_ADDONS}"
+	set_var "repomirror" "${DISTRO_MIRROR}"
+	set_var "reposources" "${DISTRO_SOURCES}"
+	set_var "reporeleases" "${DISTRO_RELEASES}"
+	set_var "localsources" "${SOURCES}"
+	set_var "localtargets" "${TARGETS}"
+}
+
+
+set_var()
+{
+	local NAME="$1"
+	local VALUE="$2"
+
+	if [ ! -f /tmp/.cluevars ]; then
+		echo "${NAME}=${VALUE}" | tee /tmp/.cluevars >/dev/null
+	else
+		sed -i "/^${NAME}/d" /tmp/.cluevars
+		sed -i "$ a ${NAME}=${VALUE}" /tmp/.cluevars
+	fi
+}
+
+
 set_build()
 {
 	local NEWBUILD="0"
 	local CURBUILD=$(more ${ROOT}/devices/options | grep -i "^DISTRO_BUILD=" | cut -f2 -d"=")
 	CURBUILD=$(echo "${CURBUILD}" | sed -e 's/^[ \t]*//')
-	echo "current build = $CURBUILD"
 	NEWBUILD=$(python -c "print int($CURBUILD) + 1")
-	echo "new build  = $NEWBUILD"
 	sed -i "s|^DISTRO_BUILD=${CURBUILD}|DISTRO_BUILD=${NEWBUILD}|g" ${ROOT}/devices/options
+	. ${ROOT}/devices/options ""
 }
 
-
-check_path()
-{
-	local dashes="===========================" path_err_msg
-	if [ "${PWD##/usr}" != "${PWD}" ]; then
-		path_err_msg="\n $double_dashes"
-		path_err_msg="${path_err_msg}\n ERROR: Detected building inside /usr"
-		path_err_msg="${path_err_msg}\n $double_dashes"
-		path_err_msg="${path_err_msg}\n This is not supported with our buildsystem."
-		path_err_msg="${path_err_msg}\n Please use another dir (for example your \$HOME) to build ${DISTRO_NAME}"
-
-		die "${path_err_msg}"
-	fi
-}
-
-check_device()
-{
-	local dashes="===========================" device_err_msg
-	if [ \( -z "${DEVICE}" -a -d "${ROOT}/devices" \) -o \
-		\( -n "${DEVICE}" -a ! -d "${ROOT}/devices/${DEVICE}" \) ]; then
-		device_err_msg="\n $double_dashes"
-		device_err_msg="${device_err_msg}\n ERROR: You need to specify a valid device"
-		device_err_msg="${device_err_msg}\n $double_dashes"
-		device_err_msg="${device_err_msg}\n\n Valid devices for the system:"
-
-		for device in ${ROOT}/devices/*; do
-			device_err_msg="${device_err_msg}\n - ${device##*/}"
-		done
-		die "${device_err_msg}"
-	fi
-}
-
-check_arch()
-{
-	local dashes="===========================" arch_err_msg linux_config_dir
-	if [ -d "${ROOT}/devices/${DEVICE}/linux" ]; then
-		linux_config_dir="${ROOT}/devices/${DEVICE}/linux"
-	else
-		linux_config_dir="${ROOT}/basis/linux"
-	fi
-
-	if [ ! -e "$linux_config_dir/linux.${TARGET_PATCH_ARCH:-$TARGET_ARCH}.conf" ] &&
-		! ls "$linux_config_dir/"*/linux.${TARGET_PATCH_ARCH:-$TARGET_ARCH}.conf &>/dev/null; then
-		arch_err_msg="\n $double_dashes"
-		arch_err_msg="${arch_err_msg}\n ERROR: Architecture not found, use a valid architecture"
-		arch_err_msg="${arch_err_msg}\n for your project or create a new config"
-		arch_err_msg="${arch_err_msg}\n $double_dashes"
-		arch_err_msg="${arch_err_msg}\n\n Valid architectures for your system"
-
-		for arch in $linux_config_dir/*.conf $linux_config_dir/*/linux.$TARGET_ARCH.conf; do
-			[[ ${arch} =~ .*\*.* ]] && continue #ignore unexpanded wildcard
-			arch_err_msg="${arch_err_msg}\n - $(basename $arch | cut -f2 -d".")"
-		done
-		die "${arch_err_msg}"
-	fi
-}
 
 check_config()
 {
-	check_path
-	check_device
-	check_arch
+	local err_msg
+	local dashes=$(printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' =)
+
+	# check device
+	if [ \( -z "${DEVICE}" -a -d "${ROOT}/devices" \) -o \
+		\( -n "${DEVICE}" -a ! -d "${ROOT}/devices/${DEVICE}" \) ]; then
+		err_msg="\n$dashes"
+		err_msg="${err_msg}\nERROR: You need to specify a valid device"
+		err_msg="${err_msg}\n$dashes"
+		err_msg="${err_msg}\n\nValid devices for the system:"
+		for device in ${ROOT}/devices/*; do
+			err_msg="${err_msg}\n - ${device##*/}"
+		done
+		die "${err_msg}"
+	fi
+
+	# check architecture
+	if [ ! ${ROOT}/devices/${DEVICE}/linux/linux.${TARGET_ARCH}.conf ]; then
+		err_msg="\n$dashes"
+		err_msg="${err_msg}\nERROR: Architecture not found, use a valid architecture for your project or create a new config"
+		err_msg="${err_msg}\n$dashes"
+		err_msg="${err_msg}\n\nValid architectures for your system"
+		for arch in ${ROOT}/devices/${DEVICE}/linux/*.conf; do
+			err_msg="${err_msg}\n - $(basename $arch | cut -f2 -d'.')"
+		done
+		die "${err_msg}"
+	fi
 }
+
 
 do_autoreconf()
 {
@@ -1496,7 +1497,7 @@ kernel_config_path()
 	pkg_linux_version="$(get_pkg_version linux)"
 	pkg_linux_dir="$(get_pkg_directory linux)"
 
-	config_name="linux.${TARGET_PATCH_ARCH:-$TARGET_ARCH}.conf"
+	config_name="linux.${TARGET_ARCH}.conf"
 
 	for cfg in ${ROOT}/devices/${DEVICE}/linux/$pkg_linux_version/$config_name \
 		${ROOT}/devices/${DEVICE}/linux/$LINUX/$config_name \
@@ -1958,17 +1959,21 @@ show_config()
 	config_message="$config_message\n\n"
 	echo -e "$config_message"
 
-	read -n 1 -p "Press any key to continue..  " key
-	echo
-
-	if [ "$key" = 'n' ] || [ "$key" = 'q' ] || [ "$key" = 's' ]; then
-		echo -e "\n\t> operation stopped by the user!\n"
-		exit 1
+	if [ "${1}" != "" ]; then
+		read -n 1 -p "Press any key to continue.." key
+		echo
+		if [ "$key" = 'n' ] || [ "$key" = 'q' ] || [ "$key" = 's' ]; then
+			echo -e "\n\t> operation stopped by the user!\n"
+			exit 1
+		fi
 	fi
 }
 
 # Check configuration
 check_config
+
+# export variables
+set_vars
 
 # If the package caches are unset, then populate them
 init_package_cache

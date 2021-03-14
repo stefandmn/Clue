@@ -22,10 +22,22 @@ ifeq ($(PUBLISH),)
 	export PUBLISH=~/AMSD/Web/clue/repos/releases
 endif
 
+DISTRO_VERSION=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion=" | cut -f2 -d"=")
+IMAGE_NAME=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "imagename=" | cut -f2 -d"=")
+TARGETS=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets=" | cut -f2 -d"=")
 
-# Build OS release
-#test:
-#	./$(CONFIG)/process test
+
+# Display release information
+info:
+ifeq ($(wait),on)
+	./$(CONFIG)/build "info" wait
+else
+	./$(CONFIG)/build "info"
+endif
+
+# Setup build counter in order to describe the next release version
+next:
+	./$(CONFIG)/build "next"
 
 
 # Build particular package or the entire system
@@ -38,11 +50,19 @@ ifneq ($(package),)
 else
 ifneq ($(packages),)
 	rm -rf $(OUTPUT_DIR)/build.log
-	for pack in $(packages) ; do ./$(CONFIG)/build $$pack | tee -a $(OUTPUT_DIR)/install.log ; done
+	for pack in $(packages) ; do ./$(CONFIG)/build $$pack | tee -a $(OUTPUT_DIR)/build.log ; done
 else
-	./$(CONFIG)/process | tee $(OUTPUT_DIR)/process.log
+	$(MAKE) info wait
+	./$(CONFIG)/build | tee $(OUTPUT_DIR)/build.log
 endif
 endif
+
+
+# Build Clue OS release image
+image:
+	 $(MAKE) next
+	 $(MAKE) info -e wait
+	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
 
 
 # Install (and build in case was not yet built) a particular package
@@ -56,8 +76,7 @@ ifneq ($(packages),)
 	rm -rf $(OUTPUT_DIR)/install.log
 	for pack in $(packages) ; do ./$(CONFIG)/install $$pack | tee -a $(OUTPUT_DIR)/install.log ; done
 else
-	@printf "\n* Please specify 'package' parameter, and optional 'parent' parameter!\n\n"
-	exit 1
+	$(error Please specify 'package' parameter, and optional 'parent' parameter!)
 endif
 endif
 
@@ -86,19 +105,6 @@ cleanall:
 	rm -rf $(OUTPUT_DIR)/* $(OUTPUT_DIR)/.stamp $(OUTPUT_DIR)/.ccache
 
 
-# Build CLue OS release
-release:
-	./$(CONFIG)/process release | tee $(OUTPUT_DIR)/process.log
-
-
-# Build and publish Clue OS release
-publish:
-	$(MAKE) release
-	echo -e "\n\n Variables: device=$(DEVICE)"
-	#cp -f $(OUTPUT)/targets/$(NAME).zip $(PUBLISH)/$(NAME)/$(NAME)-$(DISTRO_VER).zip
-	#python $(PUBLISH)/xmlgen.py
-
-
 # Display the cache statistics for
 cachestats:
 	./$(CONFIG)/tools/cachestats | tee $(OUTPUT_DIR)/cachestats.txt
@@ -117,8 +123,7 @@ viewpack:
 ifneq ($(package),)
 	./$(CONFIG)/tools/viewpack $(package)
 else
-	@printf "\n* Please specify 'package' parameter!\n\n"
-	exit 1
+	$(error Please specify 'package' parameter!)
 endif
 
 
@@ -135,8 +140,7 @@ svnrev:
 ifneq ($(message),)
 	svn ci -m "$(message)"
 else
-	@printf "\n* Please specify 'message' parameter!\n\n"
-	exit 1
+	$(error Please specify 'message' parameter!)
 endif
 
 
@@ -148,8 +152,7 @@ ifneq ($(message),)
 	git commit -m "$(message)"
 	git push
 else
-	@printf "\n* Please specify 'message' parameter!\n\n"
-	exit 1
+	$(error Please specify 'message' parameter!)
 endif
 
 
@@ -157,8 +160,12 @@ endif
 # done later - manually or through a separate task and thus the tag is transformed into a
 # addon release
 gitrel:
-	git tag "$(DISTRO_VER)"
+ifneq ($(DISTRO_VERSION),)
+	git tag "$(DISTRO_VERSION)"
 	git push origin --tags
+else
+	$(error Distribution version can not be detected!)
+endif
 
 
 # Commit and push changes in both versioning systems (SVN and GIT)
@@ -173,22 +180,23 @@ endif
 
 
 # Publish the last build in the releases repository
-publish:
+release:
+ifneq ($(shell [ -f $(TARGETS)/$(IMAGE_NAME).img.gz ] && echo -n yes),yes)
+	$(MAKE) next
+	$(MAKE) info -e wait=on
 ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
-	$(MAKE) revision -e message="Submit new release"
+	$(MAKE) revision -e message="Publish release: $(DISTRO_VERSION)"
 	$(MAKE) gitrel
 endif
-ifeq ($(shell [[ -f $(TARGETS)/$(IMAGE_NAME).img.gz ]] && echo -n yes),yes)
+	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
+endif
 ifneq ($(PUBLISH),)
 	# define location and copy meta files
 	mkdir -p $(PUBLISH)/$(DEVICE)
 	cp -f $(TARGETS)/$(IMAGE_NAME).img.gz  $(PUBLISH)/$(IMAGE_NAME).img.gz
-	python $(PUBLISH)/jsongen.py
+	python $(PUBLISH)/jsongen.py --device="$(DEVICE)" --properties=/tmp/.cluevars
 else
 	echo "Repository location is not specified in PUBLISH variable. Set it up and try again!"
-endif
-else
-	echo "Release file doesn't exist, try to run 'release' target first!"
 endif
 
 
@@ -196,10 +204,11 @@ endif
 help:
 	echo -e "\
 \nSYNOPSIS\n\
-       make build | clean | cleanall | release | install \n\
+       make info | next \n\
+       make  clean | cleanall | build | image | install \n\
        make cachestats | viewplan | viewpack | viewbuild \n\
        make svnrev | gitrev | gitrel | revision \n\
-       make help \n\
+       make release help \n\
 \nDESCRIPTION\n\
     Executes one of the make tasks defined through this Makefile flow, according \n\
     to the specified DEVICE variable. In case is not defined/exported to the OS \n\
@@ -211,11 +220,15 @@ help:
     build [-e package=<pack>]\n\
                   build one particular package (and all related dependencies) or \n\
                   the entire DEVICE distribution\n\
+    info\n\
+                  Display release setup according to the selected DEVICE\n\
     clean [-e package=<pack> | packages=<list of packs separated by space>]\n\
                   cleanup one particular package or the entire DEVICE distribution\n\
     cleanall\n\
                   Clean-up all DEVICE distributions, cache and stamps resources as well\n\
-    release\n\
+    build\n\
+                  Build the system release for the current DEVICE\n\
+    image\n\
                   Build the system release and create OS image for the current DEVICE\n\
     install -e package=<pack> | packages=<list of packs separated by space>]\n\
                   install one particular package and related dependencies\n\
@@ -227,6 +240,8 @@ help:
                   Shows the package descriptor and properties\n\
     viewbuild | monitor\n\
                   Display the real time build process for the current DEVICE\n\
+    next\n\
+                  Increment release build number to indicate new release preparation\n\
     svnrev\n\
                   Commit the new release changes into SVN versioning repository.\n\
                   Attention, adding or removal to the project level have to be done\n\
@@ -238,7 +253,9 @@ help:
                   addon version (defined in the addon descriptor - addon.xml file)\n\
     revision\n\
                   Commit and push project changes in both versioning systems (SVN and GIT)\n\
-    help\n\
+    release\n\
+                  Build release and image for the current DEVICE and publish it into repository\n\
+     help\n\
                   Shows this text\n\
 \n\
     There are couple of system variables that can be set in order to drive the building \n\
