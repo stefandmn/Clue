@@ -1,7 +1,5 @@
 # Clue Media Experience
 
---- _**Clue 2** - first release and distribution is still under development_ --- 
-
 **Clue** is a free and open source environment, developed as fork of LibreELEC project,
 to provide you builtin functions like multimedia center, integrated webcam, multiple 
 networking pre-configurations (like Repeater, Router, Hotspot, etc.), etc., everything 
@@ -10,7 +8,7 @@ out of the box, easy to be deployed and to use over **Kodi** media center.
 To install **Clue**  you need to download the installer image from [amsd.go.ro/clue](https://amsd.go.ro/clue),
 choosing the right image file corresponding to your RPi device version, write it on the SD 
 (or min SD) card, and connect RPi device through LAN port to your local network. The 
-installer doesn't require human interaction and it will finish the installation process 
+installer doesn't require human interaction, and it will finish the installation process 
 in 1-2 minutes (depending by your RPi version).
 
 After installation **Clue** will boot loading automatically _Kodi_ media center with a 
@@ -20,7 +18,7 @@ Connecting the RPi device to a TV over _HDMI_ you'll be able to setup the system
 from TV remove control and also to control the entire _HDMI_ chain using **System Setup** 
 utility (deployed like a _Kodi_ addon).
 
-**Clue** works mainly on all RPi devices, supported devices and their technical specifications 
+**Clue** works mainly on all RPi devices, supported devices, and their technical specifications 
 are described below. In addition, this documentation provides guidelines to extend the **Clue OS**
 setup or to adapt existing functionalities adjusting packages configuration.  
  
@@ -117,8 +115,8 @@ _B+ model specific_
 
 ## Development Process
 
-Development process is always driven __GNU make__ utility, providing the entire set command to 
-build the entire distro, creater OS image, or to build or install particular packages or addons.
+Development process is driven by __GNU make__ utility, providing the entire set of commands to 
+build the distribution, create OS image, or to build or install particular packages or addons.
 Also, __Makefile__ gives you details how to configure your environment in order to run the processes
 and to optimize your resources. Just to identify all these details try a simple ```make help``` command.
 

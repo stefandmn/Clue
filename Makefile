@@ -22,6 +22,9 @@ ifeq ($(PUBLISH),)
 	export PUBLISH=~/AMSD/Web/clue/repos/releases
 endif
 
+# Global variables
+DISTRO_GITHTAG=$(shell git describe --abbrev=0 --tags)
+DISTRO_NAME=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"=")
 DISTRO_VERSION=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"=")
 IMAGE_NAME=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "imagename" | cut -f2 -d"=")
 TARGETS=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"=")
@@ -34,6 +37,7 @@ ifeq ($(wait),on)
 else
 	./$(CONFIG)/build "info"
 endif
+
 
 # Setup build counter in order to describe the next release version
 next:
@@ -62,6 +66,11 @@ endif
 image:
 	 $(MAKE) next
 	 $(MAKE) info -e wait=on
+	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
+	$(eval DISTRO_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"="`)
+ifneq ($(TARGETS),)
+	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)
+endif
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
 
 
@@ -160,6 +169,7 @@ endif
 # done later - manually or through a separate task and thus the tag is transformed into a
 # addon release
 gitrel:
+	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
 ifneq ($(DISTRO_VERSION),)
 	git tag "$(DISTRO_VERSION)"
 	git push origin --tags
@@ -181,22 +191,30 @@ endif
 
 # Publish the last build in the releases repository
 release:
-ifneq ($(shell [ -f $(TARGETS)/$(IMAGE_NAME).img.gz ] && echo -n yes),yes)
-	$(MAKE) next
-	$(MAKE) info -e wait=on
+	 $(MAKE) next
+	 $(MAKE) info -e wait=on
+	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
+	$(eval DISTRO_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"="`)
+	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
+ifneq ($(TARGETS),)
+	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)
+endif
 ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
 	$(MAKE) revision -e message="Reporting release $(DISTRO_VERSION)"
+endif
+	$(eval DISTRO_GITHTAG=`git describe --abbrev=0 --tags`)
+ifneq ($(DISTRO_VERSION),$(DISTRO_GITHTAG))
 	$(MAKE) gitrel
 endif
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
-endif
+	$(eval IMAGE_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "imagename" | cut -f2 -d"="`)
 ifneq ($(PUBLISH),)
 	# define location and copy meta files
 	mkdir -p $(PUBLISH)/$(DEVICE)
-	cp -f $(TARGETS)/$(IMAGE_NAME).img.gz  $(PUBLISH)/$(IMAGE_NAME).img.gz
+	cp -f $(TARGETS)/$(IMAGE_NAME).img.gz  $(PUBLISH)/$(DEVICE)/$(IMAGE_NAME).img.gz
 	python $(PUBLISH)/jsongen.py --device="$(DEVICE)" --properties=/tmp/.cluevars
 else
-	echo "Repository location is not specified in PUBLISH variable. Set it up and try again!"
+	$(error Repository location is not specified in PUBLISH variable. Set it up and try again!)
 endif
 
 
@@ -264,8 +282,11 @@ help:
                   Indicates the target device type. Possible options are: RPi, RPi2, RPi4\n\
                   Default value is 'RPi'.\n\
     OUTPUT\n\
-                  Describe the local file system location where the build process will be  \n\
+                  Describes the local file system location where the build process will be  \n\
                   executed. Default value is '$(ROOT)/../Clue-out'\n\
+    PUBLISH\n\
+                  Indicates the remote file system where the new releases are published and stored\n\
+                  This location should be attached to the local system as a network folder\n\
     STATUS\n\
                   Provides and indication about distribution build status. All possible values\n\
                   are: stable, devel, nightly, daily, weekly, monthly, Default value is 'devel'\n\

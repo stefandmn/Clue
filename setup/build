@@ -48,18 +48,18 @@ if [ -n "${1}" ] && [ "${1}" != "image" ] && [ "${1}" != "info" ] && [ "${1}" !=
 	# build dependencies, only when PKG_DEPENDS_? is filled
 	unset _pkg_depends
 	case "${TARGET}" in
-		"target")
-			_pkg_depends="${PKG_DEPENDS_TARGET}"
-			;;
-		"host")
-			_pkg_depends="${PKG_DEPENDS_HOST}"
-			;;
-		"init")
-			_pkg_depends="${PKG_DEPENDS_INIT}"
-			;;
-		"bootstrap")
-			_pkg_depends="${PKG_DEPENDS_BOOTSTRAP}"
-			;;
+	"target")
+		_pkg_depends="${PKG_DEPENDS_TARGET}"
+		;;
+	"host")
+		_pkg_depends="${PKG_DEPENDS_HOST}"
+		;;
+	"init")
+		_pkg_depends="${PKG_DEPENDS_INIT}"
+		;;
+	"bootstrap")
+		_pkg_depends="${PKG_DEPENDS_BOOTSTRAP}"
+		;;
 	esac
 
 	# build dependencies
@@ -243,10 +243,10 @@ if [ -n "${1}" ] && [ "${1}" != "image" ] && [ "${1}" != "info" ] && [ "${1}" !=
 
 	if [ -f "${PKG_CONFIGURE_SCRIPT}" -o -f "${PKG_CMAKE_SCRIPT}" -o -f "${PKG_MESON_SCRIPT}" ]; then
 		case "${TARGET}" in
-			"target") PKG_REAL_BUILD="${PKG_BUILD}/.${TARGET_NAME}" ;;
-			"host") PKG_REAL_BUILD="${PKG_BUILD}/.${HOST_NAME}" ;;
-			"init") PKG_REAL_BUILD="${PKG_BUILD}/.${TARGET_NAME}-${TARGET}" ;;
-			"bootstrap") PKG_REAL_BUILD="${PKG_BUILD}/.${HOST_NAME}-${TARGET}" ;;
+		"target") PKG_REAL_BUILD="${PKG_BUILD}/.${TARGET_NAME}" ;;
+		"host") PKG_REAL_BUILD="${PKG_BUILD}/.${HOST_NAME}" ;;
+		"init") PKG_REAL_BUILD="${PKG_BUILD}/.${TARGET_NAME}-${TARGET}" ;;
+		"bootstrap") PKG_REAL_BUILD="${PKG_BUILD}/.${HOST_NAME}-${TARGET}" ;;
 		esac
 		mkdir -p "${PKG_REAL_BUILD}"
 		cd "${PKG_REAL_BUILD}"
@@ -262,78 +262,78 @@ if [ -n "${1}" ] && [ "${1}" != "image" ] && [ "${1}" != "info" ] && [ "${1}" !=
 		pkg_call configure_${TARGET}
 	else
 		case "${PKG_TOOLCHAIN}:${TARGET}" in
-			# meson builds
-			"meson:target")
-				create_meson_conf ${TARGET} ${MESON_CONF}
-				echo "Executing (target): meson ${TARGET_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_TARGET} $(dirname ${PKG_MESON_SCRIPT})" | tr -s " "
-				CC="${HOST_CC}" CXX="${HOST_CXX}" meson ${TARGET_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_TARGET} $(dirname ${PKG_MESON_SCRIPT})
-				;;
-			"meson:host")
-				create_meson_conf ${TARGET} ${MESON_CONF}
-				echo "Executing (host): meson ${HOST_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_HOST} $(dirname ${PKG_MESON_SCRIPT})" | tr -s " "
-				meson ${HOST_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_HOST} $(dirname ${PKG_MESON_SCRIPT})
-				;;
-			"meson:init")
-				create_meson_conf ${TARGET} ${MESON_CONF}
-				echo "Executing (init): meson ${INIT_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_INIT} $(dirname ${PKG_MESON_SCRIPT})" | tr -s " "
-				meson ${INIT_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_INIT} $(dirname ${PKG_MESON_SCRIPT})
-				;;
-			"meson:bootstrap")
-				create_meson_conf ${TARGET} ${MESON_CONF}
-				echo "Executing (bootstrap): meson ${BOOTSTRAP_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_BOOTSTRAP} $(dirname ${PKG_MESON_SCRIPT})" | tr -s " "
-				meson ${BOOTSTRAP_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_BOOTSTRAP} $(dirname ${PKG_MESON_SCRIPT})
-				;;
+		# meson builds
+		"meson:target")
+			create_meson_conf ${TARGET} ${MESON_CONF}
+			echo "Executing (target): meson ${TARGET_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_TARGET} $(dirname ${PKG_MESON_SCRIPT})" | tr -s " "
+			CC="${HOST_CC}" CXX="${HOST_CXX}" meson ${TARGET_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_TARGET} $(dirname ${PKG_MESON_SCRIPT})
+			;;
+		"meson:host")
+			create_meson_conf ${TARGET} ${MESON_CONF}
+			echo "Executing (host): meson ${HOST_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_HOST} $(dirname ${PKG_MESON_SCRIPT})" | tr -s " "
+			meson ${HOST_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_HOST} $(dirname ${PKG_MESON_SCRIPT})
+			;;
+		"meson:init")
+			create_meson_conf ${TARGET} ${MESON_CONF}
+			echo "Executing (init): meson ${INIT_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_INIT} $(dirname ${PKG_MESON_SCRIPT})" | tr -s " "
+			meson ${INIT_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_INIT} $(dirname ${PKG_MESON_SCRIPT})
+			;;
+		"meson:bootstrap")
+			create_meson_conf ${TARGET} ${MESON_CONF}
+			echo "Executing (bootstrap): meson ${BOOTSTRAP_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_BOOTSTRAP} $(dirname ${PKG_MESON_SCRIPT})" | tr -s " "
+			meson ${BOOTSTRAP_MESON_OPTS} --cross-file=${MESON_CONF} ${PKG_MESON_OPTS_BOOTSTRAP} $(dirname ${PKG_MESON_SCRIPT})
+			;;
 			# cmake builds with ninja
-			"cmake:target")
-				echo "Executing (target): cmake ${CMAKE_GENERATOR_NINJA} ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
-				cmake ${CMAKE_GENERATOR_NINJA} ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})
-				;;
-			"cmake:host")
-				echo "Executing (host): cmake ${CMAKE_GENERATOR_NINJA} ${HOST_CMAKE_OPTS} ${PKG_CMAKE_OPTS_HOST} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
-				cmake ${CMAKE_GENERATOR_NINJA} ${HOST_CMAKE_OPTS} ${PKG_CMAKE_OPTS_HOST} $(dirname ${PKG_CMAKE_SCRIPT})
-				;;
-			"cmake:init")
-				echo "Executing (init): cmake ${CMAKE_GENERATOR_NINJA} ${INIT_CMAKE_OPTS} ${PKG_CMAKE_OPTS_INIT} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
-				cmake ${CMAKE_GENERATOR_NINJA} ${INIT_CMAKE_OPTS} ${PKG_CMAKE_OPTS_INIT} $(dirname ${PKG_CMAKE_SCRIPT})
-				;;
-			"cmake:bootstrap")
-				echo "Executing (bootstrap): cmake ${CMAKE_GENERATOR_NINJA} ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
-				cmake ${CMAKE_GENERATOR_NINJA} ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})
-				;;
+		"cmake:target")
+			echo "Executing (target): cmake ${CMAKE_GENERATOR_NINJA} ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
+			cmake ${CMAKE_GENERATOR_NINJA} ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})
+			;;
+		"cmake:host")
+			echo "Executing (host): cmake ${CMAKE_GENERATOR_NINJA} ${HOST_CMAKE_OPTS} ${PKG_CMAKE_OPTS_HOST} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
+			cmake ${CMAKE_GENERATOR_NINJA} ${HOST_CMAKE_OPTS} ${PKG_CMAKE_OPTS_HOST} $(dirname ${PKG_CMAKE_SCRIPT})
+			;;
+		"cmake:init")
+			echo "Executing (init): cmake ${CMAKE_GENERATOR_NINJA} ${INIT_CMAKE_OPTS} ${PKG_CMAKE_OPTS_INIT} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
+			cmake ${CMAKE_GENERATOR_NINJA} ${INIT_CMAKE_OPTS} ${PKG_CMAKE_OPTS_INIT} $(dirname ${PKG_CMAKE_SCRIPT})
+			;;
+		"cmake:bootstrap")
+			echo "Executing (bootstrap): cmake ${CMAKE_GENERATOR_NINJA} ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
+			cmake ${CMAKE_GENERATOR_NINJA} ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})
+			;;
 			# cmake builds with make
-			"cmake-make:target")
-				echo "Executing (target): cmake ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
-				cmake ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})
-				;;
-			"cmake-make:host")
-				echo "Executing (host): cmake ${HOST_CMAKE_OPTS} ${PKG_CMAKE_OPTS_HOST} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
-				cmake ${HOST_CMAKE_OPTS} ${PKG_CMAKE_OPTS_HOST} $(dirname ${PKG_CMAKE_SCRIPT})
-				;;
-			"cmake-make:init")
-				echo "Executing (init): cmake ${INIT_CMAKE_OPTS} ${PKG_CMAKE_OPTS_INIT} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
-				cmake ${INIT_CMAKE_OPTS} ${PKG_CMAKE_OPTS_INIT} $(dirname ${PKG_CMAKE_SCRIPT})
-				;;
-			"cmake-make:bootstrap")
-				echo "Executing (bootstrap): cmake ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
-				cmake ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})
-				;;
+		"cmake-make:target")
+			echo "Executing (target): cmake ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
+			cmake ${TARGET_CMAKE_OPTS} ${PKG_CMAKE_OPTS_TARGET} $(dirname ${PKG_CMAKE_SCRIPT})
+			;;
+		"cmake-make:host")
+			echo "Executing (host): cmake ${HOST_CMAKE_OPTS} ${PKG_CMAKE_OPTS_HOST} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
+			cmake ${HOST_CMAKE_OPTS} ${PKG_CMAKE_OPTS_HOST} $(dirname ${PKG_CMAKE_SCRIPT})
+			;;
+		"cmake-make:init")
+			echo "Executing (init): cmake ${INIT_CMAKE_OPTS} ${PKG_CMAKE_OPTS_INIT} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
+			cmake ${INIT_CMAKE_OPTS} ${PKG_CMAKE_OPTS_INIT} $(dirname ${PKG_CMAKE_SCRIPT})
+			;;
+		"cmake-make:bootstrap")
+			echo "Executing (bootstrap): cmake ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})" | tr -s " "
+			cmake ${BOOTSTRAP_CMAKE_OPTS} ${PKG_CMAKE_OPTS_BOOTSTRAP} $(dirname ${PKG_CMAKE_SCRIPT})
+			;;
 			# configure builds
-			"configure:target" | "autotools:target")
-				echo "Executing (target): ${PKG_CONFIGURE_SCRIPT} ${TARGET_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_TARGET}" | tr -s " "
-				${PKG_CONFIGURE_SCRIPT} ${TARGET_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_TARGET}
-				;;
-			"configure:host" | "autotools:host")
-				echo "Executing (host): ${PKG_CONFIGURE_SCRIPT} ${HOST_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_HOST}" | tr -s " "
-				${PKG_CONFIGURE_SCRIPT} ${HOST_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_HOST}
-				;;
-			"configure:init" | "autotools:init")
-				echo "Executing (init): ${PKG_CONFIGURE_SCRIPT} ${INIT_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_INIT}" | tr -s " "
-				${PKG_CONFIGURE_SCRIPT} ${INIT_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_INIT}
-				;;
-			"configure:bootstrap" | "autotools:bootstrap")
-				echo "Executing (bootstrap): ${PKG_CONFIGURE_SCRIPT} ${BOOTSTRAP_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_BOOTSTRAP}" | tr -s " "
-				${PKG_CONFIGURE_SCRIPT} ${BOOTSTRAP_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_BOOTSTRAP}
-				;;
+		"configure:target" | "autotools:target")
+			echo "Executing (target): ${PKG_CONFIGURE_SCRIPT} ${TARGET_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_TARGET}" | tr -s " "
+			${PKG_CONFIGURE_SCRIPT} ${TARGET_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_TARGET}
+			;;
+		"configure:host" | "autotools:host")
+			echo "Executing (host): ${PKG_CONFIGURE_SCRIPT} ${HOST_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_HOST}" | tr -s " "
+			${PKG_CONFIGURE_SCRIPT} ${HOST_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_HOST}
+			;;
+		"configure:init" | "autotools:init")
+			echo "Executing (init): ${PKG_CONFIGURE_SCRIPT} ${INIT_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_INIT}" | tr -s " "
+			${PKG_CONFIGURE_SCRIPT} ${INIT_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_INIT}
+			;;
+		"configure:bootstrap" | "autotools:bootstrap")
+			echo "Executing (bootstrap): ${PKG_CONFIGURE_SCRIPT} ${BOOTSTRAP_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_BOOTSTRAP}" | tr -s " "
+			${PKG_CONFIGURE_SCRIPT} ${BOOTSTRAP_CONFIGURE_OPTS} ${PKG_CONFIGURE_OPTS_BOOTSTRAP}
+			;;
 		esac
 	fi
 
@@ -346,40 +346,40 @@ if [ -n "${1}" ] && [ "${1}" != "image" ] && [ "${1}" != "info" ] && [ "${1}" !=
 		pkg_call make_${TARGET}
 	else
 		case "${PKG_TOOLCHAIN}:${TARGET}" in
-			# ninja based builds
-			"meson:target" | "cmake:target" | "ninja:target")
-				echo "Executing (target): ninja ${PKG_MAKE_OPTS_TARGET}" | tr -s " "
-				ninja ${NINJA_OPTS} ${PKG_MAKE_OPTS_TARGET}
-				;;
-			"meson:host" | "cmake:host" | "ninja:host")
-				echo "Executing (host): ninja ${PKG_MAKE_OPTS_HOST}" | tr -s " "
-				ninja ${NINJA_OPTS} ${PKG_MAKE_OPTS_HOST}
-				;;
-			"meson:init" | "cmake:init" | "ninja:init")
-				echo "Executing (init): ninja ${PKG_MAKE_OPTS_INIT}" | tr -s " "
-				ninja ${NINJA_OPTS} ${PKG_MAKE_OPTS_INIT}
-				;;
-			"meson:bootstrap" | "cmake:bootstrap" | "ninja:bootstrap")
-				echo "Executing (bootstrap): ninja ${PKG_MAKE_OPTS_BOOTSTRAP}" | tr -s " "
-				ninja ${NINJA_OPTS} ${PKG_MAKE_OPTS_BOOTSTRAP}
-				;;
+		# ninja based builds
+		"meson:target" | "cmake:target" | "ninja:target")
+			echo "Executing (target): ninja ${PKG_MAKE_OPTS_TARGET}" | tr -s " "
+			ninja ${NINJA_OPTS} ${PKG_MAKE_OPTS_TARGET}
+			;;
+		"meson:host" | "cmake:host" | "ninja:host")
+			echo "Executing (host): ninja ${PKG_MAKE_OPTS_HOST}" | tr -s " "
+			ninja ${NINJA_OPTS} ${PKG_MAKE_OPTS_HOST}
+			;;
+		"meson:init" | "cmake:init" | "ninja:init")
+			echo "Executing (init): ninja ${PKG_MAKE_OPTS_INIT}" | tr -s " "
+			ninja ${NINJA_OPTS} ${PKG_MAKE_OPTS_INIT}
+			;;
+		"meson:bootstrap" | "cmake:bootstrap" | "ninja:bootstrap")
+			echo "Executing (bootstrap): ninja ${PKG_MAKE_OPTS_BOOTSTRAP}" | tr -s " "
+			ninja ${NINJA_OPTS} ${PKG_MAKE_OPTS_BOOTSTRAP}
+			;;
 			# make based builds
-			"configure:target" | "cmake-make:target" | "autotools:target" | "make:target")
-				echo "Executing (target): make ${PKG_MAKE_OPTS_TARGET}" | tr -s " "
-				make ${PKG_MAKE_OPTS_TARGET}
-				;;
-			"configure:host" | "cmake-make:host" | "autotools:host" | "make:host")
-				echo "Executing (host): make ${PKG_MAKE_OPTS_HOST}" | tr -s " "
-				make ${PKG_MAKE_OPTS_HOST}
-				;;
-			"configure:init" | "cmake-make:init" | "autotools:init" | "make:init")
-				echo "Executing (init): make ${PKG_MAKE_OPTS_INIT}" | tr -s " "
-				make ${PKG_MAKE_OPTS_INIT}
-				;;
-			"configure:bootstrap" | "cmake-make:bootstrap" | "autotools:bootstrap" | "make:bootstrap")
-				echo "Executing (bootstrap): make ${PKG_MAKE_OPTS_BOOTSTRAP}" | tr -s " "
-				make ${PKG_MAKE_OPTS_BOOTSTRAP}
-				;;
+		"configure:target" | "cmake-make:target" | "autotools:target" | "make:target")
+			echo "Executing (target): make ${PKG_MAKE_OPTS_TARGET}" | tr -s " "
+			make ${PKG_MAKE_OPTS_TARGET}
+			;;
+		"configure:host" | "cmake-make:host" | "autotools:host" | "make:host")
+			echo "Executing (host): make ${PKG_MAKE_OPTS_HOST}" | tr -s " "
+			make ${PKG_MAKE_OPTS_HOST}
+			;;
+		"configure:init" | "cmake-make:init" | "autotools:init" | "make:init")
+			echo "Executing (init): make ${PKG_MAKE_OPTS_INIT}" | tr -s " "
+			make ${PKG_MAKE_OPTS_INIT}
+			;;
+		"configure:bootstrap" | "cmake-make:bootstrap" | "autotools:bootstrap" | "make:bootstrap")
+			echo "Executing (bootstrap): make ${PKG_MAKE_OPTS_BOOTSTRAP}" | tr -s " "
+			make ${PKG_MAKE_OPTS_BOOTSTRAP}
+			;;
 		esac
 	fi
 
@@ -404,34 +404,34 @@ if [ -n "${1}" ] && [ "${1}" != "image" ] && [ "${1}" != "info" ] && [ "${1}" !=
 		pkg_call makeinstall_${TARGET}
 	else
 		case "${PKG_TOOLCHAIN}:${TARGET}" in
-			# ninja based builds
-			"meson:target" | "cmake:target")
-				DESTDIR=${TARGET_SYSROOT} ninja install ${PKG_MAKEINSTALL_OPTS_TARGET}
-				DESTDIR=${INSTALL} ninja install ${PKG_MAKEINSTALL_OPTS_TARGET}
-				;;
-			"meson:host" | "cmake:host")
-				ninja install ${PKG_MAKEINSTALL_OPTS_HOST}
-				;;
-			"meson:init" | "cmake:init")
-				DESTDIR=${INSTALL} ninja install ${PKG_MAKEINSTALL_OPTS_INIT}
-				;;
-			"meson:bootstrap" | "cmake:bootstrap")
-				ninja install ${PKG_MAKEINSTALL_OPTS_BOOTSTRAP}
-				;;
+		# ninja based builds
+		"meson:target" | "cmake:target")
+			DESTDIR=${TARGET_SYSROOT} ninja install ${PKG_MAKEINSTALL_OPTS_TARGET}
+			DESTDIR=${INSTALL} ninja install ${PKG_MAKEINSTALL_OPTS_TARGET}
+			;;
+		"meson:host" | "cmake:host")
+			ninja install ${PKG_MAKEINSTALL_OPTS_HOST}
+			;;
+		"meson:init" | "cmake:init")
+			DESTDIR=${INSTALL} ninja install ${PKG_MAKEINSTALL_OPTS_INIT}
+			;;
+		"meson:bootstrap" | "cmake:bootstrap")
+			ninja install ${PKG_MAKEINSTALL_OPTS_BOOTSTRAP}
+			;;
 			# make based builds
-			"configure:target" | "cmake-make:target" | "autotools:target" | "make:target")
-				make install DESTDIR=${TARGET_SYSROOT} -j1 ${PKG_MAKEINSTALL_OPTS_TARGET}
-				make install DESTDIR=${INSTALL} ${PKG_MAKEINSTALL_OPTS_TARGET}
-				;;
-			"configure:host" | "cmake-make:host" | "autotools:host" | "make:host")
-				make install ${PKG_MAKEINSTALL_OPTS_HOST}
-				;;
-			"configure:init" | "cmake-make:init" | "autotools:init" | "make:init")
-				make install DESTDIR=${INSTALL} ${PKG_MAKEINSTALL_OPTS_INIT}
-				;;
-			"configure:bootstrap" | "cmake-make:bootstrap" | "autotools:bootstrap" | "make:bootstrap")
-				make install ${PKG_MAKEINSTALL_OPTS_BOOTSTRAP}
-				;;
+		"configure:target" | "cmake-make:target" | "autotools:target" | "make:target")
+			make install DESTDIR=${TARGET_SYSROOT} -j1 ${PKG_MAKEINSTALL_OPTS_TARGET}
+			make install DESTDIR=${INSTALL} ${PKG_MAKEINSTALL_OPTS_TARGET}
+			;;
+		"configure:host" | "cmake-make:host" | "autotools:host" | "make:host")
+			make install ${PKG_MAKEINSTALL_OPTS_HOST}
+			;;
+		"configure:init" | "cmake-make:init" | "autotools:init" | "make:init")
+			make install DESTDIR=${INSTALL} ${PKG_MAKEINSTALL_OPTS_INIT}
+			;;
+		"configure:bootstrap" | "cmake-make:bootstrap" | "autotools:bootstrap" | "make:bootstrap")
+			make install ${PKG_MAKEINSTALL_OPTS_BOOTSTRAP}
+			;;
 		esac
 	fi
 
@@ -531,34 +531,34 @@ elif [ -z "${1}" ] || [ "${1}" = "image" ]; then
 	GIT_HASH=$(git rev-parse HEAD)
 	GIT_ABBREV=${GIT_HASH:0:7}
 	case "${DISTRO_STATUS}" in
-		nightly)
-			DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m%d)-${GIT_ABBREV}
-			DISTRO_LABEL="(${DISTRO_CODE})"
-			;;
-		daily)
-			DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%j)-${GIT_ABBREV}
-			DISTRO_LABEL="(${DISTRO_CODE})"
-			;;
-		weekly)
-			DISTRO_CODE=${DISTRO_STATUS}-$(date +%G%V)-${GIT_ABBREV}
-			DISTRO_LABEL="(${DISTRO_CODE})"
-			;;
-		monthly)
-			DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m)-${GIT_ABBREV}
-			DISTRO_LABEL="(${DISTRO_CODE})"
-			;;
-		devel)
-			DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m%d%H%M%S)-${GIT_ABBREV}
-			DISTRO_LABEL="(${DISTRO_CODE})"
-			;;
-		stable)
-			DISTRO_CODE=${DISTRO_STATUS}-${GIT_ABBREV}
-			DISTRO_LABEL="(${DISTRO_CODE})"
-			;;
-		*)
-			DISTRO_CODE=${DISTRO_STATUS}
-			DISTRO_LABEL="${DISTRO_CODE}"
-			;;
+	nightly)
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m%d)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
+		;;
+	daily)
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%j)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
+		;;
+	weekly)
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%G%V)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
+		;;
+	monthly)
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
+		;;
+	devel)
+		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m%d%H%M%S)-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
+		;;
+	stable)
+		DISTRO_CODE=${DISTRO_STATUS}-${GIT_ABBREV}
+		DISTRO_LABEL="(${DISTRO_CODE})"
+		;;
+	*)
+		DISTRO_CODE=${DISTRO_STATUS}
+		DISTRO_LABEL="${DISTRO_CODE}"
+		;;
 	esac
 
 	TARGET_VERSION="${DEVICE}.${TARGET_ARCH}-${DISTRO_CODE}"
@@ -757,13 +757,13 @@ EOF
 		cp ${ROOT}/README* ${RELEASE_DIR}
 		echo "${TARGET_VERSION}" >${RELEASE_DIR}/RELEASE
 
-			echo -e "\t\tKodi commit: $(get_pkg_version kodi)" >>${RELEASE_DIR}/RELEASE
+		echo -e "\t\tKodi commit: $(get_pkg_version kodi)" >>${RELEASE_DIR}/RELEASE
 
 		mkdir -p ${RELEASE_DIR}/target
 		cp ${TARGETS}/${IMAGE_NAME}.system ${RELEASE_DIR}/target/SYSTEM
 		cp ${TARGETS}/${IMAGE_NAME}.kernel ${RELEASE_DIR}/target/KERNEL
 
-		(	# Create md5sum's
+		(# Create md5sum's
 			cd ${RELEASE_DIR}
 			md5sum -t target/SYSTEM >target/SYSTEM.md5
 			md5sum -t target/KERNEL >target/KERNEL.md5
@@ -773,7 +773,7 @@ EOF
 		echo -e "\tCreating release tarball.."
 		tar cf ${TARGETS}/${IMAGE_NAME}.tar -C ${TARGETS} ${IMAGE_NAME} || die "An error has occurred creating release tarball: $(echo '${TARGETS}/${IMAGE_NAME}.tar, over location ${TARGETS} for directory ${IMAGE_NAME}')"
 
-		(	# Create sha256 checksum of tarball
+		(# Create sha256 checksum of tarball
 			cd ${TARGETS}
 			sha256sum ${IMAGE_NAME}.tar >${IMAGE_NAME}.tar.sha256
 		)
@@ -919,7 +919,6 @@ EOF
 		# cleanup
 		echo -e "\tCleaning up.."
 		rm -rf "${LE_TMP}"
-
 
 		# Cleanup release dir
 		rm -rf ${RELEASE_DIR}
