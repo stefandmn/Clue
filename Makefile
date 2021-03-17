@@ -171,9 +171,9 @@ endif
 # addon release
 gitrel:
 	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
-	echo "GIT Tag 1: DISTRO_VERSION=$(DISTRO_VERSION)"
+	echo "*** GIT Tag 1: DISTRO_VERSION=$(DISTRO_VERSION)"
 ifneq ($(DISTRO_VERSION),)
-	echo "GIT Tag 2: DISTRO_VERSION=$(DISTRO_VERSION)"
+	echo "*** GIT Tag 2: DISTRO_VERSION=$(DISTRO_VERSION)"
 	git tag "$(DISTRO_VERSION)"
 	git push origin --tags
 else
@@ -195,21 +195,21 @@ endif
 # Publish the last build in the releases repository
 release:
 	$(MAKE) next
-	$(MAKE) info -e wait=on
+	#$(MAKE) info -e wait=on
 	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
 	$(eval DISTRO_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"="`)
 	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
-	echo "Variables: DISTRO_VERSION=$(DISTRO_VERSION)"
+	echo "*** Variables: DISTRO_VERSION=$(DISTRO_VERSION)"
 ifneq ($(TARGETS),)
 	echo "Clean-up old release from local file system: $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*"
 	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
 endif
 ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
-	echo "Revision: DISTRO_VERSION=$(DISTRO_VERSION)"
+	echo "*** Revision: DISTRO_VERSION=$(DISTRO_VERSION)"
 	$(MAKE) revision -e message="Reporting release $(DISTRO_VERSION)"
 endif
 	$(eval DISTRO_GITHTAG=`git describe --abbrev=0 --tags`)
-	echo "Release: DISTRO_VERSION=$(DISTRO_VERSION), DISTRO_GITHTAG=$(DISTRO_GITHTAG)"
+	echo "*** Release: DISTRO_VERSION=$(DISTRO_VERSION), DISTRO_GITHTAG=$(DISTRO_GITHTAG)"
 ifneq ($(DISTRO_VERSION),$(DISTRO_GITHTAG))
 	$(MAKE) gitrel
 endif
