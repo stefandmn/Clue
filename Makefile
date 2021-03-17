@@ -65,11 +65,11 @@ endif
 
 # Build Clue OS release image
 image:
+	$(MAKE) next
+	$(MAKE) info -e wait=on
 ifneq ($(TARGETS),)
 	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
 endif
-	$(MAKE) next
-	$(MAKE) info -e wait=on
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
 
 
@@ -189,20 +189,16 @@ endif
 
 # Publish the last build in the releases repository
 release:
-ifneq ($(TARGETS),)
-	echo "*** Clean-up old release from local file system: $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*"
-	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
-endif
 	$(MAKE) next
 	$(MAKE) info -e wait=on
+ifneq ($(TARGETS),)
+	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
+endif
 	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
-	echo "*** Variables: DISTRO_VERSION=$(DISTRO_VERSION)"
 ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
-	echo "*** Revision: DISTRO_VERSION=$(DISTRO_VERSION)"
 	$(MAKE) revision -e message="Reporting release $(DISTRO_VERSION)"
 endif
 	$(eval DISTRO_GITHTAG=`git describe --abbrev=0 --tags`)
-	echo "*** Release: DISTRO_VERSION=$(DISTRO_VERSION), DISTRO_GITHTAG=$(DISTRO_GITHTAG)"
 ifneq ($(DISTRO_VERSION),$(DISTRO_GITHTAG))
 	$(MAKE) gitrel -e tag="$(DISTRO_VERSION)"
 endif
