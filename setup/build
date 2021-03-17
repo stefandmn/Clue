@@ -563,10 +563,8 @@ elif [ -z "${1}" ] || [ "${1}" = "image" ]; then
 
 	TARGET_VERSION="${DEVICE}.${TARGET_ARCH}-${DISTRO_CODE}"
 	IMAGE_NAME="${DISTRO_NAME}-${DISTRO_VERSION}-${TARGET_VERSION}"
-
 	set_var "distrocode" "${DISTRO_CODE}"
 	set_var "imagename" "${IMAGE_NAME}"
-	set_var "targetversion" "${TARGET_VERSION}"
 
 	# Setup fakeroot
 	echo ">> Defining fake root.."

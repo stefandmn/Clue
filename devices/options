@@ -13,7 +13,7 @@ DISTRO_LONGNAME="Clue Media Experience"
 DISTRO_STATUS="${STATUS:-devel}"
 
 # DISTRO_VERSION: Distribution Version with minor and major revisions
-DISTRO_BUILD=146
+DISTRO_BUILD=148
 DISTRO_RELEASE=2.0
 DISTRO_VERSION="${DISTRO_RELEASE}.${DISTRO_BUILD}"
 
@@ -1970,10 +1970,10 @@ show_config()
 }
 
 # Check configuration
-check_config
+[[ -z ${1} ]] && check_config
 
 # export variables
-set_vars
+[[ -z ${1} ]] && set_vars
 
 # If the package caches are unset, then populate them
 init_package_cache
