@@ -56,6 +56,7 @@ ifneq ($(packages),)
 	rm -rf $(OUTPUT_DIR)/build.log
 	for pack in $(packages) ; do ./$(CONFIG)/build $$pack | tee -a $(OUTPUT_DIR)/build.log ; done
 else
+	$(MAKE) next
 	$(MAKE) info -e wait=on
 	./$(CONFIG)/build | tee $(OUTPUT_DIR)/build.log
 endif
@@ -64,13 +65,11 @@ endif
 
 # Build Clue OS release image
 image:
-	$(MAKE) next
-	$(MAKE) info -e wait=on
-	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
-	$(eval DISTRO_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"="`)
 ifneq ($(TARGETS),)
 	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
 endif
+	$(MAKE) next
+	$(MAKE) info -e wait=on
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
 
 
@@ -190,16 +189,14 @@ endif
 
 # Publish the last build in the releases repository
 release:
-	$(MAKE) next
-	#$(MAKE) info -e wait=on
-	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
-	$(eval DISTRO_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"="`)
-	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
-	echo "*** Variables: DISTRO_VERSION=$(DISTRO_VERSION)"
 ifneq ($(TARGETS),)
 	echo "*** Clean-up old release from local file system: $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*"
 	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
 endif
+	$(MAKE) next
+	$(MAKE) info -e wait=on
+	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
+	echo "*** Variables: DISTRO_VERSION=$(DISTRO_VERSION)"
 ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
 	echo "*** Revision: DISTRO_VERSION=$(DISTRO_VERSION)"
 	$(MAKE) revision -e message="Reporting release $(DISTRO_VERSION)"
@@ -210,6 +207,7 @@ ifneq ($(DISTRO_VERSION),$(DISTRO_GITHTAG))
 	$(MAKE) gitrel -e tag="$(DISTRO_VERSION)"
 endif
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
+	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
 	$(eval IMAGE_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "imagename" | cut -f2 -d"="`)
 ifneq ($(PUBLISH),)
 	# define location and copy meta files
