@@ -64,12 +64,13 @@ endif
 
 # Build Clue OS release image
 image:
-	 $(MAKE) next
-	 $(MAKE) info -e wait=on
+	$(MAKE) next
+	$(MAKE) info -e wait=on
 	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
 	$(eval DISTRO_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"="`)
 ifneq ($(TARGETS),)
-	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)
+	echo "Clean-up old release from local file system: $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*"
+	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
 endif
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
 
@@ -191,13 +192,14 @@ endif
 
 # Publish the last build in the releases repository
 release:
-	 $(MAKE) next
-	 $(MAKE) info -e wait=on
+	$(MAKE) next
+	$(MAKE) info -e wait=on
 	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
 	$(eval DISTRO_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"="`)
 	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
 ifneq ($(TARGETS),)
-	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)
+	echo "Clean-up old release from local file system: $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*"
+	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
 endif
 ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
 	$(MAKE) revision -e message="Reporting release $(DISTRO_VERSION)"

@@ -1,7 +1,6 @@
 #!/bin/bash
 
 unset _CACHE_PACKAGE_LOCAL _CACHE_PACKAGE_GLOBAL _DEBUG_DEPENDS_LIST _DEBUG_PACKAGE_LIST
-unset DISTRO_NAME DISTRO_LONGNAME DISTRO_CODE DISTRO_STATUS DISTRO_BUILD DISTRO_RELEASE DISTRO_VERSION DISTRO_PROVIDER
 
 ${CONFIG}/tools/checkdeps || exit 1
 
@@ -519,6 +518,9 @@ if [ -n "${1}" ] && [ "${1}" != "image" ] && [ "${1}" != "info" ] && [ "${1}" !=
 elif [ -z "${1}" ] || [ "${1}" = "image" ]; then
 	# Import device settings & configuration
 	. ${ROOT}/devices/options ""
+
+	# Initialize transferable variables defined by options and configurations
+	set_vars
 
 	# Setup both toolchain cmake configs to avoid potentially racy behaviour later.
 	# Use a fork for host to isolate any variable modifications.
