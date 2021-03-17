@@ -1970,10 +1970,10 @@ show_config()
 }
 
 # Check configuration
-[[ -z ${1} ]] && check_config
+[[ "${1}" == "" ]] && check_config
 
 # export variables
-[[ -z ${1} ]] && set_vars
+[[ "${1}" == "" ]] && set_vars
 
 # If the package caches are unset, then populate them
 init_package_cache
