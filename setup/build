@@ -519,9 +519,6 @@ elif [ -z "${1}" ] || [ "${1}" = "image" ]; then
 	# Import device settings & configuration
 	. ${ROOT}/devices/options ""
 
-	# Initialize transferable variables defined by options and configurations
-	set_vars
-
 	# Setup both toolchain cmake configs to avoid potentially racy behaviour later.
 	# Use a fork for host to isolate any variable modifications.
 	echo -e "\n\n> Build process started.."
@@ -940,4 +937,7 @@ elif [ "${1}" = "next" ]; then
 
 	# Setup for the next build
 	set_build
+
+	# Initialize transferable variables defined by options and configurations
+	set_vars
 fi

@@ -69,7 +69,6 @@ image:
 	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
 	$(eval DISTRO_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"="`)
 ifneq ($(TARGETS),)
-	echo "Clean-up old release from local file system: $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*"
 	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
 endif
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
@@ -170,14 +169,12 @@ endif
 # done later - manually or through a separate task and thus the tag is transformed into a
 # addon release
 gitrel:
-	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
-	echo "*** GIT Tag 1: DISTRO_VERSION=$(DISTRO_VERSION)"
-ifneq ($(DISTRO_VERSION),)
-	echo "*** GIT Tag 2: DISTRO_VERSION=$(DISTRO_VERSION)"
-	git tag "$(DISTRO_VERSION)"
+ifneq ($(tag),)
+	echo "*** GIT Tag 2: TAG=$(tag)"
+	git tag "$(tag)"
 	git push origin --tags
 else
-	$(error Distribution version can not be detected!)
+	$(error Please specify 'tag' parameter!)
 endif
 
 
@@ -187,8 +184,7 @@ ifneq ($(message),)
 	$(MAKE) svnrev
 	$(MAKE) gitrev
 else
-	@printf "\n* Please specify 'message' parameter!\n\n"
-	exit 1
+	$(error Please specify 'message' parameter!)
 endif
 
 
@@ -201,7 +197,7 @@ release:
 	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
 	echo "*** Variables: DISTRO_VERSION=$(DISTRO_VERSION)"
 ifneq ($(TARGETS),)
-	echo "Clean-up old release from local file system: $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*"
+	echo "*** Clean-up old release from local file system: $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*"
 	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
 endif
 ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
@@ -211,7 +207,7 @@ endif
 	$(eval DISTRO_GITHTAG=`git describe --abbrev=0 --tags`)
 	echo "*** Release: DISTRO_VERSION=$(DISTRO_VERSION), DISTRO_GITHTAG=$(DISTRO_GITHTAG)"
 ifneq ($(DISTRO_VERSION),$(DISTRO_GITHTAG))
-	$(MAKE) gitrel
+	$(MAKE) gitrel -e tag="$(DISTRO_VERSION)"
 endif
 	./$(CONFIG)/build "image" | tee $(OUTPUT_DIR)/build.log
 	$(eval IMAGE_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "imagename" | cut -f2 -d"="`)
