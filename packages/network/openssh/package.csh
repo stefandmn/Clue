@@ -46,6 +46,9 @@ post_makeinstall_target() {
 		-i $INSTALL/etc/ssh/sshd_config
 
 	debug_strip $INSTALL/usr
+
+    mkdir -p $INSTALL/usr/share/services
+    cp -P $PKG_DIR/default.d/*.conf $INSTALL/usr/share/services
 }
 
 post_install() {

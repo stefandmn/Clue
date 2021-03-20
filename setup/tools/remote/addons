@@ -71,64 +71,76 @@ setversion()
 if [ "${TASK}" = "publish" ]; then
 	
 	for addon in ${PACK}
-	do
-		echo
-		echo "> Building and publishing [${addon}-${BASE}]"
-		setversion "${ROOT}/${addon}" "${BASE}"
-		VER=$(getversion "${ROOT}/${addon}")
-		if [ "${VER}" != "${BASE}" ]; then
-			echo "Error setting up base version for [${addon}] addon: found version is ${VER}"
-			exit 1
-		fi
-		cd ${ROOT}/${addon}
-		make build
-		make publish
-		if [ "${2}" != "" ]; then
-			make gitrev -e message="${2}"
-		else
-			make gitrev -e message="Global dependency"
+]	do
+		if  [ -d ${ROOT}/${addon} ]; then
+			echo
+			echo "> Building and publishing [${addon}-${BASE}]"
+			setversion "${ROOT}/${addon}" "${BASE}"
+			VER=$(getversion "${ROOT}/${addon}")
+			if [ "${VER}" != "${BASE}" ]; then
+				echo "Error setting up base version for [${addon}] addon: found version is ${VER}"
+				exit 1
+			fi
+			cd ${ROOT}/${addon}
+			make build
+			make publish
+			if [ "${2}" != "" ]; then
+				make gitrev -e message="${2}"
+			else
+				make gitrev -e message="Global dependency"
+			fi
 		fi
 	done
 elif  [ "${TASK}" = "clean" ]; then
 	for addon in ${PACK}
 	do
-		echo
-		VER=$(getversion "${ROOT}/${addon}")
-		echo "> Cleaning [${addon}-${VER}]"
-		cd ${ROOT}/${addon}
-		make clean
+		if  [ -d ${ROOT}/${addon} ]; then
+			echo
+			VER=$(getversion "${ROOT}/${addon}")
+			echo "> Cleaning [${addon}-${VER}]"
+			cd ${ROOT}/${addon}
+			make clean
+		fi
 	done
 elif  [ "${TASK}" = "build" ]; then
 	for addon in ${PACK}
 	do
-		echo
-		VER=$(getversion "${ROOT}/${addon}")
-		echo "> Building [${addon}-${VER}]"
-		cd ${ROOT}/${addon}
-		make build
+		if  [ -d ${ROOT}/${addon} ]; then
+			echo
+			VER=$(getversion "${ROOT}/${addon}")
+			echo "> Building [${addon}-${VER}]"
+			cd ${ROOT}/${addon}
+			make build
+		fi
 	done
 elif  [ "${TASK}" = "getversion" ]; then
 	for addon in ${PACK}
 	do
-		echo
-		VER=$(getversion "${ROOT}/${addon}")
-		echo "> Get Version of [${addon}-${VER}]"
+		if  [ -d ${ROOT}/${addon} ]; then
+			echo
+			VER=$(getversion "${ROOT}/${addon}")
+			echo "> Get Version of [${addon}-${VER}]"
+		fi
 	done
 elif  [ "${TASK}" = "nextversion" ]; then
 	for addon in ${PACK}
 	do
-		echo
-		VER=$(nextversion "${ROOT}/${addon}")
-		echo "> Next Versioning of [${addon}-${VER}]"
-		setversion "${ROOT}/${addon}" "${VER}"
+		if  [ -d ${ROOT}/${addon} ]; then
+			echo
+			VER=$(nextversion "${ROOT}/${addon}")
+			echo "> Next Versioning of [${addon}-${VER}]"
+			setversion "${ROOT}/${addon}" "${VER}"
+		fi
 	done
 elif  [ "${TASK}" = "prevversion" ]; then
 	for addon in ${PACK}
 	do
-		echo
-		VER=$(prevversion "${ROOT}/${addon}")
-		echo "> Next Versioning of [${addon}-${VER}]"
-		setversion "${ROOT}/${addon}" "${VER}"
+		if  [ -d ${ROOT}/${addon} ]; then
+			echo
+			VER=$(prevversion "${ROOT}/${addon}")
+			echo "> Next Versioning of [${addon}-${VER}]"
+			setversion "${ROOT}/${addon}" "${VER}"
+		fi
 	done
 elif  [ "${TASK}" = "test" ]; then
 	if [ "${RPIHOST}" = "" -a "${TESTPATH}" = "" ]; then
@@ -142,11 +154,13 @@ elif  [ "${TASK}" = "test" ]; then
 	fi
 	for addon in ${PACK}
 	do
-		echo
-		VER=$(getversion "${ROOT}/${addon}")
-		echo "> Deploying [${addon}-${VER}] on ${LOCATION}"
-		cd ${ROOT}/${addon}
-		make test
+		if  [ -d ${ROOT}/${addon} ]; then
+			echo
+			VER=$(getversion "${ROOT}/${addon}")
+			echo "> Deploying [${addon}-${VER}] on ${LOCATION}"
+			cd ${ROOT}/${addon}
+			make test
+		fi
 	done
 elif  [ "${TASK}" = "deploy" ]; then
 	if [ "${RPIHOST}" = "" ]; then
@@ -157,11 +171,13 @@ elif  [ "${TASK}" = "deploy" ]; then
 	fi
 	for addon in ${PACK}
 	do
-		echo
-		VER=$(getversion "${ROOT}/${addon}")
-		echo "> Deploying [${addon}-${VER}] on ${LOCATION}"
-		cd ${ROOT}/${addon}
-		make test
+		if  [ -d ${ROOT}/${addon} ]; then
+			echo
+			VER=$(getversion "${ROOT}/${addon}")
+			echo "> Deploying [${addon}-${VER}] on ${LOCATION}"
+			cd ${ROOT}/${addon}
+			make test
+		fi
 	done
 else
 	echo "Unknown execution task: ${TASK}"

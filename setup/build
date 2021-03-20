@@ -933,6 +933,7 @@ elif [ "${1}" = "info" ]; then
 
 elif [ "${1}" = "next" ]; then
 	# Import device settings & configuration
+	svn update --quiet --force ${ROOT}/devices/options
 	. ${ROOT}/devices/options ""
 
 	# Setup for the next build

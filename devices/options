@@ -1856,7 +1856,7 @@ show_config()
 	double_dashes=$(printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' =)
 	simple_dashes=$(printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -)
 	config_message="$config_message\n$double_dashes"
-	config_message="$config_message\n $(tput bold)\e[34m$DISTRO_NAME\e[39m (\e[5m${DISTRO_VERSION} ${DISTRO_STATUS}\e[25m) Configuration$(tput sgr0)\n\n"
+	config_message="$config_message\n $(tput bold)\e[34m${DISTRO_NAME} ${DEVICE}\e[39m (\e[5m${DISTRO_VERSION} ${DISTRO_STATUS}\e[25m) Configuration$(tput sgr0)\n\n"
 
 	# Build options
 	config_message="$config_message\n\n Build options:"
