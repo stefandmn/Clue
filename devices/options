@@ -13,7 +13,7 @@ DISTRO_LONGNAME="Clue Media Experience"
 DISTRO_STATUS="${STATUS:-devel}"
 
 # DISTRO_VERSION: Distribution Version with minor and major revisions
-DISTRO_BUILD=160
+DISTRO_BUILD=161
 DISTRO_RELEASE=2.0
 DISTRO_VERSION="${DISTRO_RELEASE}.${DISTRO_BUILD}"
 
