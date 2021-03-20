@@ -220,6 +220,15 @@ else
 endif
 
 
+releaseall:
+	export DEVICE=RPi
+	$(MAKE) release
+	export DEVICE=RPi2
+	$(MAKE) release
+	export DEVICE=RPi4
+	$(MAKE) release
+
+
 # Display the help text
 help:
 	echo -e "\
@@ -228,7 +237,7 @@ help:
        make  clean | cleanall | build | image | install \n\
        make cachestats | viewplan | viewpack | viewbuild \n\
        make svnrev | gitrev | gitrel | revision \n\
-       make release help \n\
+       make release releaseall help \n\
 \nDESCRIPTION\n\
     Executes one of the make tasks defined through this Makefile flow, according \n\
     to the specified DEVICE variable. In case is not defined/exported to the OS \n\
