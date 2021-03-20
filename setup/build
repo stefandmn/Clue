@@ -618,11 +618,11 @@ EOF
 	echo ">> Creating /etc/issue.."
 	cat <<EOF >${INSTALL}/etc/issue
 Welcome to ..
-			  *****       **          **   **      ******
-			**           **          **   **      **
-		   **           **          **   **      ****
-		  **           **          **   **      **
-		  *****       ******      *******      ******    OS.!
+              *****       **          **   **      ******
+            **           **          **   **      **
+           **           **          **   **      ****
+          **           **          **   **      **
+          *****       ******      *******      ******     OS.!
 
 This is an open OS that comes with ABSOLUTELY NO WARRANTY!
 
