@@ -171,7 +171,6 @@ endif
 # addon release
 gitrel:
 ifneq ($(tag),)
-	echo "*** GIT Tag 2: TAG=$(tag)"
 	git tag "$(tag)"
 	git push origin --tags
 else

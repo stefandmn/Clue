@@ -928,6 +928,11 @@ elif [ "${1}" = "info" ]; then
 	# Import device settings & configuration
 	. ${ROOT}/devices/options ""
 
+	# Initialize transferable variables defined by options and configurations
+	if [ ! -f /tmp/.cluevars ]; then
+		set_vars
+	fi
+
 	# Display build configuration details
 	show_config ${2}
 
