@@ -42,6 +42,8 @@ endif
 # Setup build counter in order to describe the next release version
 next:
 	./$(CONFIG)/build "next"
+	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
+	echo "New release build: $(DISTRO_VERSION)"
 
 
 # Build particular package or the entire system
@@ -189,7 +191,7 @@ endif
 
 # Publish the last build in the releases repository
 release:
-	$(MAKE) next
+ifneq ("$(wildcard /tmp/.cluevars)","")
 	$(MAKE) info -e wait=on
 ifneq ($(TARGETS),)
 	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
@@ -212,6 +214,9 @@ ifneq ($(PUBLISH),)
 	python $(PUBLISH)/jsongen.py --device="$(DEVICE)" --properties=/tmp/.cluevars
 else
 	$(error Repository location is not specified in PUBLISH variable. Set it up and try again!)
+endif
+else
+	$(error No prior build has been done or no build initialization has performed before release creation)
 endif
 
 
