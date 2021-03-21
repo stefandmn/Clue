@@ -527,7 +527,7 @@ elif [ -z "${1}" ] || [ "${1}" = "image" ]; then
 
 	# Collect versioning details
 	echo -e ">> Reading versioning details.."
-	GIT_HASH=$(git rev-parse HEAD)
+	GIT_HASH=$(git rev-parse HEAD 2>/dev/null)
 	GIT_ABBREV=${GIT_HASH:0:7}
 	case "${DISTRO_STATUS}" in
 	nightly)
@@ -780,10 +780,10 @@ EOF
 		UUID_STORAGE="$(uuidgen)"
 
 		# set temp variables
-		LE_TMP=/tmp/.clueimg
-		SAVE_ERROR="${LE_TMP}/save_error"
-		rm -rf ${LE_TMP}
-		mkdir -p ${LE_TMP}
+		SYS_TMP=/tmp/.clueimg
+		SAVE_ERROR="${SYS_TMP}/save_error"
+		rm -rf ${SYS_TMP}
+		mkdir -p ${SYS_TMP}
 
 		if [ -z "${SYSTEM_SIZE}" -o -z "${SYSTEM_PART_START}" ]; then
 			die "SYSTEM_SIZE and SYSTEM_PART_START must be configured!"
@@ -834,11 +834,11 @@ EOF
 
 		# create bootloader configuration
 		echo -e "\tCreating bootloader configuration.."
-		cat <<EOF >"${LE_TMP}/cmdline.txt"
+		cat <<EOF >"${SYS_TMP}/cmdline.txt"
 boot=UUID=${UUID_SYSTEM} disk=UUID=${UUID_STORAGE} quiet ${EXTRA_CMDLINE}
 EOF
 
-		mcopy -i ${DISK}@@${OFFSET} "${LE_TMP}/cmdline.txt" ::
+		mcopy -i ${DISK}@@${OFFSET} "${SYS_TMP}/cmdline.txt" ::
 
 		# copy files
 		echo -e "\tCopying files to part1.."
@@ -871,34 +871,34 @@ EOF
 		echo -e "\tExtracting part2 from image.."
 		STORAGE_PART_COUNT=$((${STORAGE_PART_END} - ${STORAGE_PART_START} + 1))
 		sync
-		dd if="${DISK}" of="${LE_TMP}/part2.ext4" bs=512 skip="${STORAGE_PART_START}" count="${STORAGE_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		dd if="${DISK}" of="${SYS_TMP}/part2.ext4" bs=512 skip="${STORAGE_PART_START}" count="${STORAGE_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
 
 		# create filesystem on part2
 		echo -e "\tCreating filesystem on part2.."
-		mke2fs -F -q -t ext4 -m 0 "${LE_TMP}/part2.ext4"
-		tune2fs -L "${DISTRO_DISKLABEL}" -U ${UUID_STORAGE} "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
-		e2fsck -n "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		mke2fs -F -q -t ext4 -m 0 "${SYS_TMP}/part2.ext4"
+		tune2fs -L "${DISTRO_DISKLABEL}" -U ${UUID_STORAGE} "${SYS_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		e2fsck -n "${SYS_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
 		sync
 
 		# add resize mark
-		mkdir "${LE_TMP}/part2.fs"
-		touch "${LE_TMP}/part2.fs/.please_resize_me"
+		mkdir "${SYS_TMP}/part2.fs"
+		touch "${SYS_TMP}/part2.fs/.please_resize_me"
 		echo -e "\tPopulating filesystem on part2.."
-		populatefs -U -d "${LE_TMP}/part2.fs" "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		populatefs -U -d "${SYS_TMP}/part2.fs" "${SYS_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
 		sync
-		e2fsck -n "${LE_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		e2fsck -n "${SYS_TMP}/part2.ext4" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
 
 		# merge part2 back to disk image
 		echo -e "\tMerging part2 back to image.."
-		dd if="${LE_TMP}/part2.ext4" of="${DISK}" bs=512 seek="${STORAGE_PART_START}" conv=fsync,notrunc >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		dd if="${SYS_TMP}/part2.ext4" of="${DISK}" bs=512 seek="${STORAGE_PART_START}" conv=fsync,notrunc >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
 
 		# extract part1 from image to run fsck
 		echo -e "\tExtracting part1 from image.."
 		SYSTEM_PART_COUNT=$((${SYSTEM_PART_END} - ${SYSTEM_PART_START} + 1))
 		sync
-		dd if="${DISK}" of="${LE_TMP}/part1.fat" bs=512 skip="${SYSTEM_PART_START}" count="${SYSTEM_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		dd if="${DISK}" of="${SYS_TMP}/part1.fat" bs=512 skip="${SYSTEM_PART_START}" count="${SYSTEM_PART_COUNT}" conv=fsync >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
 		echo -e "\tChecking filesystem on part1.."
-		fsck.fat -n "${LE_TMP}/part1.fat" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
+		fsck.fat -n "${SYS_TMP}/part1.fat" >"${SAVE_ERROR}" 2>&1 || die "An error has occurred creating image: $(cat ${SAVE_ERROR})"
 
 		# gzip
 		echo -e "\tCompressing.."
@@ -915,7 +915,7 @@ EOF
 
 		# cleanup
 		echo -e "\tCleaning up.."
-		rm -rf "${LE_TMP}"
+		rm -rf "${SYS_TMP}"
 
 		# Cleanup release dir
 		rm -rf ${RELEASE_DIR}
@@ -929,17 +929,19 @@ elif [ "${1}" = "info" ]; then
 	. ${ROOT}/devices/options ""
 
 	# Initialize transferable variables defined by options and configurations
-	if [ ! -f /tmp/.cluevars ]; then
-		set_vars
-	fi
+	set_vars
 
 	# Display build configuration details
 	show_config ${2}
 
 elif [ "${1}" = "next" ]; then
 	# Import device settings & configuration
-	svn update --quiet --force ${ROOT}/devices/options
 	. ${ROOT}/devices/options ""
+
+	# update local copy of device options file (to have the right build number)
+	if [ -d ${ROOT}/.svn ]; then
+		svn update --quiet --force ${ROOT}/devices/options
+	fi
 
 	# Setup for the next build
 	set_build

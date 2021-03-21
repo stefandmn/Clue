@@ -23,7 +23,7 @@ ifeq ($(PUBLISH),)
 endif
 
 # Global variables
-DISTRO_GITHTAG=$(shell git describe --abbrev=0 --tags)
+DISTRO_GITHTAG=$(shell git describe --abbrev=0 --tags 2>/dev/null)
 DISTRO_NAME=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "distroname" | cut -f2 -d"=")
 DISTRO_VERSION=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"=")
 IMAGE_NAME=$(shell cat /tmp/.cluevars 2>/dev/null | grep -i "imagename" | cut -f2 -d"=")
@@ -58,7 +58,9 @@ ifneq ($(packages),)
 	rm -rf $(OUTPUT_DIR)/build.log
 	for pack in $(packages) ; do ./$(CONFIG)/build $$pack | tee -a $(OUTPUT_DIR)/build.log ; done
 else
+ifneq ($(local),on)
 	$(MAKE) next
+endif
 	$(MAKE) info -e wait=on
 	./$(CONFIG)/build | tee $(OUTPUT_DIR)/build.log
 endif
@@ -67,7 +69,9 @@ endif
 
 # Build Clue OS release image
 image:
+ifneq ($(local),on)
 	$(MAKE) next
+endif
 	$(MAKE) info -e wait=on
 ifneq ($(TARGETS),)
 	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
@@ -147,16 +151,19 @@ monitor:viewbuild
 # Commit and push updated files into SVN versioning system. The 'message' input
 # parameter is required.
 svnrev:
+ifneq ("$(wildcard $(ROOT)/.svn)","")
 ifneq ($(message),)
 	svn ci -m "$(message)"
 else
 	$(error Please specify 'message' parameter!)
+endif
 endif
 
 
 # Commit and push updated files into GitHUB versioning system. The 'message' input
 # parameter is required.
 gitrev:
+ifneq ("$(wildcard $(ROOT)/.git)","")
 ifneq ($(message),)
 	git add .
 	git commit -m "$(message)"
@@ -164,42 +171,49 @@ ifneq ($(message),)
 else
 	$(error Please specify 'message' parameter!)
 endif
+endif
 
 
 # Create and push a new versioning tag equals with the addon release. The uploaded can be
 # done later - manually or through a separate task and thus the tag is transformed into a
 # addon release
 gitrel:
+ifneq ("$(wildcard $(ROOT)/.git)","")
 ifneq ($(tag),)
 	git tag "$(tag)"
 	git push origin --tags
 else
 	$(error Please specify 'tag' parameter!)
 endif
+endif
 
 
 # Commit and push changes in both versioning systems (SVN and GIT)
 revision:
+ifneq ("$(wildcard $(ROOT)/.svn)","")
+ifneq ("$(wildcard $(ROOT)/.git)","")
 ifneq ($(message),)
 	$(MAKE) svnrev
 	$(MAKE) gitrev
 else
 	$(error Please specify 'message' parameter!)
 endif
+endif
+endif
 
 
 # Publish the last build in the releases repository
 release:
-ifneq ("$(wildcard /tmp/.cluevars)","")
 	$(MAKE) info -e wait=on
+ifneq ("$(wildcard /tmp/.cluevars)","")
 ifneq ($(TARGETS),)
 	rm -rf $(TARGETS)/$(DISTRO_NAME)-$(DISTRO_VERSION)*
 endif
 	$(eval DISTRO_VERSION=`cat /tmp/.cluevars 2>/dev/null | grep -i "distroversion" | cut -f2 -d"="`)
-ifneq ($(shell svn status -u | grep -i "^[AMD]" | wc -l),0)
+ifneq ($(shell svn status -u 2>/dev/null | grep -i "^[AMD]" | wc -l),0)
 	$(MAKE) revision -e message="Reporting release $(DISTRO_VERSION)"
 endif
-	$(eval DISTRO_GITHTAG=`git describe --abbrev=0 --tags`)
+	$(eval DISTRO_GITHTAG=`git describe --abbrev=0 --tags 2>/dev/null`)
 ifneq ($(DISTRO_VERSION),$(DISTRO_GITHTAG))
 	$(MAKE) gitrel -e tag="$(DISTRO_VERSION)"
 endif
@@ -248,16 +262,24 @@ help:
     build [-e package=<pack>]\n\
                   build one particular package (and all related dependencies) or \n\
                   the entire DEVICE distribution\n\
-    info\n\
-                  Display release setup according to the selected DEVICE\n\
+    info [-e wait=on|off]\n\
+                  Display release setup according to the selected DEVICE. The command\n\
+                  can interrupt build flow execution waiting for a key validation, \n\
+                  or can exit from the process based on 'wait' parameter value.\n\
     clean [-e package=<pack> | packages=<list of packs separated by space>]\n\
                   cleanup one particular package or the entire DEVICE distribution\n\
     cleanall\n\
                   Clean-up all DEVICE distributions, cache and stamps resources as well\n\
-    build\n\
-                  Build the system release for the current DEVICE\n\
-    image\n\
+    build [-e local=on|off package=<pack> | packages=<list of packs separated by space>]\n\
+                  Build the system release for the current DEVICE in case no 'package'\n\
+                  parameter is specified, otherwise will build only the indicated package(s)\n\
+                  In case 'local' parameter is specified and is 'on' build version will remain\n\
+                  the same\n\
+    image [-e local=on|off]\n\
                   Build the system release and create OS image for the current DEVICE\n\
+                  IN ase 'local' parameter is 'on' no build version is requested, will use the\n\
+                  the existing one from the local file system. The variables will be generated\n\
+                  by 'info' target containing the existing build version\n\
     install -e package=<pack> | packages=<list of packs separated by space>]\n\
                   install one particular package and related dependencies\n\
     cachestats\n\
@@ -274,16 +296,19 @@ help:
                   Commit the new release changes into SVN versioning repository.\n\
                   Attention, adding or removal to the project level have to be done\n\
                   directly from IDE\n\
-    gitrev\n\
+    gitrev -e message=<submit message>\n\
                   Commit the new release changes into GitHUB versioning repository\n\
-    gitrel\n\
+    gitrel -e tag=<tag name>\n\
                   Create a new release tag into GitHub versioning repository using current\n\
                   addon version (defined in the addon descriptor - addon.xml file)\n\
-    revision\n\
+    revision -e message=<submit message>\n\
                   Commit and push project changes in both versioning systems (SVN and GIT)\n\
     release\n\
                   Build release and image for the current DEVICE and publish it into repository\n\
-     help\n\
+    releaseall\n\
+                   Build releases and images for all supported DEVICES and publish the image\n\
+                   files into the release repository\n\
+      help\n\
                   Shows this text\n\
 \n\
     There are couple of system variables that can be set in order to drive the building \n\
