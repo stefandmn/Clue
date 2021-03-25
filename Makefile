@@ -221,10 +221,12 @@ endif
 	$(eval TARGETS=`cat /tmp/.cluevars 2>/dev/null | grep -i "localtargets" | cut -f2 -d"="`)
 	$(eval IMAGE_NAME=`cat /tmp/.cluevars 2>/dev/null | grep -i "imagename" | cut -f2 -d"="`)
 ifneq ($(PUBLISH),)
+	echo "> Publishing release to $(PUBLISH)/$(DEVICE)/$(IMAGE_NAME).img.gz.."
 	# define location and copy meta files
 	mkdir -p $(PUBLISH)/$(DEVICE)
-	cp -f $(TARGETS)/$(IMAGE_NAME).img.gz  $(PUBLISH)/$(DEVICE)/$(IMAGE_NAME).img.gz
+	cp -f $(TARGETS)/$(IMAGE_NAME).img.gz $(PUBLISH)/$(DEVICE)/$(IMAGE_NAME).img.gz
 	python $(PUBLISH)/jsongen.py --device="$(DEVICE)" --properties=/tmp/.cluevars
+	echo "> Release done.."
 else
 	$(error Repository location is not specified in PUBLISH variable. Set it up and try again!)
 endif
@@ -247,7 +249,7 @@ help:
 	echo -e "\
 \nSYNOPSIS\n\
        make info | next \n\
-       make  clean | cleanall | build | image | install \n\
+       make clean | cleanall | build | image | install \n\
        make cachestats | viewplan | viewpack | viewbuild \n\
        make svnrev | gitrev | gitrel | revision \n\
        make release releaseall help \n\

@@ -67,11 +67,14 @@ setversion()
 
 
 
-
-if [ "${TASK}" = "publish" ]; then
+if [ "${TASK}" = "help" ]; then
+	echo -e "\n\
+ > $0 publish | clean | build | getversion | nextversion | prevversion | test | deploy\n"
+	exit 0
+elif [ "${TASK}" = "publish" ]; then
 	
 	for addon in ${PACK}
-]	do
+	do
 		if  [ -d ${ROOT}/${addon} ]; then
 			echo
 			echo "> Building and publishing [${addon}-${BASE}]"
