@@ -29,12 +29,13 @@ class Generator:
 		parser = argparse.ArgumentParser()
 		parser.add_argument("-d", "--device", help="Specifies the device name", required=True)
 		parser.add_argument("-f", "--properties", help="Specifies the device name")
-		parser.add_argument("-dn", "--distroname", help="Describes de distribution name")
-		parser.add_argument("-dc", "--distrocode", help="Describes de distribution code")
-		parser.add_argument("-ds", "--distrostatus", help="Describes de distribution status")
-		parser.add_argument("-dv", "--distroversion", help="Describes de distribution version")
-		parser.add_argument("-dp", "--distroprovider", help="Describes de distribution provider")
-		parser.add_argument("-dd", "--distrodescription", help="Describes de distribution description")
+		parser.add_argument("-dn", "--distroname", help="Indicates the distribution name")
+		parser.add_argument("-dc", "--distrocode", help="Indicates device distribution code")
+		parser.add_argument("-ds", "--distrostatus", help="Indicates the distribution status")
+		parser.add_argument("-dv", "--distrorelease", help="Indicates the distribution release")
+		parser.add_argument("-dv", "--distroversion", help="Indicates deice distribution version")
+		parser.add_argument("-dp", "--distroprovider", help="Indicates the distribution provider")
+		parser.add_argument("-dd", "--distrodescription", help="Indicates the distribution description")
 		parser.add_argument("-p", "--localtargets", help="Specifies the path (server location) where the release JSON message is saved")
 		parser.add_argument("-i", "--imagename", help="Identified the image name of the published release")
 		self.args = vars(parser.parse_args(sys.argv[1:]))
@@ -56,7 +57,7 @@ class Generator:
 				data = json.load(handler)
 		if ("devices" not in data.keys()) or \
 			("status" in data.keys() and data["status"] != self.args["distrostatus"]) or \
-			("version" in data.keys() and data["version"] != self.args["distroversion"]):
+			("version" in data.keys() and data["release"] != self.args["distrorelease"]):
 			data["devices"] = {}
 		device = self.args["device"]
 		data["name"] = self.args["distroname"]

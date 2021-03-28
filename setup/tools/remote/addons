@@ -2,7 +2,6 @@
 
 
 TASK="$1"
-BASE="2.0.1"
 ROOT="$(cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 PACK="skin.clue module.clue service.clue weather.clue program.slideshow program.search program.recovery"
 CDIR=$(pwd)
@@ -69,28 +68,23 @@ setversion()
 
 if [ "${TASK}" = "help" ]; then
 	echo -e "\n\
- > $0 publish | clean | build | getversion | nextversion | prevversion | test | deploy\n"
+ > $0 publish | clean | build | gitrev | gitrel | getversion | nextversion | prevversion | test | deploy\n"
 	exit 0
 elif [ "${TASK}" = "publish" ]; then
 	
 	for addon in ${PACK}
 	do
 		if  [ -d ${ROOT}/${addon} ]; then
-			echo
-			echo "> Building and publishing [${addon}-${BASE}]"
-			setversion "${ROOT}/${addon}" "${BASE}"
 			VER=$(getversion "${ROOT}/${addon}")
-			if [ "${VER}" != "${BASE}" ]; then
-				echo "Error setting up base version for [${addon}] addon: found version is ${VER}"
-				exit 1
-			fi
+			echo
+			echo "> Building and publishing [${addon}-${VER}]"
 			cd ${ROOT}/${addon}
 			make build
 			make publish
 			if [ "${2}" != "" ]; then
 				make gitrev -e message="${2}"
 			else
-				make gitrev -e message="Global dependency"
+				make gitrev -e message="Global update"
 			fi
 		fi
 	done
@@ -114,6 +108,35 @@ elif  [ "${TASK}" = "build" ]; then
 			echo "> Building [${addon}-${VER}]"
 			cd ${ROOT}/${addon}
 			make build
+		fi
+	done
+elif  [ "${TASK}" = "gitrev" ]; then
+	for addon in ${PACK}
+	do
+		if  [ -d ${ROOT}/${addon} ]; then
+			VER=$(getversion "${ROOT}/${addon}")
+			echo
+			echo "> Submitting changes in VCS: [${addon}-${VER}]"
+			cd ${ROOT}/${addon}
+			if [ "${2}" != "" ]; then
+				make gitrev -e message="${2}"
+			else
+				make gitrev -e message="Global update"
+			fi
+		fi
+	done
+elif  [ "${TASK}" = "gitrel" ]; then
+	for addon in ${PACK}
+	do
+		if  [ -d ${ROOT}/${addon} ]; then
+			VER=$(getversion "${ROOT}/${addon}")
+			cd ${ROOT}/${addon}
+			TAG=$(git describe --abbrev=0 --tags 2>/dev/null)
+			if [ "${TAG}" != "${VER}" ]; then
+				echo
+				echo "> Submitting new release.tag in VCS: [${addon}-${VER}]"
+				make gitrel
+			fi
 		fi
 	done
 elif  [ "${TASK}" = "getversion" ]; then
