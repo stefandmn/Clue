@@ -61,13 +61,14 @@ class Generator:
 		device = self.args["device"]
 		data["name"] = self.args["distroname"]
 		data["status"] = self.args["distrostatus"]
-		data["version"] = self.args["distroversion"]
+		data["release"] = self.args["distrorelease"]
 		data["provider"] = self.args["distroprovider"]
 		data["description"] = self.args["distrodescription"]
 		data["devices"][device] = {} if device not in data["devices"].keys() else data["devices"][device]
 		data["devices"][device]["code"] = self.args["distrocode"]
 		data["devices"][device]["date"] = str(datetime.datetime.now())
 		data["devices"][device]["url"] = self.args["reporeleases"] + "/" + self.args["device"] + "/" + self.args["imagename"] + ".img.gz"
+		data["devices"][device]["version"] = self.args["distroversion"]
 		# save file and return result
 		return self._save_file(data=data, file=os.path.join(basepath, filename))
 
