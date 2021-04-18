@@ -313,10 +313,7 @@ post_makeinstall_target() {
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "webinterface.clue" $MANIFEST
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "program.slideshow" $MANIFEST
 	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "program.search" $MANIFEST
-	# add device dependent services
-	if [ "$DEVICE" = "Slice" -o "$DEVICE" = "Slice3" ]; then
-		xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "service.slice" $MANIFEST
-	fi
+	xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "program.recovery" $MANIFEST
 
 	# update global configuration
 	SETTINGS=$INSTALL/usr/share/kodi/system/settings/settings.xml

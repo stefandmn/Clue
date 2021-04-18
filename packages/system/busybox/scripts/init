@@ -113,7 +113,7 @@ mount_common() {
 	error "mount_common" "Could not mount $1"
 }
 
-get_iscsistart_options() {
+get_iscsistartoptions() {
 	# Convert kernel commandline ISCSI= options to iscsistart options
 	IFS_SAVE="$IFS"
 	IFS=,
@@ -170,7 +170,7 @@ mount_iscsi() {
 		progress "iSCSI auto connect based on iBFT"
 		/usr/sbin/iscsistart -b >&$SILENT_OUT 2>&1 || error "iscsistart" "Unable to auto connect"
 	else
-		/usr/sbin/iscsistart $(get_iscsistart_options "$ISCSI_OPTIONS") >&$SILENT_OUT 2>&1 || error "iscsistart" "Unable to connect to ISCSI target"
+		/usr/sbin/iscsistart $(get_iscsistartoptions "$ISCSI_OPTIONS") >&$SILENT_OUT 2>&1 || error "iscsistart" "Unable to connect to ISCSI target"
 	fi
 
 	mount_common "$ISCSI_DEV" "$2" "$3" "$4"
@@ -253,7 +253,7 @@ mount_sysroot() {
 }
 
 # mount the specified SYSTEM file and output arch from /etc/os-release
-get_project_arch() {
+get_architecture() {
 	if [ -f ${1}/etc/os-release ]; then
 		. ${1}/etc/os-release
 		echo "${DEVICE}.${TARGET_ARCH}"
@@ -279,12 +279,12 @@ is_compatible() {
 }
 
 # determine if the new SYSTEM file is compatible with the current SYSTEM file
-check_is_compatible() {
+check_iscompatible() {
 	local update_filename="${1}"
 	local old_project_arch new_project_arch
 
-	old_project_arch="$(get_project_arch "/sysroot")" || return
-	new_project_arch="$(get_project_arch "/update")" || return
+	old_project_arch="$(get_architecture "/sysroot")" || return
+	new_project_arch="$(get_architecture "/update")" || return
 
 	# If old or new project/arch isn't available then could be very old (pre-/etc/os-release) build - have to trust it
 	if [ -n "${old_project_arch}" -a -n "${new_project_arch}" ]; then
@@ -646,7 +646,7 @@ mount_home() {
 	fi
 }
 
-check_out_of_space() {
+check_outofspace() {
 	if [ "$(df /home | awk '/[0-9]%/{print $4}')" -eq "0" ]; then
 		echo ""
 		echo "The $1 is corrupt, or there is not enough"
@@ -730,9 +730,9 @@ check_update() {
 	if [ -f "$UPDATE_TAR" ]; then
 		TARRESULT="0"
 
-		echo "Found new .tar archive"
+		echo "Found new system image (TAR format)"
 		UPDATE_FILENAME="$UPDATE_TAR"
-		StartProgress spinner "Extracting contents of archive... "
+		StartProgress spinner "Extracting contents... "
 		tar -xf "$UPDATE_TAR" -C $UPDATE_DIR/.tmp 1>/dev/null 2>/tmp/tarresult.txt || TARRESULT="1"
 
 		if [ "${TARRESULT}" -eq "0" ]; then
@@ -742,10 +742,10 @@ check_update() {
 		else
 			StopProgress "FAILED"
 
-			echo "Failed to extract contents of archive file!"
-			echo "tar result: '$(cat /tmp/tarresult.txt)'"
+			echo "Failed to extract content!"
+			echo "Extracting result: '$(cat /tmp/tarresult.txt)'"
 
-			check_out_of_space "archive"
+			check_outofspace "archive"
 
 			do_cleanup
 			StartProgress countdown "Normal startup in 30s... " 30 "NOW"
@@ -757,7 +757,7 @@ check_update() {
 		GZRESULT="0"
 
 		if [ -f "$UPDATE_IMG_GZ" ]; then
-			echo "Found new compressed image file"
+			echo "Found new system image (GZ file format)"
 			UPDATE_FILENAME="$UPDATE_IMG_GZ"
 			StartProgress spinner "Decompressing image file... "
 			gunzip -d -c "$UPDATE_IMG_GZ" 1>$IMG_FILE 2>/tmp/gzresult.txt || GZRESULT="1"
@@ -768,14 +768,14 @@ check_update() {
 				echo "Failed to decompress image file!"
 				echo "gunzip result: '$(cat /tmp/gzresult.txt)'"
 
-				check_out_of_space "compressed image"
+				check_outofspace "compressed image"
 
 				do_cleanup
 				StartProgress countdown "Normal startup in 30s... " 30 "NOW"
 				return 0
 			fi
 		else
-			echo "Found new image file"
+			echo "Found new system image (IMG file format)"
 			UPDATE_FILENAME="$UPDATE_IMG"
 			mv "$UPDATE_IMG" $IMG_FILE
 		fi
@@ -878,7 +878,7 @@ check_update() {
 	# Verify that the new update is compatible with the current system - this should avoid creating
 	# non-booting systems after (for example) an RPi tar is incorrectly applied to an RPi2 system.
 	if [ ! -f "$UPDATE_ROOT/.nocompat" ]; then
-		if ! check_is_compatible "$UPDATE_FILENAME"; then
+		if ! check_iscompatible "$UPDATE_FILENAME"; then
 			do_cleanup
 			StartProgress countdown "Normal startup in 60s... " 60 "NOW"
 			return 0
