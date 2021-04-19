@@ -1,10 +1,9 @@
 PKG_NAME="bcm2835-bootloader"
-PKG_VERSION="62fc8c01165a80021054a430182b504f7b877c2d"
-PKG_SHA256="3587caa082981f007c236c2ca15538f772c20309a00b25d979ce12f346c6f68a"
+PKG_VERSION="1.0"
 PKG_ARCH="arm"
 PKG_URL="${REPO_SOURCES}/${PKG_NAME}-${PKG_VERSION}.tar.xz"
 PKG_DEPENDS_TARGET="toolchain linux bcmstat"
-PKG_DESCRIPTION="bcm2835-bootloader: Tool to create a bootable kernel for RaspberryPi"
+PKG_DESCRIPTION="Tool to create a bootable kernel for Raspberry Pi"
 PKG_TOOLCHAIN="manual"
 
 makeinstall_target() {
