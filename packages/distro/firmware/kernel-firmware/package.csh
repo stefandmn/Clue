@@ -44,7 +44,7 @@ makeinstall_target() {
 
 	PKG_KERNEL_CFG_FILE=$(kernel_config_path) || die
 
-	# The following files are RPi specific and installed by brcmfmac_sdio-firmware-rpi instead.
+	# The following files are RPi specific and installed by brcmfmac_sdio-firmware instead.
 	# They are also not required at all if the kernel is not suitably configured.
 	if listcontains "${FIRMWARE}" "brcmfmac_sdio-firmware" ||
 		! grep -q "^CONFIG_BRCMFMAC_SDIO=y" ${PKG_KERNEL_CFG_FILE}; then

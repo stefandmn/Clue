@@ -1,8 +1,8 @@
 [Unit]
 Description=Persistent Log Storage
 RequiresMountsFor=/var /home
-Requires=storage-log.service
-After=storage-log.service
+Requires=home-log.service
+After=home-log.service
 ConditionKernelCommandLine=!installer
 ConditionKernelCommandLine=|debugging
 ConditionPathExists=|/home/.cache/debug.clue

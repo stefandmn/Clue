@@ -528,38 +528,26 @@ elif [ -z "${1}" ] || [ "${1}" = "image" ]; then
 	# Collect versioning details
 	echo -e ">> Reading versioning details.."
 	GIT_HASH=$(git rev-parse HEAD 2>/dev/null)
-	GIT_ABBREV=${GIT_HASH:0:7}
+	[ "${GIT_HASH}" != "" ] && GIT_ABBREV=${GIT_HASH:0:7} || GIT_ABBREV=""
 	case "${DISTRO_STATUS}" in
 	nightly)
-		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m%d)-${GIT_ABBREV}
-		DISTRO_LABEL="(${DISTRO_CODE})"
+		[ "${GIT_ABBREV}" != "" ] && DISTRO_LABEL=$(date +%Y%m%d)-${GIT_ABBREV} || DISTRO_LABEL=$(date +%Y%m%d)
 		;;
 	daily)
-		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%j)-${GIT_ABBREV}
-		DISTRO_LABEL="(${DISTRO_CODE})"
+		[ "${GIT_ABBREV}" != "" ] && DISTRO_LABEL=$(date +%Y%j)-${GIT_ABBREV} || DISTRO_LABEL=$(date +%Y%j)
 		;;
 	weekly)
-		DISTRO_CODE=${DISTRO_STATUS}-$(date +%G%V)-${GIT_ABBREV}
-		DISTRO_LABEL="(${DISTRO_CODE})"
+		[ "${GIT_ABBREV}" != "" ] && DISTRO_LABEL=$(date +%G%V)-${GIT_ABBREV} || DISTRO_LABEL=$(date +%G%V)
 		;;
 	monthly)
-		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m)-${GIT_ABBREV}
-		DISTRO_LABEL="(${DISTRO_CODE})"
+		[ "${GIT_ABBREV}" != "" ] && DISTRO_LABEL=$(date +%Y%m)-${GIT_ABBREV} || DISTRO_LABEL=$(date +%Y%m)
 		;;
 	devel)
-		DISTRO_CODE=${DISTRO_STATUS}-$(date +%Y%m%d%H%M%S)-${GIT_ABBREV}
-		DISTRO_LABEL="(${DISTRO_CODE})"
-		;;
-	stable)
-		DISTRO_CODE=${DISTRO_STATUS}-${GIT_ABBREV}
-		DISTRO_LABEL="(${DISTRO_CODE})"
-		;;
-	*)
-		DISTRO_CODE=${DISTRO_STATUS}
-		DISTRO_LABEL="${DISTRO_CODE}"
+		[ "${GIT_ABBREV}" != "" ] && DISTRO_LABEL=$(date +%Y%m%d%H%M%S)-${GIT_ABBREV} || DISTRO_LABEL=$(date +%Y%m%d%H%M%S)
 		;;
 	esac
 
+	DISTRO_CODE=${DISTRO_STATUS}-${DISTRO_LABEL}
 	TARGET_VERSION="${DEVICE}.${TARGET_ARCH}-${DISTRO_CODE}"
 	IMAGE_NAME="${DISTRO_NAME}-${DISTRO_VERSION}-${TARGET_VERSION}"
 	set_var "distrocode" "${DISTRO_CODE}"
@@ -602,10 +590,10 @@ elif [ -z "${1}" ] || [ "${1}" = "image" ]; then
 	echo ">> Creating /etc/os-release.."
 	cat <<EOF >${INSTALL}/etc/os-release
 NAME="${DISTRO_NAME}"
-VERSION="${DISTRO_VERSION} ${DISTRO_LABEL}"
+VERSION="${DISTRO_VERSION} (${DISTRO_CODE})"
 ID="clue"
 ID_LIKE="libreelec"
-PRETTY_NAME="${DISTRO_LONGNAME} ${DISTRO_VERSION} ${DISTRO_LABEL}"
+PRETTY_NAME="${DISTRO_LONGNAME} ${DISTRO_VERSION} (${DISTRO_CODE})"
 VERSION_ID="${DISTRO_VERSION}"
 VERSION_CODE="${DISTRO_CODE}"
 HOME_URL="https://amsd.go.ro/clue"
